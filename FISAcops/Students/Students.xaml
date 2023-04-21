@@ -24,6 +24,32 @@
 
         <!-- Contenu de la page ici -->
 
+
+        <ListView Name="studentsListView" Margin="10" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding Nom}" Width="120"/>
+                    <GridViewColumn Header="Prénom" DisplayMemberBinding="{Binding Prenom}" Width="120"/>
+                    <GridViewColumn Header="Mail" DisplayMemberBinding="{Binding Mail}" Width="200"/>
+                    <GridViewColumn Header="Promotion" DisplayMemberBinding="{Binding Promotion}" Width="120"/>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Modifier" Click="EditStudent_Click" Tag="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Supprimer" Click="DeleteStudent_Click" Tag="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 
                 Margin="0,0,20,20" 
