@@ -22,6 +22,7 @@ namespace FISAcops
     /// </summary>
     public partial class Students : Page
     {
+        private static List<Student> students = new List<Student>();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -31,8 +32,27 @@ namespace FISAcops
         private void EditStudent_Click(object sender, RoutedEventArgs e)
         {
             // Récupérer l'élève sélectionné
-            var selectedStudent = ((Button)sender).Tag as Student;
-            
+            var selectedStudentTag = ((Button)sender).Tag;
+            var mainWindow = (MainWindow)Window.GetWindow(this);
+            int index = -1;
+
+            // Rechercher l'indice de l'étudiant dans la liste
+            if (selectedStudentTag != null)
+            {
+                Student selectedStudent = (Student)selectedStudentTag;
+                index = students.IndexOf(selectedStudent);
+            }
+
+            if (index >= 0)
+            {
+                // Naviguer vers la page d'édition de l'étudiant
+                mainWindow.frame.Navigate(new EditStudent(index));
+            }
+            else
+            {
+                // L'étudiant sélectionné n'a pas été trouvé dans la liste
+                // Gérer cette situation en conséquence
+            }
         }
 
         private void DeleteStudent_Click(object sender, RoutedEventArgs e)
@@ -71,7 +91,7 @@ namespace FISAcops
         public Students()
         {
             InitializeComponent();
-            List<Student> students = new List<Student>();
+            
 
             // Charger les étudiants à partir du fichier JSON
             string appLocation = @"D:\Projets\VisualStudio\FISAcops";

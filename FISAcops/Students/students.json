@@ -1,1 +1,8 @@
-[{"Nom":"D\u0027Silva","Prenom":"Th\u00E9otime","Mail":"theotime.dsilva@viacesi.Fr","Promotion":"FISA INFO 2225"},{"Nom":"Patrick","Prenom":"Sebastion","Mail":"pjs.seb@gmail.com","Promotion":"FISE_INFO"},{"Nom":"Nkongue","Prenom":"Eddy","Mail":"nkongue.eddy@viacesi.fr","Promotion":"FISA INFO 2225"}]
+[
+  {
+    "Nom": "Théotime",
+    "Prenom": "D'Silva",
+    "Mail": "théotime.dsilva@viacesi.fr",
+    "Promotion": "FISA"
+  }
+]
