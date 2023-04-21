@@ -32,29 +32,7 @@ namespace FISAcops
         {
             // Récupérer l'élève sélectionné
             var selectedStudent = ((Button)sender).Tag as Student;
-            /*
-            // Ouvrir la fenêtre d'édition de l'élève
-            var editStudentWindow = new CreateStudent(selectedStudent);
-            editStudentWindow.ShowDialog();
-
-            // Mettre à jour la liste des étudiants si l'utilisateur a cliqué sur "Enregistrer"
-            if (editStudentWindow.DialogResult == true)
-            {
-                // Récupérer l'élève modifié
-                var editedStudent = editStudentWindow.Student;
-
-                // Rechercher et remplacer l'élève modifié dans la liste des étudiants
-                var students = studentsListView.ItemsSource as List<Student>;
-                var index = students.FindIndex(s => s.Id == editedStudent.Id);
-                students[index] = editedStudent;
-
-                // Rafraîchir la liste des étudiants
-                studentsListView.ItemsSource = null;
-                studentsListView.ItemsSource = students;
-
-                // Enregistrer les modifications dans le fichier JSON
-                SaveStudentsToJson(students);
-            }*/
+            
         }
 
         private void DeleteStudent_Click(object sender, RoutedEventArgs e)
