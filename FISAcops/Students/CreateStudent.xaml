@@ -25,10 +25,10 @@
         <!-- Contenu de la page ici -->
         <StackPanel Grid.Row="1">
             <Label>Nom :</Label>
-            <TextBox Name="nomTextBox" />
+            <TextBox Name="nomTextBox" LostFocus="UpdateMail" />
 
             <Label>Prénom :</Label>
-            <TextBox Name="prenomTextBox" />
+            <TextBox Name="prenomTextBox" LostFocus="UpdateMail" />
 
             <Label>Mail :</Label>
             <TextBox Name="mailTextBox" />
@@ -37,10 +37,10 @@
             <TextBox Name="promoTextBox" />
 
             <Button Content="sauvegarder" 
-                Margin="0,0,20,20" 
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Bottom" 
-                Click="SaveStudent_Click"/>
+            Margin="0,0,20,20" 
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Bottom" 
+            Click="SaveStudent_Click"/>
         </StackPanel>
 
         <!-- Bouton en bas à droite -->

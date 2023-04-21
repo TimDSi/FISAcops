@@ -53,6 +53,23 @@ namespace FISAcops
             };
             string output = JsonSerializer.Serialize(students, options);
             File.WriteAllText(filePath, output, new UTF8Encoding(false));
+
+            //retour à la page principale
+            var mainWindow = (MainWindow)Window.GetWindow(this);
+            mainWindow.frame.Navigate(new MainPage());
+        }
+
+        //this function is for pre edit mail cause we need to be fast
+        private void UpdateMail(object sender, RoutedEventArgs e)
+        {
+            string nom = nomTextBox.Text;
+            string prenom = prenomTextBox.Text;
+
+            // Construire la nouvelle adresse e-mail avec nom et prénom
+            string newMail = $"{nom.ToLower()}.{prenom.ToLower()}@viacesi.fr";
+
+            // Définir la nouvelle adresse e-mail dans le champ mailTextBox
+            mailTextBox.Text = newMail;
         }
 
 
