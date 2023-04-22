@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -25,11 +26,11 @@ namespace FISAcops
 
         private readonly static string appLocation = AppDomain.CurrentDomain.BaseDirectory;
         private readonly static string filePath = System.IO.Path.Combine(appLocation, "..\\..\\..\\Students\\students.json");
+        private MainWindow mainWindow;
 
         private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
-            var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new MainPage());
         }
 
@@ -37,7 +38,6 @@ namespace FISAcops
         {
             // Récupérer l'élève sélectionné
             var selectedStudentTag = ((Button)sender).Tag;
-            var mainWindow = (MainWindow)Window.GetWindow(this);
             int index = -1;
 
             // Rechercher l'indice de l'étudiant dans la liste
@@ -85,6 +85,11 @@ namespace FISAcops
 
         }
 
+        public void AddStudent_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.frame.Navigate(new StudentEdition());
+        }
+
         private static void SaveStudentsToJson(List<Student> students)
         {
             // Convertir la liste des étudiants en JSON
@@ -111,7 +116,7 @@ namespace FISAcops
         public Students()
         {
             InitializeComponent();
-
+            mainWindow = (MainWindow)Window.GetWindow(this);
             RefreshStudentsList();
 
             // Lier la liste d'étudiants à notre ListView
