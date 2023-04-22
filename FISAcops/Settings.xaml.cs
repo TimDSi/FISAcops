@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,10 +24,31 @@ namespace FISAcops
     public partial class Settings : Page
     {
         public string settingsPath = @"C:\Users\33652\AppData\Local\FISAcops\settings.json";
-        public string studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
-        public string groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+        public string studentsPath;
+        public string groupPath;
+        
 
-        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
+        private void SaveSettings(string studentsPath, string groupPath)
+        {
+            // Créer un objet JSON pour stocker les chemins de dossier
+            var jsonObject = new
+            {
+                StudentsPath = studentsPath,
+                GroupPath = groupPath
+            };
+
+            // Convertir l'objet JSON en une chaîne JSON
+            string jsonString = JsonSerializer.Serialize(jsonObject);
+
+            // Enregistrer la chaîne JSON dans un fichier
+            File.WriteAllText(settingsPath, jsonString);
+        }
+
+        private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings(studentsPath, groupPath);
+        }
+        private void BtnStudentsPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.FileName = "Folder Selection";
@@ -38,23 +60,60 @@ namespace FISAcops
 
             if (dialog.ShowDialog() == true)
             {
-                string selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    updateFolder(selectedFolder);
+                    studentsPath = selectedFolder;
+                    TxtStudentsPath.Text = selectedFolder;
                 }
-
             }
         }
 
-        private void updateFolder(string newFolder)
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
-            TxtFolderPath.Text = newFolder;
+            //Réinitialiser les valeurs par défaut
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\Students.json";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\Groups.json";
 
-            // Créer un objet JSON pour stocker le chemin de dossier
+            // Mettre à jour les fichiers de configuration JSON
+            SaveSettings(studentsPath, groupPath);
+
+            // Mettre à jour le texte du TextBox
+            TxtGroupPath.Text = groupPath;
+            TxtStudentsPath.Text = studentsPath;
+        }
+
+        private void BtnGroupPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.FileName = "Folder Selection";
+            dialog.Filter = "Folders|*.none";
+            dialog.ValidateNames = false;
+            dialog.CheckFileExists = false;
+            dialog.CheckPathExists = true;
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+
+            if (dialog.ShowDialog() == true)
+            {
+                string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                if (selectedFolder != null)
+                {
+                    groupPath = selectedFolder;
+                    TxtGroupPath.Text = selectedFolder;
+                }
+            }
+        }
+
+        private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+
+            // Créer un objet JSON pour stocker les chemins des fichiers
             var jsonObject = new
             {
-                filePath = newFolder
+                studentsPath = studentsPath,
+                groupPath = groupPath
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -64,17 +123,15 @@ namespace FISAcops
             File.WriteAllText(settingsPath, jsonString);
         }
 
+
+
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new MainPage());
         }
 
-        private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
-        {
-            var filePath = @"D:\Workspace\VisualStudio\FISAcops\FISAcops\settings.json";
-            updateFolder(filePath);
-        }
+        
 
         public Settings()
         {
@@ -89,13 +146,23 @@ namespace FISAcops
                 var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
 
                 // Vérifier si la propriété settingsPath existe dans l'objet JSON
-                if (jsonObject.TryGetProperty("filePath", out JsonElement settingsPathElement))
+                if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
                 {
                     // Récupérer la valeur de la propriété settingsPath
-                    string filePath = settingsPathElement.GetString();
+                    string? filePath = groupPathElement.GetString();
 
                     // Affecter la valeur de settingsPath à TxtFolderPath
-                    TxtFolderPath.Text = filePath;
+                    TxtGroupPath.Text = filePath;
+                }
+
+                // Vérifier si la propriété settingsPath existe dans l'objet JSON
+                if (jsonObject.TryGetProperty("StudentsPath", out JsonElement studentsPathElement))
+                {
+                    // Récupérer la valeur de la propriété settingsPath
+                    string? filePath = studentsPathElement.GetString();
+
+                    // Affecter la valeur de settingsPath à TxtFolderPath
+                    TxtStudentsPath.Text = filePath;
                 }
             }
         }

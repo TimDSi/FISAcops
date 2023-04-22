@@ -23,9 +23,16 @@
                    VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
-        <TextBox x:Name="TxtFolderPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,49,0,0" />
-        <Button Content="Parcourir" Click="BtnBrowse_Click" Height="20" Width="50" Grid.Row="1" Margin="301,48,449,182"  />
-        <Button x:Name="BtnSetFilePath" Content="LocalPath" Height="20" Width="70" Click="BtnSetLocalFilePath_Click" Margin="356,48,374,182" Grid.Row="1"/>
+        <TextBox x:Name="TxtStudentsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,48,0,0" Height="18" />
+        <Button Content="Parcourir" Click="BtnStudentsPath_Click" Height="20" Grid.Row="1" Margin="301,46,440,184" />
+
+        <TextBox x:Name="TxtGroupPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,72,0,0" />
+        <Button Content="Parcourir" Click="BtnGroupPath_Click" Height="20" Grid.Row="1" Margin="301,71,440,159" />
+
+        <Button x:Name="BtnSetFilePath" Content="Enregistrer" Height="20" Width="70" Click="BtnSetFilePath_Click" Margin="365,46,365,184" Grid.Row="1"/>
+        <Button x:Name="BtnReset" Content="Reset" Height="20" Width="70" Click="BtnReset_Click" Margin="365,71,365,159" Grid.Row="1" RenderTransformOrigin="0.473,0.22"/>
+
+
 
 
 
@@ -36,8 +43,5 @@
                 VerticalAlignment="Bottom" 
                 Click="BtnMainPage"
                 Grid.Row="2"/>
-        <TextBox x:Name="TxtFolderPath_Copy" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,49,0,0" />
-        <Button Content="Parcourir" Click="BtnBrowse_Click" Height="20" Width="50" Grid.Row="1" Margin="301,48,449,182"  />
-        <Button x:Name="BtnSetFilePath_Copy" Content="LocalPath" Height="20" Width="70" Click="BtnSetLocalFilePath_Click" Margin="356,48,374,182" Grid.Row="1"/>
     </Grid>
 </Page>
