@@ -25,7 +25,7 @@
         <!-- Contenu de la page ici -->
         <TextBox x:Name="TxtFolderPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,49,0,0" />
         <Button Content="Parcourir" Click="BtnBrowse_Click" Height="20" Width="50" Grid.Row="1" Margin="301,48,449,182"  />
-        <Button x:Name="BtnSetFilePath" Content="Set File Path" Click="BtnSetLocalFilePath_Click"/>
+        <Button x:Name="BtnSetFilePath" Content="LocalPath" Height="20" Width="70" Click="BtnSetLocalFilePath_Click" Margin="356,48,374,182" Grid.Row="1"/>
 
 
 
@@ -36,5 +36,8 @@
                 VerticalAlignment="Bottom" 
                 Click="BtnMainPage"
                 Grid.Row="2"/>
+        <TextBox x:Name="TxtFolderPath_Copy" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,49,0,0" />
+        <Button Content="Parcourir" Click="BtnBrowse_Click" Height="20" Width="50" Grid.Row="1" Margin="301,48,449,182"  />
+        <Button x:Name="BtnSetFilePath_Copy" Content="LocalPath" Height="20" Width="70" Click="BtnSetLocalFilePath_Click" Margin="356,48,374,182" Grid.Row="1"/>
     </Grid>
 </Page>

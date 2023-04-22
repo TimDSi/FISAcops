@@ -22,7 +22,10 @@ namespace FISAcops
     /// </summary>
     public partial class Settings : Page
     {
-        private string filePath = @"D:\Workspace\VisualStudio\FISAcops\FISAcops\settings.json";
+        public string settingsPath = @"C:\Users\33652\AppData\Local\FISAcops\settings.json";
+        public string studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
+        public string groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
@@ -36,20 +39,29 @@ namespace FISAcops
             if (dialog.ShowDialog() == true)
             {
                 string selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
-                TxtFolderPath.Text = selectedFolder;
-
-                // Créer un objet JSON pour stocker le chemin de dossier
-                var jsonObject = new
+                if (selectedFolder != null)
                 {
-                    settingsPath = selectedFolder
-                };
+                    updateFolder(selectedFolder);
+                }
 
-                // Convertir l'objet JSON en une chaîne JSON
-                string jsonString = JsonSerializer.Serialize(jsonObject);
-
-                // Enregistrer la chaîne JSON dans un fichier
-                File.WriteAllText(filePath, jsonString);
             }
+        }
+
+        private void updateFolder(string newFolder)
+        {
+            TxtFolderPath.Text = newFolder;
+
+            // Créer un objet JSON pour stocker le chemin de dossier
+            var jsonObject = new
+            {
+                filePath = newFolder
+            };
+
+            // Convertir l'objet JSON en une chaîne JSON
+            string jsonString = JsonSerializer.Serialize(jsonObject);
+
+            // Enregistrer la chaîne JSON dans un fichier
+            File.WriteAllText(settingsPath, jsonString);
         }
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -60,39 +72,30 @@ namespace FISAcops
 
         private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.FileName = "settings.json";
-            dialog.DefaultExt = ".json";
-            dialog.Filter = "JSON Files (*.json)|*.json|All files (*.*)|*.*";
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
-
-            if (dialog.ShowDialog() == true)
-            {
-                filePath = dialog.FileName;
-                // Utilisez le nouveau chemin d'accès pour le fichier "settings.json"
-            }
+            var filePath = @"D:\Workspace\VisualStudio\FISAcops\FISAcops\settings.json";
+            updateFolder(filePath);
         }
 
         public Settings()
         {
             InitializeComponent();
 
-            if (File.Exists(filePath))
+            if (File.Exists(settingsPath))
             {
                 // Lire le contenu du fichier JSON
-                string jsonString = File.ReadAllText(filePath);
+                string jsonString = File.ReadAllText(settingsPath);
 
                 // Désérialiser le contenu JSON en un objet
                 var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
 
                 // Vérifier si la propriété settingsPath existe dans l'objet JSON
-                if (jsonObject.TryGetProperty("settingsPath", out JsonElement settingsPathElement))
+                if (jsonObject.TryGetProperty("filePath", out JsonElement settingsPathElement))
                 {
                     // Récupérer la valeur de la propriété settingsPath
-                    string settingsPath = settingsPathElement.GetString();
+                    string filePath = settingsPathElement.GetString();
 
                     // Affecter la valeur de settingsPath à TxtFolderPath
-                    TxtFolderPath.Text = settingsPath;
+                    TxtFolderPath.Text = filePath;
                 }
             }
         }
