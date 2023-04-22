@@ -23,6 +23,9 @@ namespace FISAcops
     public partial class Students : Page
     {
 
+        private readonly static string appLocation = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly static string filePath = System.IO.Path.Combine(appLocation, "..\\..\\..\\Students\\students.json");
+
         private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -88,16 +91,12 @@ namespace FISAcops
             string json = JsonSerializer.Serialize(students);
 
             // Enregistrer le JSON dans le fichier "students.json"
-            string appLocation = @"D:\Projets\VisualStudio\FISAcops";
-            string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
             File.WriteAllText(filePath, json);
         }
 
         public void RefreshStudentsList()
         {
             // Charger les étudiants à partir du fichier JSON
-            string appLocation = @"D:\Projets\VisualStudio\FISAcops";
-            string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);

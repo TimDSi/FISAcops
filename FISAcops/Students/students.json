@@ -18,15 +18,15 @@
     "Promotion": "test"
   },
   {
-    "Nom": "test2",
-    "Prenom": "test",
-    "Mail": "test2.test@viacesi.fr",
-    "Promotion": "test"
-  },
-  {
     "Nom": "test",
     "Prenom": "test",
     "Mail": "test.test2@viacesi.fr",
     "Promotion": "test"
+  },
+  {
+    "Nom": "toto",
+    "Prenom": "gro",
+    "Mail": "toto.gro@viacesi.fr",
+    "Promotion": "anime"
   }
 ]

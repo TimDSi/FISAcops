@@ -24,15 +24,16 @@ namespace FISAcops
     /// </summary>
     public partial class StudentEdition : Page
     {
-        private readonly static string appLocation = @"D:\Projets\VisualStudio\FISAcops";
-        private readonly static string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
-        private static List<Student> students = new();
+        private readonly static string appLocation = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly static string filePath = System.IO.Path.Combine(appLocation, "..\\..\\..\\Students\\students.json");
+
+        private static List<Student> studentsList = new();
         private readonly int? selectedStudent;
 
         //Check if mail is already registered
         private static bool EmailExists(string email)
         {
-            return students.Any(s => s.Mail.ToLower() == email.ToLower());
+            return studentsList.Any(s => s.Mail.ToLower() == email.ToLower());
         }
 
         private void SaveStudent_Click(object sender, RoutedEventArgs e)
@@ -46,7 +47,7 @@ namespace FISAcops
 
             if (selectedStudent == null) {
                 // Ajouter un nouvel étudiant à la liste
-                students.Add(new Student
+                studentsList.Add(new Student
                 {
                     Nom = nomTextBox.Text,
                     Prenom = prenomTextBox.Text,
@@ -57,7 +58,7 @@ namespace FISAcops
             else
             {
                 // Edit étudiant de la liste
-                students[(int)selectedStudent] = (new Student
+                studentsList[(int)selectedStudent] = (new Student
                 {
                     Nom = nomTextBox.Text,
                     Prenom = prenomTextBox.Text,
@@ -73,7 +74,7 @@ namespace FISAcops
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 WriteIndented = true // Ajouter cette option pour formater le JSON de manière plus lisible
             };
-            string output = JsonSerializer.Serialize(students, options);
+            string output = JsonSerializer.Serialize(studentsList, options);
             File.WriteAllText(filePath, output, new UTF8Encoding(false));
 
             ReturnAndLoad();
@@ -145,13 +146,13 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                students = JsonSerializer.Deserialize<List<Student>>(json);
+                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
 
                 //supress warnings
-                if (students != null)
+                if (studentsList != null)
                 {
                     // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
-                    var student = students[selectedStudent];
+                    var student = studentsList[selectedStudent];
 
                     // Remplir les champs du formulaire avec les valeurs de cet élève
                     nomTextBox.Text = student.Nom;
@@ -169,7 +170,7 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                students = JsonSerializer.Deserialize<List<Student>>(json);
+                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
             }
         }
     }
