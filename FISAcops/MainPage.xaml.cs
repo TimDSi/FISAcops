@@ -35,7 +35,7 @@ namespace FISAcops
         private void BtnCreateGroup(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new CreateGroup());
+            mainWindow.frame.Navigate(new GroupEdition());
         }
 
         private void BtnGroups(object sender, RoutedEventArgs e)

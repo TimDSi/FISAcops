@@ -18,7 +18,7 @@ namespace FISAcops
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class CreateGroup : Page
+    public partial class GroupEdition : Page
     {
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -26,7 +26,7 @@ namespace FISAcops
             mainWindow.frame.Navigate(new MainPage());
         }
 
-        public CreateGroup()
+        public GroupEdition()
         {
             InitializeComponent();
             Title = "Créer un groupe"; // Ajoutez cette ligne pour modifier le titre de la fenêtre
