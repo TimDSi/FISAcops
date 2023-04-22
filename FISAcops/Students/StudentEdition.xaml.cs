@@ -91,6 +91,7 @@ namespace FISAcops
         //this function is for pre edit mail cause we need to be fast
         private void UpdateMail(object sender, RoutedEventArgs e)
         {
+            //delete accent
             string nom = RemoveDiacritics(nomTextBox.Text);
             string prenom = RemoveDiacritics(prenomTextBox.Text);
 
