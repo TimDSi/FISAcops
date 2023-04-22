@@ -23,7 +23,7 @@ namespace FISAcops
     public partial class Students : Page
     {
 
-        private static List<Student> StudentsList = new List<Student>();
+        private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -58,27 +58,31 @@ namespace FISAcops
 
         private void DeleteStudent_Click(object sender, RoutedEventArgs e)
         {
-            // Récupérer l'élève sélectionné
-            var selectedStudent = ((Button)sender).Tag as Student;
-
-            // Demander confirmation à l'utilisateur avant de supprimer l'élève
-            var result = MessageBox.Show($"Voulez-vous vraiment supprimer l'élève {selectedStudent.Nom} ?", "Confirmation de suppression", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            // retrive student list and selected student
+            if (
+                ((Button)sender).Tag is Student selectedStudent && 
+                studentsListView.ItemsSource is List<Student> students
+                )
             {
-                // Supprimer l'élève de la liste des étudiants
-                var students = studentsListView.ItemsSource as List<Student>;
-                students.Remove(selectedStudent);
+                // Demander confirmation à l'utilisateur avant de supprimer l'élève
+                var result = MessageBox.Show($"Voulez-vous vraiment supprimer l'élève {selectedStudent.Nom} ?", "Confirmation de suppression", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Supprimer l'élève de la liste des étudiants
+                    students.Remove(selectedStudent);
 
-                // Rafraîchir la liste des étudiants
-                studentsListView.ItemsSource = null;
-                studentsListView.ItemsSource = students;
+                    // Rafraîchir la liste des étudiants
+                    studentsListView.ItemsSource = null;
+                    studentsListView.ItemsSource = students;
 
-                // Enregistrer les modifications dans le fichier JSON
-                SaveStudentsToJson(students);
+                    // Enregistrer les modifications dans le fichier JSON
+                    SaveStudentsToJson(students);
+                }
             }
+
         }
 
-        private void SaveStudentsToJson(List<Student> students)
+        private static void SaveStudentsToJson(List<Student> students)
         {
             // Convertir la liste des étudiants en JSON
             string json = JsonSerializer.Serialize(students);

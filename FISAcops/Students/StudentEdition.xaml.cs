@@ -24,13 +24,13 @@ namespace FISAcops
     /// </summary>
     public partial class StudentEdition : Page
     {
-        private static string appLocation = @"D:\Projets\VisualStudio\FISAcops";
-        private static string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
-        private static List<Student> students = new List<Student>();
-        private int? selectedStudent;
+        private readonly static string appLocation = @"D:\Projets\VisualStudio\FISAcops";
+        private readonly static string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
+        private static List<Student> students = new();
+        private readonly int? selectedStudent;
 
         //Check if mail is already registered
-        private bool EmailExists(string email)
+        private static bool EmailExists(string email)
         {
             return students.Any(s => s.Mail.ToLower() == email.ToLower());
         }
@@ -146,14 +146,18 @@ namespace FISAcops
                 string json = File.ReadAllText(filePath);
                 students = JsonSerializer.Deserialize<List<Student>>(json);
 
-                // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
-                var student = students[selectedStudent];
+                //supress warnings
+                if (students != null)
+                {
+                    // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
+                    var student = students[selectedStudent];
 
-                // Remplir les champs du formulaire avec les valeurs de cet élève
-                nomTextBox.Text = student.Nom;
-                prenomTextBox.Text = student.Prenom;
-                mailTextBox.Text = student.Mail;
-                promoTextBox.Text = student.Promotion;
+                    // Remplir les champs du formulaire avec les valeurs de cet élève
+                    nomTextBox.Text = student.Nom;
+                    prenomTextBox.Text = student.Prenom;
+                    mailTextBox.Text = student.Mail;
+                    promoTextBox.Text = student.Promotion;
+                }
             }
         }
 
