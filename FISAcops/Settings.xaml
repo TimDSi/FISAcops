@@ -1,4 +1,4 @@
-﻿<Page x:Class="FISAcops.Parameters"
+﻿<Page x:Class="FISAcops.Settings"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:FISAcops"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Parameters">
+      Title="Settings">
 
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
@@ -23,6 +23,11 @@
                    VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
+        <TextBox x:Name="TxtFolderPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,49,0,0" />
+        <Button Content="Parcourir" Click="BtnBrowse_Click" Height="20" Width="50" Grid.Row="1" Margin="301,48,449,182"  />
+        <Button x:Name="BtnSetFilePath" Content="Set File Path" Click="BtnSetLocalFilePath_Click"/>
+
+
 
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 

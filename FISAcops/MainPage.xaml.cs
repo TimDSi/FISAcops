@@ -35,7 +35,7 @@ namespace FISAcops
         private void BtnParameters(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new Parameters());
+            mainWindow.frame.Navigate(new Settings());
         }
 
         private void BtnGroups(object sender, RoutedEventArgs e)
