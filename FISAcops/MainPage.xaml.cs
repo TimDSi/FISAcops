@@ -32,10 +32,10 @@ namespace FISAcops
             mainWindow.frame.Navigate(new Calender());
         }
 
-        private void BtnCreateGroup(object sender, RoutedEventArgs e)
+        private void BtnParameters(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new GroupEdition());
+            mainWindow.frame.Navigate(new Parameters());
         }
 
         private void BtnGroups(object sender, RoutedEventArgs e)
