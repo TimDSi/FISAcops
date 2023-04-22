@@ -22,7 +22,8 @@ namespace FISAcops
     /// </summary>
     public partial class Students : Page
     {
-        private static List<Student> students = new List<Student>();
+
+        private static List<Student> StudentsList = new List<Student>();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -40,13 +41,13 @@ namespace FISAcops
             if (selectedStudentTag != null)
             {
                 Student selectedStudent = (Student)selectedStudentTag;
-                index = students.IndexOf(selectedStudent);
+                index = StudentsList.IndexOf(selectedStudent);
             }
 
             if (index >= 0)
             {
                 // Naviguer vers la page d'édition de l'étudiant
-                mainWindow.frame.Navigate(new EditStudent(index));
+                mainWindow.frame.Navigate(new StudentEdition(index));
             }
             else
             {
@@ -88,22 +89,30 @@ namespace FISAcops
             File.WriteAllText(filePath, json);
         }
 
-        public Students()
+        public void RefreshStudentsList()
         {
-            InitializeComponent();
-            
-
             // Charger les étudiants à partir du fichier JSON
             string appLocation = @"D:\Projets\VisualStudio\FISAcops";
             string filePath = System.IO.Path.Combine(appLocation, "FISAcops", "Students", "students.json");
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                students = JsonSerializer.Deserialize<List<Student>>(json);
+                StudentsList = JsonSerializer.Deserialize<List<Student>>(json);
             }
 
+            // Rafraîchir la source de données de la ListView
+            studentsListView.ItemsSource = null;
+            studentsListView.ItemsSource = StudentsList;
+        }
+
+        public Students()
+        {
+            InitializeComponent();
+
+            RefreshStudentsList();
+
             // Lier la liste d'étudiants à notre ListView
-            studentsListView.ItemsSource = students;
+            studentsListView.ItemsSource = StudentsList;
             Title = "Liste des élèves"; // Ajoutez cette ligne pour modifier le titre de la fenêtre
 
         }

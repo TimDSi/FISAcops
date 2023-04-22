@@ -2,7 +2,19 @@
   {
     "Nom": "Théotime",
     "Prenom": "D'Silva",
-    "Mail": "théotime.dsilva@viacesi.fr",
+    "Mail": "théotime.d'silva@viacesi.fr",
     "Promotion": "FISA"
+  },
+  {
+    "Nom": "Eddy",
+    "Prenom": "Nkongue",
+    "Mail": "eddy.nkongue@viacesi.fr",
+    "Promotion": "FIAS"
+  },
+  {
+    "Nom": "test",
+    "Prenom": "test",
+    "Mail": "test.test@viacesi.fr",
+    "Promotion": "test"
   }
 ]

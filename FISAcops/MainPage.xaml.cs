@@ -47,7 +47,7 @@ namespace FISAcops
         private void BtnCreateStudent(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new CreateStudent());
+            mainWindow.frame.Navigate(new StudentEdition());
         }
 
         private void BtnStudents(object sender, RoutedEventArgs e)
