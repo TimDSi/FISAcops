@@ -125,17 +125,8 @@ namespace FISAcops
             // Récupérer la fenêtre courante
             var mainWindow = (MainWindow)Window.GetWindow(this);
 
-            if (selectedStudent != null)
-            {
-                // Rafraîchir la liste des étudiants dans la page Students
-                mainWindow.frame.Navigate(new Students());
-            }
-            else
-            {
-                // Naviguer vers la page précédente
-                mainWindow.frame.GoBack();
-            }
-
+            // Navigate to Students
+            mainWindow.frame.Navigate(new Students());
         }
 
         public StudentEdition(int selectedStudent)

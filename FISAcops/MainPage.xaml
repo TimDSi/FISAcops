@@ -14,7 +14,6 @@
             <Button Content="Calendrier d'appels" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCalender"/>
             <Button Content="Créer un groupe" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCreateGroup"/>
             <Button Content="Liste des groupes" Margin="0,0,0,10" Width="200" Height="30" Click="BtnGroups"/>
-            <Button Content="Créer un élève" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCreateStudent"/>
             <Button Content="Liste des élèves" Margin="0,0,0,10" Width="200" Height="30" Click="BtnStudents"/>
         </StackPanel>
     </Grid>
