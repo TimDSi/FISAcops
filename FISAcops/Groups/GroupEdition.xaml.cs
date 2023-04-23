@@ -20,7 +20,6 @@ namespace FISAcops
         private List<Student> SelectedStudents = new();
 
         private List<Group> groupsList = new();
-        private int index;
         private readonly int? selectedGroup;
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -31,16 +30,24 @@ namespace FISAcops
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox checkBox = sender as CheckBox;
-            Student student = checkBox.DataContext as Student;
+            if (sender is CheckBox checkBox)
+            {
+            if (checkBox.DataContext is Student student)
+            {
             SelectedStudents.Add(student);
+            }
+            }
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            CheckBox checkBox = sender as CheckBox;
-            Student student = checkBox.DataContext as Student;
+            if (sender is CheckBox checkBox)
+            {
+            if (checkBox.DataContext is Student student)
+            {
             SelectedStudents.Remove(student);
+            }
+            }
         }
 
 
