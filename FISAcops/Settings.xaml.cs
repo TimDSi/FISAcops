@@ -25,7 +25,7 @@ namespace FISAcops
     {
         public string settingsPath = @"C:\Users\33652\AppData\Local\FISAcops\settings.json";
         public string studentsPath;
-        public string groupPath;
+        public string groupsPath;
         
 
         private void SaveSettings(string studentsPath, string groupPath)
@@ -46,7 +46,7 @@ namespace FISAcops
 
         private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
         {
-            SaveSettings(studentsPath, groupPath);
+            SaveSettings(studentsPath, groupsPath);
         }
         private void BtnStudentsPath_Click(object sender, RoutedEventArgs e)
         {
@@ -73,13 +73,13 @@ namespace FISAcops
         {
             //Réinitialiser les valeurs par défaut
             studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupsPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupPath);
+            SaveSettings(studentsPath, groupsPath);
 
             // Mettre à jour le texte du TextBox
-            TxtGroupPath.Text = groupPath;
+            TxtGroupPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
         }
 
@@ -98,7 +98,7 @@ namespace FISAcops
                 string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    groupPath = selectedFolder;
+                    groupsPath = selectedFolder;
                     TxtGroupPath.Text = selectedFolder;
                 }
             }
@@ -107,13 +107,13 @@ namespace FISAcops
         private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
         {
             studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupsPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Créer un objet JSON pour stocker les chemins des fichiers
             var jsonObject = new
             {
                 studentsPath = studentsPath,
-                groupPath = groupPath
+                groupPath = groupsPath
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -138,7 +138,7 @@ namespace FISAcops
             InitializeComponent();
 
             studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupsPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Lire le contenu du fichier JSON
             string jsonString = File.ReadAllText(settingsPath);
@@ -156,7 +156,7 @@ namespace FISAcops
                 // Affecter la valeur de settingsPath à TxtFolderPath
                 if (filePath != null)
                 {
-                    groupPath = filePath;
+                    groupsPath = filePath;
                 }
             }
 
@@ -173,7 +173,7 @@ namespace FISAcops
                 }
             }
 
-            TxtGroupPath.Text = groupPath;
+            TxtGroupPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
         }
     }

@@ -23,7 +23,43 @@
                    VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
+        <ListView Name="groupsListView" Margin="10" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding Nom}" Width="120"/>
+                    <GridViewColumn Header="Membres" Width="250">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ListBox ItemsSource="{Binding Membres}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Modifier" Click="EditGroup_Click" Tag="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Supprimer" Click="DeleteGroup_Click" Tag="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
+        <!-- Bouton en bas à gauche -->
+        <Button Content="Ajouter un groupe" 
+        Margin="20,0,0,20" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Bottom" 
+        Click="AddGroup_Click"
+        Grid.Row="3"/>
+        
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 
                 Margin="0,0,20,20" 
