@@ -20,7 +20,7 @@ namespace FISAcops
         private List<Student> SelectedStudents = new();
 
         private List<Group> groupsList = new();
-        private readonly int? selectedGroup;
+        private readonly int selectedGroup;
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -58,7 +58,7 @@ namespace FISAcops
             bool groupNameExists = groupsList.Any(group => group.GroupName == nomTextBox.Text);
 
 
-            if (selectedGroup == null)
+            if (selectedGroup == -1)
             {
                 if (groupNameExists)
                 {
@@ -72,7 +72,7 @@ namespace FISAcops
             }
             else
             {
-                if (groupNameExists && groupsList[selectedGroup.Value].GroupName != nomTextBox.Text)
+                if (groupNameExists && groupsList[selectedGroup].GroupName != nomTextBox.Text)
                 {
                     // Afficher un message d'erreur si un groupe avec le même nom existe déjà et que ce n'est pas le groupe actuellement sélectionné
                     MessageBox.Show("Un groupe avec le même nom existe déjà. Veuillez choisir un nom différent.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -80,8 +80,8 @@ namespace FISAcops
                 }
 
                 // Modifier le groupe sélectionné dans la liste
-                groupsList[selectedGroup.Value].GroupName = nomTextBox.Text;
-                groupsList[selectedGroup.Value].StudentsList = SelectedStudents;
+                groupsList[selectedGroup].GroupName = nomTextBox.Text;
+                groupsList[selectedGroup].StudentsList = SelectedStudents;
             }
 
 
@@ -107,32 +107,7 @@ namespace FISAcops
         }
 
 
-        public GroupEdition()
-        {
-            InitializeComponent();
-
-            string studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
-
-            // Charger les étudiants à partir du fichier JSON
-            if (File.Exists(studentsPath))
-            {
-                string json = File.ReadAllText(studentsPath);
-                AvailableStudents = JsonSerializer.Deserialize<List<Student>>(json);
-                SelectedStudents = JsonSerializer.Deserialize<List<Student>>(json);
-            }
-
-            if (File.Exists(groupPath))
-            {
-                string json = File.ReadAllText(groupPath);
-                groupsList = JsonSerializer.Deserialize<List<Group>>(json);
-            }
-
-            dgStudents2.ItemsSource = AvailableStudents;
-            dgStudents1.Visibility = Visibility.Collapsed;
-
-        }
-
-        public GroupEdition(int selectedGroup)
+        public GroupEdition(int selectedGroup = -1)
         {
             InitializeComponent();
             this.selectedGroup = selectedGroup;
@@ -149,16 +124,41 @@ namespace FISAcops
             {
                 string json = File.ReadAllText(groupPath);
                 groupsList = JsonSerializer.Deserialize<List<Group>>(json);
-                SelectedStudents = groupsList[selectedGroup].StudentsList;
-                nomTextBox.Text = groupsList[selectedGroup].GroupName;
+
+                if (selectedGroup == -1)
+                {
+                    // Pas de groupe sélectionné, initialiser la liste des étudiants sélectionnés
+                    SelectedStudents = new List<Student>();
+                }
+                else
+                {
+                    // Groupe sélectionné, charger la liste des étudiants sélectionnés
+                    SelectedStudents = groupsList[selectedGroup].StudentsList;
+                    nomTextBox.Text = groupsList[selectedGroup].GroupName;
+                }
 
                 // Supprimer les étudiants sélectionnés de la liste AvailableStudents
                 AvailableStudents.RemoveAll(student => SelectedStudents.Any(s => s.Mail == student.Mail));
             }
-
+            else
+            {
+                // Pas de fichier de groupe, initialiser la liste des étudiants sélectionnés
+                SelectedStudents = new List<Student>();
+            }
 
             dgStudents2.ItemsSource = AvailableStudents;
             dgStudents1.ItemsSource = SelectedStudents;
+
+            if (selectedGroup == -1)
+            {
+                // Aucun groupe sélectionné, masquer la liste des étudiants sélectionnés
+                dgStudents1.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Groupe sélectionné, afficher la liste des étudiants sélectionnés
+                dgStudents1.Visibility = Visibility.Visible;
+            }
         }
     }
 }
