@@ -18,7 +18,7 @@ namespace FISAcops
         private readonly string filePath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
 
         private static List<Student> studentsList = new();
-        private readonly int? selectedStudent;
+        private readonly int selectedStudent;
 
         //Check if mail is already registered
         private static bool EmailExists(string email)
@@ -35,7 +35,7 @@ namespace FISAcops
                 return;
             }
 
-            if (selectedStudent == null) {
+            if (selectedStudent == -1) {
                 // Ajouter un nouvel étudiant à la liste
                 studentsList.Add(new Student
                 {
@@ -48,7 +48,7 @@ namespace FISAcops
             else
             {
                 // Edit étudiant de la liste
-                studentsList[(int)selectedStudent] = (new Student
+                studentsList[selectedStudent] = (new Student
                 {
                     Nom = nomTextBox.Text,
                     Prenom = prenomTextBox.Text,
@@ -83,20 +83,20 @@ namespace FISAcops
         private void UpdateMail(object sender, RoutedEventArgs e)
         {
             //delete accent
-            string nom = RemoveDiacritics(nomTextBox.Text);
-            string prenom = RemoveDiacritics(prenomTextBox.Text);
+            string? nom = RemoveDiacritics(nomTextBox.Text);
+            string? prenom = RemoveDiacritics(prenomTextBox.Text);
 
             // Supprimer les caractères spéciaux
             nom = Regex.Replace(nom, "[^a-zA-Z]+", "");
             prenom = Regex.Replace(prenom, "[^a-zA-Z]+", "");
 
             // Construire la nouvelle adresse e-mail avec nom et prénom
-            string newMail = $"{nom.ToLower()}.{prenom.ToLower()}@viacesi.fr";
+            string newMail = $"{prenom.ToLower()}.{nom.ToLower()}@viacesi.fr";
 
             int number = 2;
             while (EmailExists(newMail))
             {
-                newMail = $"{nom.ToLower()}.{prenom.ToLower()}{number}@viacesi.fr";
+                newMail = $"{prenom.ToLower()}.{nom.ToLower()}{number}@viacesi.fr";
                 number++;
             }
 
@@ -119,7 +119,7 @@ namespace FISAcops
             mainWindow.frame.Navigate(new Students());
         }
 
-        public StudentEdition(int selectedStudent)
+        public StudentEdition(int selectedStudent = -1)
         {
             InitializeComponent();
             this.selectedStudent = selectedStudent;
@@ -129,8 +129,8 @@ namespace FISAcops
                 string json = File.ReadAllText(filePath);
                 studentsList = JsonSerializer.Deserialize<List<Student>>(json);
 
-                //supress warnings
-                if (studentsList != null)
+                // Vérifier si un élève est sélectionné ou non
+                if (selectedStudent != -1 && studentsList != null)
                 {
                     // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
                     var student = studentsList[selectedStudent];
@@ -141,17 +141,6 @@ namespace FISAcops
                     mailTextBox.Text = student.Mail;
                     promoTextBox.Text = student.Promotion;
                 }
-            }
-        }
-
-        public StudentEdition()
-        {
-            InitializeComponent();
-            // Charger les étudiants existants à partir du fichier JSON
-            if (File.Exists(filePath))
-            {
-                string json = File.ReadAllText(filePath);
-                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
             }
         }
     }

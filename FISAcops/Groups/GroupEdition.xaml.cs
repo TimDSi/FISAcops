@@ -16,10 +16,10 @@ namespace FISAcops
 
         private readonly string groupPath = System.IO.Path.Combine(new Settings().studentsPath, "groups.json");
 
-        private List<Student> AvailableStudents = new();
-        private List<Student> SelectedStudents = new();
+        private readonly List<Student> AvailableStudents = new();
+        private readonly List<Student> SelectedStudents = new();
 
-        private List<Group> groupsList = new();
+        private readonly List<Group> groupsList = new();
         private readonly int selectedGroup;
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -130,15 +130,15 @@ namespace FISAcops
                     // Pas de groupe sélectionné, initialiser la liste des étudiants sélectionnés
                     SelectedStudents = new List<Student>();
                 }
-                else
+                else if (groupsList != null) 
                 {
                     // Groupe sélectionné, charger la liste des étudiants sélectionnés
-                    SelectedStudents = groupsList[selectedGroup].StudentsList;
+                    SelectedStudents =  groupsList[selectedGroup].StudentsList;
                     nomTextBox.Text = groupsList[selectedGroup].GroupName;
                 }
 
                 // Supprimer les étudiants sélectionnés de la liste AvailableStudents
-                AvailableStudents.RemoveAll(student => SelectedStudents.Any(s => s.Mail == student.Mail));
+                AvailableStudents?.RemoveAll(student => SelectedStudents.Any(s => s.Mail == student.Mail));
             }
             else
             {
