@@ -137,14 +137,17 @@ namespace FISAcops
         {
             InitializeComponent();
 
-            if (File.Exists(settingsPath))
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+
+            // Lire le contenu du fichier JSON
+            string jsonString = File.ReadAllText(settingsPath);
+
+            // Désérialiser le contenu JSON en un objet
+            var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
+
+            if (jsonObject != null)
             {
-                // Lire le contenu du fichier JSON
-                string jsonString = File.ReadAllText(settingsPath);
-
-                // Désérialiser le contenu JSON en un objet
-                var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
-
                 // Vérifier si la propriété settingsPath existe dans l'objet JSON
                 if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
                 {
@@ -152,7 +155,10 @@ namespace FISAcops
                     string? filePath = groupPathElement.GetString();
 
                     // Affecter la valeur de settingsPath à TxtFolderPath
-                    TxtGroupPath.Text = filePath;
+                    if (filePath != null)
+                    {
+                        groupPath = filePath;
+                    }
                 }
 
                 // Vérifier si la propriété settingsPath existe dans l'objet JSON
@@ -162,9 +168,14 @@ namespace FISAcops
                     string? filePath = studentsPathElement.GetString();
 
                     // Affecter la valeur de settingsPath à TxtFolderPath
-                    TxtStudentsPath.Text = filePath;
+                    if (filePath != null)
+                    {
+                        studentsPath = filePath;
+                    }
                 }
             }
+            TxtGroupPath.Text = groupPath;
+            TxtStudentsPath.Text = studentsPath;
         }
     }
 }

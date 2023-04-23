@@ -137,7 +137,8 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
+                // Désérialiser le contenu JSON en un objet
+                var studentsList = JsonSerializer.Deserialize<dynamic>(json);
 
                 //supress warnings
                 if (studentsList != null)
@@ -161,7 +162,8 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
+                // Désérialiser le contenu JSON en un objet
+                var studentsList = JsonSerializer.Deserialize<dynamic>(json);
             }
         }
     }
