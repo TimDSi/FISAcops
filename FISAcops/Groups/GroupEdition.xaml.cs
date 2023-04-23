@@ -117,7 +117,10 @@ namespace FISAcops
             if (File.Exists(studentsPath))
             {
                 string json = File.ReadAllText(studentsPath);
-                AvailableStudents = JsonSerializer.Deserialize<List<Student>>(json);
+                if (json != null)
+                {
+                    AvailableStudents = JsonSerializer.Deserialize<List<Student>>(json);
+                }
             }
 
             if (File.Exists(groupPath))
