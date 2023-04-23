@@ -59,7 +59,7 @@ namespace FISAcops
             var mainWindow = (MainWindow)Window.GetWindow(this);
 
             // Navigate to Students
-            mainWindow.frame.Navigate(new Students());
+            mainWindow.frame.Navigate(new Groups());
         }
 
         private void RefreshLists()
