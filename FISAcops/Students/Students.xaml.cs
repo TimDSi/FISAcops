@@ -24,8 +24,7 @@ namespace FISAcops
     public partial class Students : Page
     {
 
-        private readonly static string appLocation = AppDomain.CurrentDomain.BaseDirectory;
-        private readonly static string filePath = System.IO.Path.Combine(appLocation, "..\\..\\..\\Students\\students.json");
+        private string filePath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
 
         private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -92,7 +91,7 @@ namespace FISAcops
             mainWindow.frame.Navigate(new StudentEdition());
         }
 
-        private static void SaveStudentsToJson(List<Student> students)
+        private void SaveStudentsToJson(List<Student> students)
         {
             // Convertir la liste des étudiants en JSON
             string json = JsonSerializer.Serialize(students);
@@ -119,7 +118,6 @@ namespace FISAcops
         {
             InitializeComponent();
             RefreshStudentsList();
-
             // Lier la liste d'étudiants à notre ListView
             studentsListView.ItemsSource = StudentsList;
             Title = "Liste des élèves"; // Ajoutez cette ligne pour modifier le titre de la fenêtre

@@ -1,15 +1,9 @@
 [
   {
-    "Nom": "Théotime",
-    "Prenom": "D'Silva",
-    "Mail": "theotime.dsilva@viacesi.fr",
+    "Nom": "Dsilvaa",
+    "Prenom": "Théotime",
+    "Mail": "dsilvaa.theotime@viacesi.fr",
     "Promotion": "FISA"
-  },
-  {
-    "Nom": "Eddy",
-    "Prenom": "Nkongue",
-    "Mail": "eddy.nkongue@viacesi.fr",
-    "Promotion": "FIAS"
   },
   {
     "Nom": "test",
@@ -18,21 +12,9 @@
     "Promotion": "test"
   },
   {
-    "Nom": "test",
-    "Prenom": "test",
-    "Mail": "test.test2@viacesi.fr",
-    "Promotion": "test"
-  },
-  {
-    "Nom": "Siri",
-    "Prenom": "hack",
-    "Mail": "siri.hack@viacesi.fr",
-    "Promotion": "2254"
-  },
-  {
     "Nom": "Pablo",
-    "Prenom": "escobar",
-    "Mail": "pablo.escobar@viacesi.fr",
-    "Promotion": "tetard"
+    "Prenom": "Pablo",
+    "Mail": "pablo.pablo@viacesi.fr",
+    "Promotion": "Pablo"
   }
 ]

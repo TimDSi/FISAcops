@@ -24,8 +24,7 @@ namespace FISAcops
     /// </summary>
     public partial class StudentEdition : Page
     {
-        private readonly static string appLocation = AppDomain.CurrentDomain.BaseDirectory;
-        private readonly static string filePath = System.IO.Path.Combine(appLocation, "..\\..\\..\\Students\\students.json");
+        private readonly string filePath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
 
         private static List<Student> studentsList = new();
         private readonly int? selectedStudent;
@@ -137,8 +136,7 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                // Désérialiser le contenu JSON en un objet
-                var studentsList = JsonSerializer.Deserialize<dynamic>(json);
+                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
 
                 //supress warnings
                 if (studentsList != null)
@@ -162,8 +160,7 @@ namespace FISAcops
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                // Désérialiser le contenu JSON en un objet
-                var studentsList = JsonSerializer.Deserialize<dynamic>(json);
+                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
             }
         }
     }

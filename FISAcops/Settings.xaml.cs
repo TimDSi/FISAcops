@@ -72,8 +72,8 @@ namespace FISAcops
         private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
             //Réinitialiser les valeurs par défaut
-            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\Students.json";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\Groups.json";
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Mettre à jour les fichiers de configuration JSON
             SaveSettings(studentsPath, groupPath);
@@ -106,8 +106,8 @@ namespace FISAcops
 
         private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
         {
-            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Créer un objet JSON pour stocker les chemins des fichiers
             var jsonObject = new
@@ -137,8 +137,8 @@ namespace FISAcops
         {
             InitializeComponent();
 
-            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops\students.json";
-            groupPath = @"C:\Users\33652\AppData\Local\FISAcops\group.json";
+            studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
+            groupPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Lire le contenu du fichier JSON
             string jsonString = File.ReadAllText(settingsPath);
@@ -146,8 +146,8 @@ namespace FISAcops
             // Désérialiser le contenu JSON en un objet
             var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
 
-            if (jsonObject != null)
-            {
+            //if (jsonObject != null)
+            //{
                 // Vérifier si la propriété settingsPath existe dans l'objet JSON
                 if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
                 {
@@ -173,7 +173,7 @@ namespace FISAcops
                         studentsPath = filePath;
                     }
                 }
-            }
+            //}
             TxtGroupPath.Text = groupPath;
             TxtStudentsPath.Text = studentsPath;
         }
