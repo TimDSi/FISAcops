@@ -146,34 +146,33 @@ namespace FISAcops
             // Désérialiser le contenu JSON en un objet
             var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
 
-            //if (jsonObject != null)
-            //{
-                // Vérifier si la propriété settingsPath existe dans l'objet JSON
-                if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
+            
+            // Vérifier si la propriété settingsPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
+            {
+                // Récupérer la valeur de la propriété settingsPath
+                string? filePath = groupPathElement.GetString();
+
+                // Affecter la valeur de settingsPath à TxtFolderPath
+                if (filePath != null)
                 {
-                    // Récupérer la valeur de la propriété settingsPath
-                    string? filePath = groupPathElement.GetString();
-
-                    // Affecter la valeur de settingsPath à TxtFolderPath
-                    if (filePath != null)
-                    {
-                        groupPath = filePath;
-                    }
+                    groupPath = filePath;
                 }
+            }
 
-                // Vérifier si la propriété settingsPath existe dans l'objet JSON
-                if (jsonObject.TryGetProperty("StudentsPath", out JsonElement studentsPathElement))
+            // Vérifier si la propriété settingsPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("StudentsPath", out JsonElement studentsPathElement))
+            {
+                // Récupérer la valeur de la propriété settingsPath
+                string? filePath = studentsPathElement.GetString();
+
+                // Affecter la valeur de settingsPath à TxtFolderPath
+                if (filePath != null)
                 {
-                    // Récupérer la valeur de la propriété settingsPath
-                    string? filePath = studentsPathElement.GetString();
-
-                    // Affecter la valeur de settingsPath à TxtFolderPath
-                    if (filePath != null)
-                    {
-                        studentsPath = filePath;
-                    }
+                    studentsPath = filePath;
                 }
-            //}
+            }
+
             TxtGroupPath.Text = groupPath;
             TxtStudentsPath.Text = studentsPath;
         }
