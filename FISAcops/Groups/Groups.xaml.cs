@@ -23,27 +23,30 @@ namespace FISAcops
 
         private void EditGroup_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            // Récupère le groupe sélectionné
-            Groupe groupeSelectionne = ((Button)sender).Tag as Groupe;
+            // Récupérer l'élève sélectionné
+            var selectedGroupTag = ((Button)sender).Tag;
+            int index = -1;
 
-            // Ouvre la fenêtre pour modifier le groupe
-            ModifierGroupe modifierGroupe = new ModifierGroupe(groupeSelectionne);
-            modifierGroupe.Owner = Application.Current.MainWindow;
-            modifierGroupe.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            // Affiche la fenêtre en mode modal
-            bool? dialogResult = modifierGroupe.ShowDialog();
-
-            // Si l'utilisateur a cliqué sur le bouton "Modifier"
-            if (dialogResult == true)
+            // Rechercher l'indice de l'étudiant dans la liste
+            if (selectedGroupTag != null)
             {
-                // Met à jour le groupe modifié
-                groupeSelectionne.Nom = modifierGroupe.nomGroupeTextBox.Text;
-                groupeSelectionne.Membres = modifierGroupe.membresGroupeTextBox.Text.Split(',').ToList();
-                groupsListView.Items.Refresh();
+                Group selectedGroup = (Group)selectedGroupTag;
+                index = groupsList.IndexOf(selectedGroup);
             }
-            */
+
+            if (index >= 0)
+            {
+                // Naviguer vers la page d'édition de l'étudiant
+                var mainWindow = (MainWindow)Window.GetWindow(this);
+                mainWindow.frame.Navigate(new GroupEdition(index));
+            }
+            else
+            {
+                // L'étudiant sélectionné n'a pas été trouvé dans la liste
+                // Gérer cette situation en conséquence
+            }
+
+
         }
 
 
@@ -80,10 +83,10 @@ namespace FISAcops
 
         private void SaveGroupsToJson(List<Group> groupList)
         {
-            // Convertir la liste des étudiants en JSON
+            // Convertir la liste des groupes en JSON
             string json = JsonSerializer.Serialize(groupList);
 
-            // Enregistrer le JSON dans le fichier "^groups.json"
+            // Écrire le JSON dans le fichier
             File.WriteAllText(filePath, json);
         }
 
@@ -105,7 +108,6 @@ namespace FISAcops
         {
             InitializeComponent();
             RefreshGroupsList();
-            groupsList = new List<Group>();
             groupsListView.ItemsSource = groupsList;
         }
 

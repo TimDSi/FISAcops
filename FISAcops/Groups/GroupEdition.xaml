@@ -28,26 +28,46 @@
             <TextBox Name="nomTextBox"/>
 
             <StackPanel Orientation="Vertical">
+
+
                 <DataGrid Name="dgStudents1" 
-                          Margin="5" 
-                          AutoGenerateColumns="False" 
-                          ItemsSource="{Binding Students1}">
+                            Margin="5" 
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding SelectedStudents}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}"/>
-                        <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Nom" Binding="{Binding Nom}"/>
+                        <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}"/>
+                        <DataGridTemplateColumn Header="Inclure">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+
+
                 <DataGrid Name="dgStudents2" 
-                          Margin="5" 
-                          AutoGenerateColumns="False" 
-                          ItemsSource="{Binding Students2}">
+                            Margin="5" 
+                            AutoGenerateColumns="False" 
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding AvailableStudents}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}"/>
-                        <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Nom" Binding="{Binding Nom}"/>
+                        <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}"/>
+                        <DataGridTemplateColumn Header="Inclure">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="False" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                
+               
             </StackPanel>
 
 

@@ -26,7 +26,7 @@
         <ListView Name="groupsListView" Margin="10" Grid.Row="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding Nom}" Width="120"/>
+                    <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding GroupName}" Width="120"/>
                     <GridViewColumn Header="Membres" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

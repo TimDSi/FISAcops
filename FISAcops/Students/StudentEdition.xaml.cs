@@ -116,7 +116,7 @@ namespace FISAcops
             var mainWindow = (MainWindow)Window.GetWindow(this);
 
             // Navigate to Students
-            mainWindow.frame.Navigate(new Groups());
+            mainWindow.frame.Navigate(new Students());
         }
 
         public StudentEdition(int selectedStudent)
