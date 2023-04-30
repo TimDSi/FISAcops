@@ -32,8 +32,7 @@ namespace FISAcops
         public Checker()
         {
             InitializeComponent();
-            MainChecker();
-
+            Task.Run(() => MainChecker());
         }
 
 
@@ -56,14 +55,14 @@ namespace FISAcops
                 int bytesRead = stream.Read(data, 0, data.Length);
                 string receivedMessage = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
 
+                // Stockage du message reçu
+                tbStatus.Dispatcher.Invoke(() => tbStatus.Text = receivedMessage);
+
                 // Fermeture de la connexion avec le client
                 client.Close();
 
                 // Arrêt du serveur
                 server.Stop();
-
-                // Stockage du message reçu
-                tbStatus.Text = receivedMessage;
             }
             catch (Exception ex)
             {
