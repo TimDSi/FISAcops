@@ -49,7 +49,7 @@ namespace FISAcops
         }
 
 
-        private List<Group> LoadGroupsFromJson()
+        private static List<Group> LoadGroupsFromJson()
         {
             var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
             if (!File.Exists(groupPath))
@@ -60,7 +60,7 @@ namespace FISAcops
             return JsonSerializer.Deserialize<List<Group>>(json);
         }
 
-        private List<Student> LoadStudentsFromJson()
+        private static List<Student> LoadStudentsFromJson()
         {
             var studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
             if (!File.Exists(studentsPath))
@@ -71,21 +71,21 @@ namespace FISAcops
             return JsonSerializer.Deserialize<List<Student>>(json);
         }
 
-        private List<CheckIn> checkIns = new List<CheckIn>();
+        private readonly List<CheckIn> checkIns = new();
 
-        private void btnGenerate_Click2(object sender, RoutedEventArgs e)
+        private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
         {
             tbRandomNumber.Text = "";
             checkIns.Clear();
             if (rbStudents.IsChecked == true)
             {
                 checkIns.Add(new CheckIn("TestSolo" , new Random().Next(1, 100001)));
-                tbRandomNumber.Text = checkIns[checkIns.Count - 1].getCode().ToString();
+                tbRandomNumber.Text = checkIns[^1].getCode().ToString();
             }
             else if (rbGroups.IsChecked == true)
             {
                 int tailleGroupe = 3;
-                List<int> codes = new List<int>();
+                List<int> codes = new();
                 while (codes.Count < tailleGroupe)
                 {
                     int newCode = new Random().Next(1, 100001);
@@ -97,22 +97,21 @@ namespace FISAcops
                 for (int i = 0; i < tailleGroupe; i++)
                 {
                     checkIns.Add(new CheckIn("TestMulti"+i, codes[i]));
-                    tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[checkIns.Count - 1].getCode().ToString();
+                    tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[^1].getCode().ToString();
                 }
             }
             tbState.Text = "Code non rentré";
         }
 
-        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new Checker());
         }
 
-        private void btnValidate_Click(object sender, RoutedEventArgs e)
+        private void BtnValidate_Click(object sender, RoutedEventArgs e)
         {
-            int enteredCode;
-            if (Int32.TryParse(txtCode.Text, out enteredCode))
+            if (Int32.TryParse(txtCode.Text, out int enteredCode))
             {
                 bool noCode = true;
                 foreach (CheckIn checkIn in checkIns)
