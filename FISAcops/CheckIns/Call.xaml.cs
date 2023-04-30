@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FISAcops.CheckIns;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,6 +68,27 @@ namespace FISAcops
             }
             var json = File.ReadAllText(studentsPath);
             return JsonSerializer.Deserialize<List<Student>>(json);
+        }
+
+        private CheckIn checkIn = new CheckIn();
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            tbRandomNumber.Text = checkIn.getCode().ToString();
+            tbState.Text = "Code non rentré";
+        }
+
+        private void btnValidate_Click(object sender, RoutedEventArgs e)
+        {
+            int enteredCode;
+            if (Int32.TryParse(txtCode.Text, out enteredCode))
+            {
+                tbState.Text = checkIn.isCodeGood(enteredCode);
+            }
+            else
+            {
+                tbState.Text = "Code incorrect";
+            }
         }
 
         public Call()

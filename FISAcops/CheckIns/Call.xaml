@@ -51,7 +51,26 @@
             </ComboBox>
 
             <ComboBox x:Name="cbGroups" Margin="10" Visibility="Collapsed"/>
+
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <!-- Bouton pour générer un nombre aléatoire -->
+                <Button x:Name="btnGenerate" Content="Générer un nombre aléatoire" Margin="10" Click="btnGenerate_Click"/>
+
+                <!-- Affichage du nombre aléatoire généré -->
+                <TextBlock x:Name="tbRandomNumber" Text="" Margin="10" Width="100"/>
+            </StackPanel>
+
+            <!-- Input pour rentrer le code -->
+            <TextBox x:Name="txtCode" Margin="10"/>
+
+            <!-- Bouton pour valider le code -->
+            <Button x:Name="btnValidate" Content="Valider" Margin="10" Click="btnValidate_Click"/>
+
+            <!-- Affichage de l'état -->
+            <TextBlock x:Name="tbState" Text="Code non rentré" Margin="10"/>
         </StackPanel>
+
+
 
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 
