@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,6 +60,19 @@ namespace FISAcops
                 var result = MessageBox.Show($"Voulez-vous vraiment supprimer l'élève {selectedStudent.Nom} ?", "Confirmation de suppression", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
+                    // Supprimer l'étudiant de tous les groupes qui le contiennent
+                    var groups = LoadGroupsFromJson();
+                    foreach (var group in groups)
+                    {
+                        var studentToRemove = group.StudentsList.FirstOrDefault(s => s.Mail == selectedStudent.Mail);
+                        if (studentToRemove != null)
+                        {
+                            group.StudentsList.Remove(studentToRemove);
+                        }
+                    }
+                    SaveGroupsToJson(groups);
+
+
                     // Supprimer l'élève de la liste des étudiants
                     students.Remove(selectedStudent);
 
@@ -73,6 +87,25 @@ namespace FISAcops
 
         }
 
+        private List<Group> LoadGroupsFromJson()
+        {
+            var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
+            if (!File.Exists(groupPath))
+            {
+                return new List<Group>();
+            }
+            var json = File.ReadAllText(groupPath);
+            return JsonSerializer.Deserialize<List<Group>>(json);
+        }
+
+        private void SaveGroupsToJson(List<Group> groups)
+        {
+            var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
+            var json = JsonSerializer.Serialize(groups, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(groupPath, json);
+        }
+
+
         public void AddStudent_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -81,11 +114,9 @@ namespace FISAcops
 
         private void SaveStudentsToJson(List<Student> students)
         {
-            // Convertir la liste des étudiants en JSON
-            string json = JsonSerializer.Serialize(students);
-
-            // Enregistrer le JSON dans le fichier "students.json"
-            File.WriteAllText(filePath, json);
+            var studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
+            var json = JsonSerializer.Serialize(students, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(studentsPath, json);
         }
 
         public void RefreshStudentsList()

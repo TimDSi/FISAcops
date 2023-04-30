@@ -38,6 +38,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nom" Binding="{Binding Nom}"/>
                         <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}"/>
+                        <DataGridTextColumn Header="Mail" Binding="{Binding Mail}"/>
                         <DataGridTemplateColumn Header="Inclure">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -57,6 +58,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nom" Binding="{Binding Nom}"/>
                         <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}"/>
+                        <DataGridTextColumn Header="Mail" Binding="{Binding Mail}"/>
                         <DataGridTemplateColumn Header="Inclure">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
