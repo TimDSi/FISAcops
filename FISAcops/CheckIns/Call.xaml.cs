@@ -1,6 +1,7 @@
 ﻿using FISAcops.CheckIns;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -70,11 +71,26 @@ namespace FISAcops
             return JsonSerializer.Deserialize<List<Student>>(json);
         }
 
-        private CheckIn checkIn = new CheckIn();
+        private List<CheckIn> checkIns = new List<CheckIn>();
 
         private void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
-            tbRandomNumber.Text = checkIn.getCode().ToString();
+            tbRandomNumber.Text = "";
+            checkIns.Clear();
+            if (rbStudents.IsChecked == true)
+            {
+                checkIns.Add(new CheckIn("TestSolo" , new Random().Next(1, 100001)));
+                tbRandomNumber.Text = checkIns[checkIns.Count - 1].getCode().ToString();
+            }
+            else if (rbGroups.IsChecked == true)
+            {
+                int tailleGroupe = 3;
+                for (int i = 0; i < tailleGroupe; i++)
+                {
+                    checkIns.Add(new CheckIn("TestMulti"+i, new Random().Next(1, 100001)));
+                    tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[checkIns.Count - 1].getCode().ToString();
+                }
+            }
             tbState.Text = "Code non rentré";
         }
 
@@ -83,7 +99,19 @@ namespace FISAcops
             int enteredCode;
             if (Int32.TryParse(txtCode.Text, out enteredCode))
             {
-                tbState.Text = checkIn.isCodeGood(enteredCode);
+                bool noCode = true;
+                foreach (CheckIn checkIn in checkIns)
+                {
+                    if (checkIn.isCodeGood(enteredCode))
+                    {
+                        tbState.Text = checkIn.CodeMessage(enteredCode);
+                        noCode = false;
+                    }
+                }
+                if (noCode)
+                {
+                    tbState.Text = "Code incorrect";
+                }
             }
             else
             {

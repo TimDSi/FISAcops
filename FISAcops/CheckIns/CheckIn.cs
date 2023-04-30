@@ -11,27 +11,32 @@ namespace FISAcops.CheckIns
 
     internal class CheckIn
     {
+        private string Mail;
         private int code;
 
         public int getCode() { return code; }
 
-
-        public string isCodeGood(int enteredCode)
+        public bool isCodeGood(int enteredCode)
+        {
+            return code == enteredCode;
+        }
+        public string CodeMessage(int enteredCode)
         {
             string result;
             if (enteredCode == code)
             {
-                result = "Code bon";
+                result = Mail + " : Code bon";
             }
             else
             {
-                result = "Code incorrect";
+                result = Mail + " : Code incorrect";
             }
             return result;
         }
 
-        public CheckIn() {
-            code = new Random().Next(1, 100001);
+        public CheckIn(string Mail, int inputCode) {
+            this.Mail = Mail;
+            this.code = inputCode;
         }
     }
 }
