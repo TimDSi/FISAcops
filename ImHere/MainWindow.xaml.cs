@@ -20,6 +20,19 @@ namespace ImHere
     /// </summary>
     public partial class MainWindow : Window
     {
+        private void btnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            int enteredCode;
+            if (Int32.TryParse(tbCode.Text, out enteredCode))
+            {
+                tbState.Text = "Code enregistré : " + enteredCode;
+            }
+            else
+            {
+                tbState.Text = "Code incorrect";
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
