@@ -73,7 +73,7 @@ namespace FISAcops
 
         private List<CheckIn> checkIns = new List<CheckIn>();
 
-        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        private void btnGenerate_Click2(object sender, RoutedEventArgs e)
         {
             tbRandomNumber.Text = "";
             checkIns.Clear();
@@ -101,6 +101,12 @@ namespace FISAcops
                 }
             }
             tbState.Text = "Code non rentré";
+        }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Window.GetWindow(this);
+            mainWindow.frame.Navigate(new Checker());
         }
 
         private void btnValidate_Click(object sender, RoutedEventArgs e)
