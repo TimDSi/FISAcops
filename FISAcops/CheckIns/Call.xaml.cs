@@ -85,9 +85,18 @@ namespace FISAcops
             else if (rbGroups.IsChecked == true)
             {
                 int tailleGroupe = 3;
+                List<int> codes = new List<int>();
+                while (codes.Count < tailleGroupe)
+                {
+                    int newCode = new Random().Next(1, 100001);
+                    if (!codes.Contains(newCode))
+                    {
+                        codes.Add(newCode);
+                    }
+                }
                 for (int i = 0; i < tailleGroupe; i++)
                 {
-                    checkIns.Add(new CheckIn("TestMulti"+i, new Random().Next(1, 100001)));
+                    checkIns.Add(new CheckIn("TestMulti"+i, codes[i]));
                     tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[checkIns.Count - 1].getCode().ToString();
                 }
             }
