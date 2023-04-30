@@ -2,8 +2,9 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:FISAcops"
+      xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="800"
       Title="Call">
@@ -23,6 +24,34 @@
                    VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Sélectionner:" Margin="10"/>
+                <RadioButton x:Name="rbStudents" Content="Étudiants" Margin="10" IsChecked="True" Checked="RadioButton_Checked"/>
+                <RadioButton x:Name="rbGroups" Content="Groupes" Margin="10" Checked="RadioButton_Checked"/>
+            </StackPanel>
+
+            <ComboBox x:Name="cbStudents" Margin="10">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Nom}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Prenom}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Promotion}"/>
+                            <TextBlock Grid.Column="3" Text="{Binding Mail}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox x:Name="cbGroups" Margin="10" Visibility="Collapsed"/>
+        </StackPanel>
 
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 
