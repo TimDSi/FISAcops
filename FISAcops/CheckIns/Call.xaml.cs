@@ -81,8 +81,12 @@ namespace FISAcops
             checkIns.Clear();
             if (rbStudents.IsChecked == true)
             {
-                checkIns.Add(new CheckIn("TestSolo" , new Random().Next(1, 100001)));
-                tbRandomNumber.Text = checkIns[^1].getCode().ToString();
+                if (cbStudents.SelectedItem is Student selectedStudent)
+                {
+                    int code = new Random().Next(1, 100001);
+                    checkIns.Add(new CheckIn($"{selectedStudent.Nom} {selectedStudent.Prenom}", code));
+                    tbRandomNumber.Text = checkIns[^1].getCode().ToString();
+                }
             }
             else if (rbGroups.IsChecked == true)
             {
@@ -103,7 +107,7 @@ namespace FISAcops
                         }
                         for (int i = 0; i < groupSize; i++)
                         {
-                            checkIns.Add(new CheckIn("TestMulti" + i, codes[i]));
+                            checkIns.Add(new CheckIn($"{selectedGroup.StudentsList[i].Nom} {selectedGroup.StudentsList[i].Prenom}", codes[i]));
                             tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[^1].getCode().ToString();
                         }
                     }
