@@ -1,47 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
 
 namespace FISAcops
 {
-    /// <summary>
-    /// Interaction logic for Checker.xaml
-    /// </summary>
-    public partial class Checker : Page
+    internal partial class Checker
     {
-        private void BtnMainPage(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new MainPage());
-        }
-
+        // Création d'un serveur de socket
+        private TcpListener server = new TcpListener(IPAddress.Any, 8080);
+        public string ReceivedMessage = "";
         public Checker()
-        {
-            InitializeComponent();
-            Task.Run(() => MainChecker());
-        }
-
-
-        private void MainChecker()
         {
             try
             {
-                // Création d'un serveur de socket
-                TcpListener server = new TcpListener(IPAddress.Any, 8080);
 
                 // Démarrage du serveur
                 server.Start();
@@ -53,21 +30,28 @@ namespace FISAcops
                 byte[] data = new byte[1024];
                 NetworkStream stream = client.GetStream();
                 int bytesRead = stream.Read(data, 0, data.Length);
-                string receivedMessage = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
+                ReceivedMessage = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
 
                 // Stockage du message reçu
-                tbStatus.Dispatcher.Invoke(() => tbStatus.Text = receivedMessage);
+                
 
                 // Fermeture de la connexion avec le client
                 client.Close();
 
                 // Arrêt du serveur
                 server.Stop();
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Exception: {0}", ex.Message);
             }
+        }
+
+        public void CheckerStop()
+        {
+            // Arrêt du serveur
+            server.Stop();
         }
     }
 }

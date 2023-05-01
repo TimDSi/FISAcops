@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -98,6 +99,35 @@ namespace FISAcops
             return checkIns;
         }
 
+        private Thread checkerThread;
+        private bool stopChecker;
+
+        private void StartChecker()
+        {
+            stopChecker = false;
+            checkerThread = new Thread(CheckerThreadMethod);
+            checkerThread.Start();
+        }
+
+        private void StopChecker()
+        {
+            stopChecker = true;
+        }
+
+        private void CheckerThreadMethod()
+        {
+            Checker checker = new Checker();
+            while (!stopChecker && checker.ReceivedMessage == "")
+            {
+                // Attendre jusqu'à ce que le message soit reçu ou que le thread soit arrêté
+            }
+            if (!stopChecker)
+            {
+                txtCode.Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
+                tbState.Dispatcher.Invoke(() => tbState.Text = "Code non rentré");
+            }
+        }
+
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
             tbRandomNumber.Text = "";
@@ -120,18 +150,19 @@ namespace FISAcops
                     }
                 }
             }
-
             tbState.Text = "Code non rentré";
+            StartChecker();
         }
 
 
 
-
+        /*
         private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new Checker());
         }
+        */
 
         private void BtnValidate_Click(object sender, RoutedEventArgs e)
         {
@@ -155,6 +186,7 @@ namespace FISAcops
             {
                 tbState.Text = "Code incorrect";
             }
+            StopChecker();
         }
 
 
