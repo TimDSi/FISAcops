@@ -120,13 +120,9 @@ namespace FISAcops
             Checker checker = new Checker();
             while (!stopChecker && checker.ReceivedMessage == "")
             {
-                // Attendre jusqu'à ce que le message soit reçu ou que le thread soit arrêté
+                Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
             }
-            if (!stopChecker)
-            {
-                txtCode.Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
-                tbState.Dispatcher.Invoke(() => tbState.Text = "Code non rentré");
-            }
+            Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
         }
 
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)

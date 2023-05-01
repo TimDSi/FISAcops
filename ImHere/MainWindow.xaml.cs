@@ -48,10 +48,11 @@ namespace ImHere
 
                 // Fermeture du client de socket
                 client.Close();
+                tbState.Text += " connexion réussi";
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: {0}", ex.Message);
+                tbState.Text += " connexion échoué";
             }
 
         }
