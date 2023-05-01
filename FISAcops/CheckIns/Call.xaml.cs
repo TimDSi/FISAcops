@@ -106,6 +106,7 @@ namespace FISAcops
         {
             stopChecker = false;
             checkerThread = new Thread(CheckerThreadMethod);
+            checkerThread.IsBackground = true;
             checkerThread.Start();
         }
 
