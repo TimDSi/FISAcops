@@ -57,7 +57,7 @@
                 <Button x:Name="btnGenerate" Content="Générer un nombre aléatoire" Margin="10" Click="BtnGenerate_Click"/>
 
                 <!-- Affichage du nombre aléatoire généré -->
-                <TextBlock x:Name="tbRandomNumber" Text="" Margin="10" Width="100"/>
+                <TextBlock x:Name="tbRandomNumber" Text="" Margin="10" Width="560"/>
             </StackPanel>
 
             <!-- Input pour rentrer le code -->

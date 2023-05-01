@@ -25,6 +25,8 @@ namespace FISAcops
     /// </summary>
     public partial class Call : Page
     {
+        private string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
+        private List<Group> groupsList;
         
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -73,7 +75,7 @@ namespace FISAcops
 
         private readonly List<CheckIn> checkIns = new();
 
-        private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
+        private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
             tbRandomNumber.Text = "";
             checkIns.Clear();
@@ -84,26 +86,35 @@ namespace FISAcops
             }
             else if (rbGroups.IsChecked == true)
             {
-                int tailleGroupe = 3;
-                List<int> codes = new();
-                while (codes.Count < tailleGroupe)
+                if (cbGroups.SelectedItem is string groupName)
                 {
-                    int newCode = new Random().Next(1, 100001);
-                    if (!codes.Contains(newCode))
+                    Group? selectedGroup = groupsList.FirstOrDefault(g => g.GroupName == groupName);
+                    if (selectedGroup != null)
                     {
-                        codes.Add(newCode);
+                        int groupSize = selectedGroup.StudentsList.Count;
+                        List<int> codes = new();
+                        while (codes.Count < groupSize)
+                        {
+                            int newCode = new Random().Next(1, 100001);
+                            if (!codes.Contains(newCode))
+                            {
+                                codes.Add(newCode);
+                            }
+                        }
+                        for (int i = 0; i < groupSize; i++)
+                        {
+                            checkIns.Add(new CheckIn("TestMulti" + i, codes[i]));
+                            tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[^1].getCode().ToString();
+                        }
                     }
+
                 }
-                for (int i = 0; i < tailleGroupe; i++)
-                {
-                    checkIns.Add(new CheckIn("TestMulti"+i, codes[i]));
-                    tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[^1].getCode().ToString();
-                }
+                
             }
             tbState.Text = "Code non rentré";
         }
 
-        private void BtnGenerate_Click(object sender, RoutedEventArgs e)
+        private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new Checker());
@@ -133,18 +144,20 @@ namespace FISAcops
             }
         }
 
+
         public Call()
         {
             cbStudents = new ComboBox();
             cbGroups = new ComboBox();
 
             InitializeComponent();
-            
+
+
             cbStudents.ItemsSource = LoadStudentsFromJson();
             cbStudents.SelectedIndex = 0;
 
-            var groups = LoadGroupsFromJson();
-            foreach (var group in groups)
+            groupsList = LoadGroupsFromJson();
+            foreach (var group in groupsList)
             {
                 cbGroups.Items.Add(group.GroupName);
             }
