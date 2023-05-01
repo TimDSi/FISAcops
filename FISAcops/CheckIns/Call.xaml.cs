@@ -101,15 +101,34 @@ namespace FISAcops
 
         // serveur sur un thread -------------------------------------------------------------------
         private bool CheckerStarted = false;
+        private readonly Checker checker = new();
 
         private void StartChecker()
         {
             CheckerStarted = true;
-            Thread checkerThread = new(CheckerThreadMethod)
+            Thread checkerThread = new(checker.CheckerStart)
             {
                 IsBackground = true
             };
             checkerThread.Start();
+
+            Thread updateThread = new(() =>
+            {
+                while (CheckerStarted)
+                {
+                    string receivedMessage = checker.ReceivedMessage;
+                    if (!string.IsNullOrEmpty(receivedMessage))
+                    {
+                        Dispatcher.Invoke(() => txtCode.Text = receivedMessage);
+                    }
+                    Thread.Sleep(100); // ralentir la boucle pour éviter la surcharge
+                }
+            })
+            {
+                IsBackground = true
+            };
+            updateThread.Start();
+
         }
 
         private void StopChecker()
@@ -117,16 +136,6 @@ namespace FISAcops
             CheckerStarted = false;
         }
 
-        private void CheckerThreadMethod()
-        {
-            Checker checker = new();
-            while (CheckerStarted && checker.ReceivedMessage == "")
-            {
-                Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
-            }
-            Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
-            checker.CheckerStop();
-        }
         //------------------------------------------------------------------------------------------
 
 

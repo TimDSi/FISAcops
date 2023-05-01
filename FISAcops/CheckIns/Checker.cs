@@ -12,33 +12,54 @@ namespace FISAcops
 {
     internal partial class Checker
     {
-        // Création d'un serveur de socket
         private readonly TcpListener server = new(IPAddress.Any, 8080);
         public string ReceivedMessage = "";
-        public Checker()
+        private bool ServerOnline = false;
+
+        public Checker() {}
+        public void CheckerStart()
         {
             try
             {
-
-                // Démarrage du serveur
                 server.Start();
 
-                // Attendre une connexion de client
-                TcpClient client = server.AcceptTcpClient();
+                ServerOnline = true;
+                while (ServerOnline)
+                {
+                    // Attendre une connexion de client
+                    TcpClient client = server.AcceptTcpClient();
 
-                // Récupération des données envoyées par le client
-                byte[] data = new byte[1024];
-                NetworkStream stream = client.GetStream();
-                int bytesRead = stream.Read(data, 0, data.Length);
-                ReceivedMessage = System.Text.Encoding.ASCII.GetString(data, 0, bytesRead);
+                    // Boucle de lecture de messages du client
+                    byte[] data = new byte[1024];
+                    NetworkStream stream = client.GetStream();
 
-                // Stockage du message reçu
-                
+                    try
+                    {
+                        while (true)
+                        {
+                            int bytesRead = stream.Read(data, 0, data.Length);
+                            ReceivedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
 
-                // Fermeture de la connexion avec le client
-                client.Close();
+                            // Stockage du message reçu
+                            // ...
 
+                            // Condition de sortie
+                            if (ReceivedMessage == "stop")
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Exception lors de la lecture du message: {0}", ex.Message);
+                    }
 
+                    // Fermeture de la connexion avec le client
+                    client.Close();
+                }
+
+                server.Stop();
             }
             catch (Exception ex)
             {
@@ -48,8 +69,7 @@ namespace FISAcops
 
         public void CheckerStop()
         {
-            // Arrêt du serveur
-            server.Stop();
+            ServerOnline = false;
         }
     }
 }
