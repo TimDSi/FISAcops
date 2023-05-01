@@ -13,7 +13,7 @@ namespace FISAcops
     internal partial class Checker
     {
         // Création d'un serveur de socket
-        private TcpListener server = new TcpListener(IPAddress.Any, 8080);
+        private readonly TcpListener server = new(IPAddress.Any, 8080);
         public string ReceivedMessage = "";
         public Checker()
         {

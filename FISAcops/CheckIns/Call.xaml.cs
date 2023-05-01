@@ -26,8 +26,8 @@ namespace FISAcops
     /// </summary>
     public partial class Call : Page
     {
-        private string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-        private List<Group> groupsList;
+        //private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
+        private readonly List<Group> groupsList;
         
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -76,10 +76,10 @@ namespace FISAcops
 
         private List<CheckIn> checkIns = new();
 
-        private List<CheckIn> GenerateCheckIns(List<Student> students)
+        private static List<CheckIn> GenerateCheckIns(List<Student> students)
         {
-            List<CheckIn> checkIns = new List<CheckIn>();
-            List<int> codes = new List<int>();
+            List<CheckIn> checkIns = new();
+            List<int> codes = new();
             int groupSize = students.Count;
 
             while (codes.Count < groupSize)
@@ -99,26 +99,27 @@ namespace FISAcops
             return checkIns;
         }
 
-        private Thread checkerThread;
-        private bool stopChecker;
+        private bool CheckerStarted = false;
 
         private void StartChecker()
         {
-            stopChecker = false;
-            checkerThread = new Thread(CheckerThreadMethod);
-            checkerThread.IsBackground = true;
+            CheckerStarted = true;
+            Thread checkerThread = new(CheckerThreadMethod)
+            {
+                IsBackground = true
+            };
             checkerThread.Start();
         }
 
         private void StopChecker()
         {
-            stopChecker = true;
+            CheckerStarted = false;
         }
 
         private void CheckerThreadMethod()
         {
-            Checker checker = new Checker();
-            while (!stopChecker && checker.ReceivedMessage == "")
+            Checker checker = new();
+            while (CheckerStarted && checker.ReceivedMessage == "")
             {
                 Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
             }
@@ -133,7 +134,7 @@ namespace FISAcops
             if (rbStudents.IsChecked == true && cbStudents.SelectedItem is Student selectedStudent)
             {
                 checkIns = GenerateCheckIns(new List<Student> { selectedStudent });
-                tbRandomNumber.Text = checkIns[^1].getCode().ToString();
+                tbRandomNumber.Text = checkIns[^1].GetCode().ToString();
             }
             else if (rbGroups.IsChecked == true && cbGroups.SelectedItem is string groupName)
             {
@@ -143,7 +144,7 @@ namespace FISAcops
                     checkIns = GenerateCheckIns(selectedGroup.StudentsList);
                     foreach (var checkIn in checkIns)
                     {
-                        tbRandomNumber.Text += " " + checkIn.getCode().ToString();
+                        tbRandomNumber.Text += " " + checkIn.GetCode().ToString();
                     }
                 }
             }
@@ -159,7 +160,7 @@ namespace FISAcops
                 bool noCode = true;
                 foreach (CheckIn checkIn in checkIns)
                 {
-                    if (checkIn.isCodeGood(enteredCode))
+                    if (checkIn.IsCodeGood(enteredCode))
                     {
                         tbState.Text = checkIn.CodeMessage(enteredCode);
                         noCode = false;

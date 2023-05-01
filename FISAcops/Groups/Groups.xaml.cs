@@ -12,7 +12,7 @@ namespace FISAcops
     public partial class Groups : Page
     {
 
-        private string filePath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
+        private readonly string filePath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
 
         private List<Group> groupsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)

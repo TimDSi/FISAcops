@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBox x:Name="tbCode" Width="200" Margin="0 0 0 10" />
-            <Button Content="Connexion" Width="100" Margin="0 0 0 10" Click="btnConnect_Click" />
+            <Button Content="Connexion" Width="100" Margin="0 0 0 10" Click="BtnConnect_Click" />
             <TextBlock x:Name="tbState" />
         </StackPanel>
     </Grid>

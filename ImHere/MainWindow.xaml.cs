@@ -21,10 +21,9 @@ namespace ImHere
     /// </summary>
     public partial class MainWindow : Window
     {
-        private void btnConnect_Click(object sender, RoutedEventArgs e)
+        private void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            int enteredCode;
-            if (Int32.TryParse(tbCode.Text, out enteredCode))
+            if (Int32.TryParse(tbCode.Text, out int enteredCode))
             {
                 tbState.Text = "Code enregistré : " + enteredCode;
             }
@@ -36,7 +35,7 @@ namespace ImHere
             try
             {
                 // Création d'un client de socket
-                TcpClient client = new TcpClient();
+                TcpClient client = new();
 
                 // Connexion au serveur distant
                 client.Connect("127.0.0.1", 8080);
@@ -53,6 +52,7 @@ namespace ImHere
             catch (Exception ex)
             {
                 tbState.Text += " connexion échoué";
+                tbState.Text += ex;
             }
 
         }

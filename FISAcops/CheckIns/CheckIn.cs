@@ -11,12 +11,12 @@ namespace FISAcops.CheckIns
 
     internal class CheckIn
     {
-        private string Mail;
-        private int code;
+        private readonly string Mail;
+        private readonly int code;
 
-        public int getCode() { return code; }
+        public int GetCode() { return code; }
 
-        public bool isCodeGood(int enteredCode)
+        public bool IsCodeGood(int enteredCode)
         {
             return code == enteredCode;
         }
