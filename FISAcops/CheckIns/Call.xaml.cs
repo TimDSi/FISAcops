@@ -99,6 +99,7 @@ namespace FISAcops
             return checkIns;
         }
 
+        // serveur sur un thread -------------------------------------------------------------------
         private bool CheckerStarted = false;
 
         private void StartChecker()
@@ -124,7 +125,10 @@ namespace FISAcops
                 Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
             }
             Dispatcher.Invoke(() => txtCode.Text = checker.ReceivedMessage);
+            checker.CheckerStop();
         }
+        //------------------------------------------------------------------------------------------
+
 
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
