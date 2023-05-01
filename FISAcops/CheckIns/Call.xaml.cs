@@ -73,50 +73,59 @@ namespace FISAcops
             return JsonSerializer.Deserialize<List<Student>>(json);
         }
 
-        private readonly List<CheckIn> checkIns = new();
+        private List<CheckIn> checkIns = new();
+
+        private List<CheckIn> GenerateCheckIns(List<Student> students)
+        {
+            List<CheckIn> checkIns = new List<CheckIn>();
+            List<int> codes = new List<int>();
+            int groupSize = students.Count;
+
+            while (codes.Count < groupSize)
+            {
+                int newCode = new Random().Next(1, 100001);
+                if (!codes.Contains(newCode))
+                {
+                    codes.Add(newCode);
+                }
+            }
+
+            for (int i = 0; i < groupSize; i++)
+            {
+                checkIns.Add(new CheckIn($"{students[i].Nom} {students[i].Prenom}", codes[i]));
+            }
+
+            return checkIns;
+        }
 
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
             tbRandomNumber.Text = "";
             checkIns.Clear();
-            if (rbStudents.IsChecked == true)
-            {
-                if (cbStudents.SelectedItem is Student selectedStudent)
-                {
-                    int code = new Random().Next(1, 100001);
-                    checkIns.Add(new CheckIn($"{selectedStudent.Nom} {selectedStudent.Prenom}", code));
-                    tbRandomNumber.Text = checkIns[^1].getCode().ToString();
-                }
-            }
-            else if (rbGroups.IsChecked == true)
-            {
-                if (cbGroups.SelectedItem is string groupName)
-                {
-                    Group? selectedGroup = groupsList.FirstOrDefault(g => g.GroupName == groupName);
-                    if (selectedGroup != null)
-                    {
-                        int groupSize = selectedGroup.StudentsList.Count;
-                        List<int> codes = new();
-                        while (codes.Count < groupSize)
-                        {
-                            int newCode = new Random().Next(1, 100001);
-                            if (!codes.Contains(newCode))
-                            {
-                                codes.Add(newCode);
-                            }
-                        }
-                        for (int i = 0; i < groupSize; i++)
-                        {
-                            checkIns.Add(new CheckIn($"{selectedGroup.StudentsList[i].Nom} {selectedGroup.StudentsList[i].Prenom}", codes[i]));
-                            tbRandomNumber.Text = tbRandomNumber.Text + " " + checkIns[^1].getCode().ToString();
-                        }
-                    }
 
-                }
-                
+            if (rbStudents.IsChecked == true && cbStudents.SelectedItem is Student selectedStudent)
+            {
+                checkIns = GenerateCheckIns(new List<Student> { selectedStudent });
+                tbRandomNumber.Text = checkIns[^1].getCode().ToString();
             }
+            else if (rbGroups.IsChecked == true && cbGroups.SelectedItem is string groupName)
+            {
+                Group? selectedGroup = groupsList.FirstOrDefault(g => g.GroupName == groupName);
+                if (selectedGroup != null)
+                {
+                    checkIns = GenerateCheckIns(selectedGroup.StudentsList);
+                    foreach (var checkIn in checkIns)
+                    {
+                        tbRandomNumber.Text += " " + checkIn.getCode().ToString();
+                    }
+                }
+            }
+
             tbState.Text = "Code non rentré";
         }
+
+
+
 
         private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
         {
