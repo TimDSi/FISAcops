@@ -156,15 +156,6 @@ namespace FISAcops
         }
 
 
-
-        /*
-        private void BtnGenerate_Click2(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new Checker());
-        }
-        */
-
         private void BtnValidate_Click(object sender, RoutedEventArgs e)
         {
             if (Int32.TryParse(txtCode.Text, out int enteredCode))
