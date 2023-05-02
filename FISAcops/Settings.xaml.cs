@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace FISAcops
 {
@@ -23,10 +12,10 @@ namespace FISAcops
     /// </summary>
     public partial class Settings : Page
     {
-        public string settingsPath = @"C:\Users\33652\AppData\Local\FISAcops\settings.json";
+        public string settingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "settings.json");
         public string studentsPath;
         public string groupsPath;
-        
+
 
         private void SaveSettings(string studentsPath, string groupPath)
         {
@@ -136,12 +125,23 @@ namespace FISAcops
         public Settings()
         {
             InitializeComponent();
+            var settingsObject = new
+            {
+                StudentsPath = @"C:\Users\33652\AppData\Local\FISAcops",
+                GroupPath = @"C:\Users\33652\AppData\Local\FISAcops"
+            };
+
+            // Convertir l'objet en une chaîne JSON
+            string jsonString = JsonSerializer.Serialize(settingsObject);
+
+            // Écrire la chaîne JSON dans le fichier "settings.json"
+            File.WriteAllText("settings.json", jsonString);
 
             studentsPath = @"C:\Users\33652\AppData\Local\FISAcops";
             groupsPath = @"C:\Users\33652\AppData\Local\FISAcops";
 
             // Lire le contenu du fichier JSON
-            string jsonString = File.ReadAllText(settingsPath);
+            jsonString = File.ReadAllText(settingsPath);
 
             // Désérialiser le contenu JSON en un objet
             var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
