@@ -42,13 +42,15 @@ namespace FISAcops
         }
         private void BtnStudentsPath_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.FileName = "Folder Selection";
-            dialog.Filter = "Folders|*.none";
-            dialog.ValidateNames = false;
-            dialog.CheckFileExists = false;
-            dialog.CheckPathExists = true;
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "Folder Selection",
+                Filter = "Folders|*.none",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+            };
 
             if (dialog.ShowDialog() == true)
             {
@@ -77,13 +79,15 @@ namespace FISAcops
 
         private void BtnGroupPath_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.FileName = "Folder Selection";
-            dialog.Filter = "Folders|*.none";
-            dialog.ValidateNames = false;
-            dialog.CheckFileExists = false;
-            dialog.CheckPathExists = true;
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "Folder Selection",
+                Filter = "Folders|*.none",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+            };
 
             if (dialog.ShowDialog() == true)
             {
