@@ -31,6 +31,7 @@ namespace FISAcops
         
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
+            StopChecker();
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new MainPage());
         }
@@ -188,7 +189,6 @@ namespace FISAcops
             {
                 tbState.Text = "Code incorrect";
             }
-            StopChecker();
         }
 
 
