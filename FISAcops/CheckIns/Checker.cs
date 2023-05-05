@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Threading;
 
 namespace FISAcops
@@ -31,7 +26,7 @@ namespace FISAcops
                     TcpClient client = server.AcceptTcpClient();
 
                     // Créer un nouveau thread pour gérer la communication avec le client
-                    Thread clientThread = new Thread(() => HandleClient(client));
+                    Thread clientThread = new(() => HandleClient(client));
                     clientThread.Start();
                 }
             }
