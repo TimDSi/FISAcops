@@ -128,13 +128,13 @@ namespace FISAcops
             {
                 IsBackground = true
             };
-            updateThread.Start();
-
         }
 
         private void StopChecker()
         {
+            checker.CheckerStop();
             CheckerStarted = false;
+            
         }
 
         //------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ namespace FISAcops
                     }
                 }
             }
-            tbState.Text = "Code non rentré";
+            //tbState.Text = "Code non rentré";
             StartChecker();
         }
 
@@ -209,7 +209,6 @@ namespace FISAcops
                 cbGroups.Items.Add(group.GroupName);
             }
             cbGroups.SelectedIndex = 0;
-
         }
     }
 }
