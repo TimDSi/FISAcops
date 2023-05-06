@@ -60,14 +60,11 @@
                 <TextBlock x:Name="tbRandomNumber" Text="" Margin="10" Width="560"/>
             </StackPanel>
 
-            <!-- Input pour rentrer le code -->
-            <TextBox x:Name="txtCode" Margin="10"/>
+            <!-- Nouveau bouton pour réactiver les contrôles -->
+            <Button x:Name="btnReactivate" Content="Changer de cible" IsEnabled="false" Margin="10" Click="BtnReactivate_Click" Grid.Row="1" HorizontalAlignment="Right"/>
 
-            <!-- Bouton pour valider le code -->
-            <Button x:Name="btnValidate" Content="Valider" Margin="10" Click="BtnValidate_Click"/>
 
-            <!-- Affichage de l'état -->
-            <TextBlock x:Name="tbState" Text="Code non rentré" Margin="10"/>
+
         </StackPanel>
 
 

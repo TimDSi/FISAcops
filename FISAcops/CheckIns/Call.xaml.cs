@@ -112,30 +112,28 @@ namespace FISAcops
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            txtCode.Text = receivedMessage;
-                            if (Int32.TryParse(txtCode.Text, out int enteredCode))
+                            if (Checker.LastClient != null)
                             {
-                                bool noCode = true;
-                                foreach (CheckIn checkIn in checkIns)
+                                if (int.TryParse(receivedMessage, out int enteredCode))
                                 {
-                                    if (checkIn.IsCodeGood(enteredCode))
+                                    bool noCode = true;
+                                    foreach (CheckIn checkIn in checkIns)
                                     {
-                                        tbState.Text = checkIn.CodeMessage(enteredCode);
-                                        if (Checker.LastClient != null)
+                                        if (checkIn.IsCodeGood(enteredCode))
                                         {
-                                            Checker.SendResponseToClient(Checker.LastClient, tbState.Text);
+                                            Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
+                                            noCode = false;
                                         }
-                                        noCode = false;
+                                    }
+                                    if (noCode)
+                                    {
+                                        Checker.SendResponseToClient(Checker.LastClient, "Code incorrect");
                                     }
                                 }
-                                if (noCode)
+                                else
                                 {
-                                    tbState.Text = "Code incorrect";
+                                    Checker.SendResponseToClient(Checker.LastClient, "Code format incorrect");
                                 }
-                            }
-                            else
-                            {
-                                tbState.Text = "Code incorrect";
                             }
                         });
 
@@ -154,7 +152,14 @@ namespace FISAcops
         {
             checker.CheckerStop();
             CheckerStarted = false;
-            
+
+            // Réactiver les RadioButton
+            rbStudents.IsEnabled = true;
+            rbGroups.IsEnabled = true;
+
+            // Réactiver les ComboBox
+            cbStudents.IsEnabled = true;
+            cbGroups.IsEnabled = true;
         }
 
         //------------------------------------------------------------------------------------------
@@ -182,33 +187,23 @@ namespace FISAcops
                     }
                 }
             }
-            //tbState.Text = "Code non rentré";
             StartChecker();
+
+            btnReactivate.IsEnabled = true;
+
+            // Désactiver les RadioButton
+            rbStudents.IsEnabled = false;
+            rbGroups.IsEnabled = false;
+
+            // Désactiver les ComboBox
+            cbStudents.IsEnabled = false;
+            cbGroups.IsEnabled = false;
         }
 
 
-        private void BtnValidate_Click(object sender, RoutedEventArgs e)
+        private void BtnReactivate_Click(object sender, RoutedEventArgs e)
         {
-            if (Int32.TryParse(txtCode.Text, out int enteredCode))
-            {
-                bool noCode = true;
-                foreach (CheckIn checkIn in checkIns)
-                {
-                    if (checkIn.IsCodeGood(enteredCode))
-                    {
-                        tbState.Text = checkIn.CodeMessage(enteredCode);
-                        noCode = false;
-                    }
-                }
-                if (noCode)
-                {
-                    tbState.Text = "Code incorrect";
-                }
-            }
-            else
-            {
-                tbState.Text = "Code incorrect";
-            }
+            StopChecker();
         }
 
 
