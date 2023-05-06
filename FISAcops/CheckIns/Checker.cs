@@ -10,7 +10,7 @@ namespace FISAcops
     internal partial class Checker
     {
         private readonly TcpListener server = new(IPAddress.Any, 8080);
-        private List<TcpClient> TcpClientList = new();
+        private readonly List<TcpClient> TcpClientList = new();
         public string ReceivedMessage = "";
         private bool ServerOnline = false;
 

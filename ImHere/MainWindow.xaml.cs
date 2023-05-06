@@ -34,7 +34,7 @@ namespace ImHere
                     // Démarrer le thread de surveillance uniquement si ce n'est pas déjà fait
                     if (monitoringThread==null || !monitoringThread.IsAlive)
                     {
-                        monitoringThread = new Thread(MonitorConnection)
+                        monitoringThread = new Thread(ReceiveMessagesFromServer)
                         {
                             IsBackground = true
                         };
@@ -64,7 +64,7 @@ namespace ImHere
             }
         }
 
-        private void MonitorConnection()
+        private void ReceiveMessagesFromServer()
         {
             while (isConnected)
             {
