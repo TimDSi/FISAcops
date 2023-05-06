@@ -46,6 +46,12 @@ namespace FISAcops
         {
             foreach (TcpClient client in TcpClientList)
             {
+                // Envoyer un message de déconnexion au client
+                byte[] disconnectMessage = Encoding.ASCII.GetBytes("disconnect");
+                NetworkStream stream = client.GetStream();
+                stream.Write(disconnectMessage, 0, disconnectMessage.Length);
+
+                // Fermer la connexion avec le client
                 client.Close();
             }
             ServerOnline = false;
