@@ -71,26 +71,34 @@ namespace ImHere
                 try
                 {
                     NetworkStream stream = client.GetStream();
-                    byte[] buffer = new byte[1];
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                    // Modifier la ligne suivante pour lire au moins 1 octet du flux
-                    bool isStillConnected = stream.Read(buffer, 0, buffer.Length) > 0;
-
-                    if (!isStillConnected)
+                    if (message == null)
                     {
                         Disconnect();
                         Dispatcher.Invoke(() => tbState.Text = "Connexion interrompue");
                     }
-                    //Thread.Sleep(100);
+                    else if (message == "disconnect")
+                    {
+                        Disconnect();
+                        Dispatcher.Invoke(() => tbState.Text = "Déconnecté par le serveur");
+                    }
+                    else
+                    {
+                        // Traitez le message reçu ici
+                        Dispatcher.Invoke(() => tbState.Text = "Message reçu : " + message);
+                    }
                 }
                 catch (IOException)
                 {
                     Disconnect();
-                    // arrive quand on ferme l'application FISA COPS sans déconnecter au préalable le serveur
                     Dispatcher.Invoke(() => tbState.Text = "Connexion interrompue erreur");
                 }
             }
         }
+
 
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
