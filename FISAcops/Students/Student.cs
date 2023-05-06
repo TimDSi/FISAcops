@@ -1,13 +1,15 @@
 ﻿namespace FISAcops
 {
-    internal class Student
+    public class Student
     {
-        public Student() {
-            Nom = "";
-            Prenom = "";
-            Mail = "";
-            Promotion = "";
+        public Student(string nom, string prenom, string mail, string promotion)
+        {
+            Nom = nom;
+            Prenom = prenom;
+            Mail = mail;
+            Promotion = promotion;
         }
+
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Mail { get; set; }

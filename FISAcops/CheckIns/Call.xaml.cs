@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Media;
 
 namespace FISAcops
 {
@@ -18,7 +18,9 @@ namespace FISAcops
     {
         //private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
         private readonly List<Group> groupsList;
-        
+        private List<Student> studentsListWithCode;
+
+
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             StopChecker();
@@ -121,8 +123,11 @@ namespace FISAcops
                                     {
                                         if (checkIn.IsCodeGood(enteredCode))
                                         {
+                                            int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.Mail);
+                                            //dgStudents.Items[index] = StudentFactory.CreateStudent(studentsListWithCode[index].Nom, studentsListWithCode[index].Prenom, studentsListWithCode[index].Mail, studentsListWithCode[index].Promotion, "Code bon");
                                             Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
                                             noCode = false;
+                                            dgStudents.Items.Refresh();
                                         }
                                     }
                                     if (noCode)
@@ -167,27 +172,35 @@ namespace FISAcops
 
         private void BtnGenerate_Click(object sender, RoutedEventArgs e)
         {
-            tbRandomNumber.Text = "";
             checkIns.Clear();
-
+            List<Student> studentsList = new();
             if (rbStudents.IsChecked == true && cbStudents.SelectedItem is Student selectedStudent)
             {
-                checkIns = GenerateCheckIns(new List<Student> { selectedStudent });
-                tbRandomNumber.Text = checkIns[^1].GetCode().ToString();
+                studentsList.Add(selectedStudent);
             }
             else if (rbGroups.IsChecked == true && cbGroups.SelectedItem is string groupName)
             {
                 Group? selectedGroup = groupsList.FirstOrDefault(g => g.GroupName == groupName);
                 if (selectedGroup != null)
                 {
-                    checkIns = GenerateCheckIns(selectedGroup.StudentsList);
-                    foreach (var checkIn in checkIns)
-                    {
-                        tbRandomNumber.Text += " " + checkIn.GetCode().ToString();
-                    }
+                    studentsList = selectedGroup.StudentsList;
                 }
             }
+            checkIns = GenerateCheckIns(studentsList);
+
+            studentsListWithCode = new();
+            for (int i = 0; i < studentsList.Count; i++)
+            {
+                Student student = studentsList[i];
+                CheckIn checkIn = checkIns[i];
+                studentsListWithCode.Add(StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
+            }
             StartChecker();
+
+            
+
+            // Définition de la source de données du DataGrid
+            dgStudents.ItemsSource = studentsListWithCode;
 
             btnReactivate.IsEnabled = true;
 
@@ -213,7 +226,7 @@ namespace FISAcops
             cbGroups = new ComboBox();
 
             InitializeComponent();
-
+            studentsListWithCode = new();
 
             cbStudents.ItemsSource = LoadStudentsFromJson();
             cbStudents.SelectedIndex = 0;

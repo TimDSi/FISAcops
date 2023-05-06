@@ -37,24 +37,24 @@ namespace FISAcops
 
             if (selectedStudent == -1) {
                 // Ajouter un nouvel étudiant à la liste
-                studentsList.Add(new Student
-                {
-                    Nom = nomTextBox.Text,
-                    Prenom = prenomTextBox.Text,
-                    Mail = mailTextBox.Text,
-                    Promotion = promoTextBox.Text
-                });
+                studentsList.Add(StudentFactory.CreateStudent(
+                    nomTextBox.Text,
+                    prenomTextBox.Text,
+                    mailTextBox.Text,
+                    promoTextBox.Text,
+                    null
+                    ));
             }
             else
             {
                 // Edit étudiant de la liste
-                studentsList[selectedStudent] = (new Student
-                {
-                    Nom = nomTextBox.Text,
-                    Prenom = prenomTextBox.Text,
-                    Mail = mailTextBox.Text,
-                    Promotion = promoTextBox.Text
-                });
+                studentsList[selectedStudent] = (StudentFactory.CreateStudent(
+                    nomTextBox.Text,
+                    prenomTextBox.Text,
+                    mailTextBox.Text,
+                    promoTextBox.Text,
+                    null
+                    ));
             }
             
 

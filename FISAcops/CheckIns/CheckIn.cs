@@ -11,7 +11,7 @@ namespace FISAcops.CheckIns
 
     internal class CheckIn
     {
-        private readonly string Mail;
+        public readonly string Mail;
         private readonly int code;
 
         public int GetCode() { return code; }
