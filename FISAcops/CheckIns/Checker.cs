@@ -3,12 +3,14 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace FISAcops
 {
     internal partial class Checker
     {
         private readonly TcpListener server = new(IPAddress.Any, 8080);
+        private List<TcpClient> TcpClientList = new();
         public string ReceivedMessage = "";
         private bool ServerOnline = false;
 
@@ -24,6 +26,7 @@ namespace FISAcops
                 {
                     // Attendre une connexion de client
                     TcpClient client = server.AcceptTcpClient();
+                    TcpClientList.Add(client);
 
                     // Créer un nouveau thread pour gérer la communication avec le client
                     Thread clientThread = new(() => HandleClient(client))
@@ -41,6 +44,10 @@ namespace FISAcops
 
         public void CheckerStop()
         {
+            foreach (TcpClient client in TcpClientList)
+            {
+                client.Close();
+            }
             ServerOnline = false;
             server.Stop();
         }
