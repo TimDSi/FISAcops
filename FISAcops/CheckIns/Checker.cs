@@ -11,6 +11,7 @@ namespace FISAcops
     {
         private readonly TcpListener server = new(IPAddress.Any, 8080);
         private readonly List<TcpClient> TcpClientList = new();
+        public static TcpClient? LastClient ;
         public string ReceivedMessage = "";
         private bool ServerOnline = false;
 
@@ -58,6 +59,13 @@ namespace FISAcops
             server.Stop();
         }
 
+        public static void SendResponseToClient(TcpClient client, string response)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(response);
+            NetworkStream stream = client.GetStream();
+            stream.Write(buffer, 0, buffer.Length);
+        }
+
         private void HandleClient(TcpClient client)
         {
             // Boucle de lecture de messages du client
@@ -70,10 +78,9 @@ namespace FISAcops
                 {
                     int bytesRead = stream.Read(data, 0, data.Length);
                     ReceivedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
-
+                    LastClient = client;
                     // Envoyer la réponse au client
-                    byte[] response = Encoding.UTF8.GetBytes("code reçu");
-                    stream.Write(response, 0, response.Length);
+                    SendResponseToClient(client, "code reçu");
 
                     // Condition de sortie
                     if (ReceivedMessage == "stop")

@@ -110,7 +110,36 @@ namespace FISAcops
                     string receivedMessage = checker.ReceivedMessage;
                     if (!string.IsNullOrEmpty(receivedMessage))
                     {
-                        Dispatcher.Invoke(() => txtCode.Text = receivedMessage);
+                        Dispatcher.Invoke(() =>
+                        {
+                            txtCode.Text = receivedMessage;
+                            if (Int32.TryParse(txtCode.Text, out int enteredCode))
+                            {
+                                bool noCode = true;
+                                foreach (CheckIn checkIn in checkIns)
+                                {
+                                    if (checkIn.IsCodeGood(enteredCode))
+                                    {
+                                        tbState.Text = checkIn.CodeMessage(enteredCode);
+                                        if (Checker.LastClient != null)
+                                        {
+                                            Checker.SendResponseToClient(Checker.LastClient, tbState.Text);
+                                        }
+                                        noCode = false;
+                                    }
+                                }
+                                if (noCode)
+                                {
+                                    tbState.Text = "Code incorrect";
+                                }
+                            }
+                            else
+                            {
+                                tbState.Text = "Code incorrect";
+                            }
+                        });
+
+                        
                     }
                     Thread.Sleep(100); // ralentir la boucle pour éviter la surcharge
                 }
