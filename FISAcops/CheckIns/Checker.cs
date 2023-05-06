@@ -26,7 +26,10 @@ namespace FISAcops
                     TcpClient client = server.AcceptTcpClient();
 
                     // Créer un nouveau thread pour gérer la communication avec le client
-                    Thread clientThread = new(() => HandleClient(client));
+                    Thread clientThread = new(() => HandleClient(client))
+                    {
+                        IsBackground = true
+                    };
                     clientThread.Start();
                 }
             }
@@ -40,7 +43,6 @@ namespace FISAcops
         {
             ServerOnline = false;
             server.Stop();
-            ReceivedMessage = "server stopped";
         }
 
         private void HandleClient(TcpClient client)
