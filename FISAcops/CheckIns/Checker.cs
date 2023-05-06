@@ -72,7 +72,7 @@ namespace FISAcops
                     ReceivedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
 
                     // Envoyer la réponse au client
-                    byte[] response = Encoding.ASCII.GetBytes("code reçu");
+                    byte[] response = Encoding.UTF8.GetBytes("code reçu");
                     stream.Write(response, 0, response.Length);
 
                     // Condition de sortie

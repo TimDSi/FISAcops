@@ -73,7 +73,7 @@ namespace ImHere
                     NetworkStream stream = client.GetStream();
                     byte[] buffer = new byte[1024];
                     int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
                     if (message == null)
                     {
