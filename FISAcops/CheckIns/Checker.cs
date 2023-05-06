@@ -71,8 +71,9 @@ namespace FISAcops
                     int bytesRead = stream.Read(data, 0, data.Length);
                     ReceivedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
 
-                    // Stockage du message reçu
-                    // ...
+                    // Envoyer la réponse au client
+                    byte[] response = Encoding.ASCII.GetBytes("code reçu");
+                    stream.Write(response, 0, response.Length);
 
                     // Condition de sortie
                     if (ReceivedMessage == "stop")
