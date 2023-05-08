@@ -61,9 +61,12 @@ namespace FISAcops
 
         public static void SendResponseToClient(TcpClient client, string response)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(response);
-            NetworkStream stream = client.GetStream();
-            stream.Write(buffer, 0, buffer.Length);
+            if (client.Connected)
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(response);
+                NetworkStream stream = client.GetStream();
+                stream.Write(buffer, 0, buffer.Length);
+            }
         }
 
         private void HandleClient(TcpClient client)
@@ -81,15 +84,14 @@ namespace FISAcops
                     LastClient = client;
 
                     // Condition de sortie
-                    if (ReceivedMessage == "stop")
+                    if (bytesRead == 0)
                     {
                         break;
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Exception lors de la lecture du message: {0}", ex.Message);
             }
 
             // Fermeture de la connexion avec le client
