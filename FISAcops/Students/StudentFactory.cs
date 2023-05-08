@@ -8,7 +8,7 @@ namespace FISAcops
 {
     public static class StudentFactory
     {
-        public static Student CreateStudent(string nom, string prenom, string mail, string promotion, string? code)
+        public static IStudent CreateStudent(string nom, string prenom, string mail, string promotion, string? code)
         {
             if (code != null)
             {
@@ -16,7 +16,7 @@ namespace FISAcops
             }
             else
             {
-                return new BaseStudent(nom, prenom, mail, promotion);
+                return new Student(nom, prenom, mail, promotion);
             }
         }
     }

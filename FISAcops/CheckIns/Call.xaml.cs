@@ -18,7 +18,7 @@ namespace FISAcops
     {
         //private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
         private readonly List<Group> groupsList;
-        private List<Student> studentsListWithCode;
+        private List<StudentWithCode> studentsListWithCode;
 
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -86,7 +86,7 @@ namespace FISAcops
 
             for (int i = 0; i < groupSize; i++)
             {
-                checkIns.Add(new CheckIn($"{students[i].Nom} {students[i].Prenom}", codes[i]));
+                checkIns.Add(new CheckIn(students[i].Mail, codes[i]));
             }
 
             return checkIns;
@@ -123,11 +123,17 @@ namespace FISAcops
                                     {
                                         if (checkIn.IsCodeGood(enteredCode))
                                         {
+                                            
                                             int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.Mail);
-                                            //dgStudents.Items[index] = StudentFactory.CreateStudent(studentsListWithCode[index].Nom, studentsListWithCode[index].Prenom, studentsListWithCode[index].Mail, studentsListWithCode[index].Promotion, "Code bon");
+                                            if (index != -1)
+                                            {
+                                                studentsListWithCode[index].UpdateCode("Code bon");
+                                            }
+                                            dgStudents.Items.Refresh(); // Rafraîchir uniquement les éléments du DataGrid
+
+
                                             Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
                                             noCode = false;
-                                            dgStudents.Items.Refresh();
                                         }
                                     }
                                     if (noCode)
@@ -193,7 +199,7 @@ namespace FISAcops
             {
                 Student student = studentsList[i];
                 CheckIn checkIn = checkIns[i];
-                studentsListWithCode.Add(StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
+                studentsListWithCode.Add((StudentWithCode)StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
             }
             StartChecker();
 

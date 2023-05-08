@@ -37,7 +37,7 @@ namespace FISAcops
 
             if (selectedStudent == -1) {
                 // Ajouter un nouvel étudiant à la liste
-                studentsList.Add(StudentFactory.CreateStudent(
+                studentsList.Add((Student)StudentFactory.CreateStudent(
                     nomTextBox.Text,
                     prenomTextBox.Text,
                     mailTextBox.Text,
@@ -48,13 +48,13 @@ namespace FISAcops
             else
             {
                 // Edit étudiant de la liste
-                studentsList[selectedStudent] = (StudentFactory.CreateStudent(
+                studentsList[selectedStudent] = (Student)StudentFactory.CreateStudent(
                     nomTextBox.Text,
                     prenomTextBox.Text,
                     mailTextBox.Text,
                     promoTextBox.Text,
                     null
-                    ));
+                    );
             }
             
 
