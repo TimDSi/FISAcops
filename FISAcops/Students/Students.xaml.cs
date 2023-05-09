@@ -12,9 +12,6 @@ namespace FISAcops
     /// </summary>
     public partial class Students : Page
     {
-
-        private string filePath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
-
         private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
@@ -61,7 +58,7 @@ namespace FISAcops
                 if (result == MessageBoxResult.Yes)
                 {
                     // Supprimer l'étudiant de tous les groupes qui le contiennent
-                    var groups = LoadGroupsFromJson();
+                    var groups = GroupsService.LoadGroupsFromJson();
                     foreach (var group in groups)
                     {
                         var studentToRemove = group.StudentsList.FirstOrDefault(s => s.Mail == selectedStudent.Mail);
@@ -70,7 +67,7 @@ namespace FISAcops
                             group.StudentsList.Remove(studentToRemove);
                         }
                     }
-                    SaveGroupsToJson(groups);
+                    GroupsService.SaveGroupsToJson(groups);
 
 
                     // Supprimer l'élève de la liste des étudiants
@@ -81,28 +78,10 @@ namespace FISAcops
                     studentsListView.ItemsSource = students;
 
                     // Enregistrer les modifications dans le fichier JSON
-                    SaveStudentsToJson(students);
+                    StudentsService.SaveStudentsToJson(students);
                 }
             }
 
-        }
-
-        private List<Group> LoadGroupsFromJson()
-        {
-            var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-            if (!File.Exists(groupPath))
-            {
-                return new List<Group>();
-            }
-            var json = File.ReadAllText(groupPath);
-            return JsonSerializer.Deserialize<List<Group>>(json);
-        }
-
-        private void SaveGroupsToJson(List<Group> groups)
-        {
-            var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-            var json = JsonSerializer.Serialize(groups, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(groupPath, json);
         }
 
 
@@ -112,31 +91,11 @@ namespace FISAcops
             mainWindow.frame.Navigate(new StudentEdition());
         }
 
-        private void SaveStudentsToJson(List<Student> students)
-        {
-            var studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
-            var json = JsonSerializer.Serialize(students, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(studentsPath, json);
-        }
-
-        public void RefreshStudentsList()
-        {
-            // Charger les étudiants à partir du fichier JSON
-            if (File.Exists(filePath))
-            {
-                string json = File.ReadAllText(filePath);
-                StudentsList = JsonSerializer.Deserialize<List<Student>>(json);
-            }
-
-            // Rafraîchir la source de données de la ListView
-            studentsListView.ItemsSource = null;
-            studentsListView.ItemsSource = StudentsList;
-        }
-
         public Students()
         {
             InitializeComponent();
-            RefreshStudentsList();
+            StudentsList = StudentsService.LoadStudentsFromJson();
+
             // Lier la liste d'étudiants à notre ListView
             studentsListView.ItemsSource = StudentsList;
             Title = "Liste des élèves"; // Ajoutez cette ligne pour modifier le titre de la fenêtre

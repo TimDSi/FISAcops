@@ -14,10 +14,10 @@ namespace FISAcops
     {
         public string settingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "settings.json");
 
-        private readonly string DefaultPath = Environment.CurrentDirectory;
+        private static readonly string DefaultPath = Environment.CurrentDirectory;
 
-        public string studentsPath;
-        public string groupsPath;
+        public string studentsPath = DefaultPath;
+        public string groupsPath = DefaultPath;
 
 
         private void SaveSettings(string studentsPath, string groupPath)
@@ -40,6 +40,7 @@ namespace FISAcops
         {
             SaveSettings(studentsPath, groupsPath);
         }
+
         private void BtnStudentsPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
@@ -61,20 +62,6 @@ namespace FISAcops
                     TxtStudentsPath.Text = selectedFolder;
                 }
             }
-        }
-
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
-        {
-            //Réinitialiser les valeurs par défaut
-            studentsPath = DefaultPath;
-            groupsPath = DefaultPath;
-
-            // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath);
-
-            // Mettre à jour le texte du TextBox
-            TxtGroupPath.Text = groupsPath;
-            TxtStudentsPath.Text = studentsPath;
         }
 
         private void BtnGroupPath_Click(object sender, RoutedEventArgs e)
@@ -99,6 +86,21 @@ namespace FISAcops
                 }
             }
         }
+
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        {
+            //Réinitialiser les valeurs par défaut
+            studentsPath = DefaultPath;
+            groupsPath = DefaultPath;
+
+            // Mettre à jour les fichiers de configuration JSON
+            SaveSettings(studentsPath, groupsPath);
+
+            // Mettre à jour le texte du TextBox
+            TxtGroupPath.Text = groupsPath;
+            TxtStudentsPath.Text = studentsPath;
+        }
+
 
         private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
         {
@@ -371,6 +373,7 @@ namespace FISAcops
             // Désérialiser le contenu JSON en un objet
             var jsonObject = JsonSerializer.Deserialize<dynamic>(jsonString);
 
+
             // Vérifier si la propriété GroupPath existe dans l'objet JSON
             if (jsonObject.TryGetProperty("GroupPath", out JsonElement groupPathElement))
             {
@@ -385,6 +388,7 @@ namespace FISAcops
             }
             CreateGroupsFileIfNotExists();
 
+
             // Vérifier si la propriété StudentsPath existe dans l'objet JSON
             if (jsonObject.TryGetProperty("StudentsPath", out JsonElement studentsPathElement))
             {
@@ -397,8 +401,8 @@ namespace FISAcops
                     studentsPath = filePath;
                 }
             }
-
             CreateStudentsFileIfNotExists();
+
 
             TxtGroupPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
@@ -413,9 +417,6 @@ namespace FISAcops
             {
                 CreateSettingsFile(DefaultPath);
             }
-
-            studentsPath = DefaultPath;
-            groupsPath = DefaultPath;
 
             LoadSettings();
         }

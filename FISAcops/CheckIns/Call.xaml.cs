@@ -44,29 +44,6 @@ namespace FISAcops
             }
         }
 
-
-        private static List<Group> LoadGroupsFromJson()
-        {
-            var groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-            if (!File.Exists(groupPath))
-            {
-                return new List<Group>();
-            }
-            var json = File.ReadAllText(groupPath);
-            return JsonSerializer.Deserialize<List<Group>>(json);
-        }
-
-        private static List<Student> LoadStudentsFromJson()
-        {
-            var studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
-            if (!File.Exists(studentsPath))
-            {
-                return new List<Student>();
-            }
-            var json = File.ReadAllText(studentsPath);
-            return JsonSerializer.Deserialize<List<Student>>(json);
-        }
-
         private List<CheckIn> checkIns = new();
 
         private static List<CheckIn> GenerateCheckIns(List<Student> students)
@@ -234,10 +211,10 @@ namespace FISAcops
             InitializeComponent();
             studentsListWithCode = new();
 
-            cbStudents.ItemsSource = LoadStudentsFromJson();
+            cbStudents.ItemsSource = StudentsService.LoadStudentsFromJson();
             cbStudents.SelectedIndex = 0;
 
-            groupsList = LoadGroupsFromJson();
+            groupsList = GroupsService.LoadGroupsFromJson();
             foreach (var group in groupsList)
             {
                 cbGroups.Items.Add(group.GroupName);
