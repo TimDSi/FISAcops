@@ -83,16 +83,8 @@ namespace FISAcops
                 groupsList[selectedGroup].GroupName = nomTextBox.Text;
                 groupsList[selectedGroup].StudentsList = SelectedStudents;
             }
-
-
-            // Sauvegarder la liste complète d'étudiants dans le fichier JSON
-            var options = new JsonSerializerOptions
-                {
-                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                    WriteIndented = true // Ajouter cette option pour formater le JSON de manière plus lisible
-                };
-            string output = JsonSerializer.Serialize(groupsList, options);
-            File.WriteAllText(groupPath, output, new UTF8Encoding(false));
+            
+            GroupsService.SaveGroupsToJson(groupsList);
 
             ReturnAndLoad();
         }
@@ -111,43 +103,24 @@ namespace FISAcops
         {
             InitializeComponent();
             this.selectedGroup = selectedGroup;
-            string studentsPath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
 
-            // Charger les étudiants à partir du fichier JSON
-            if (File.Exists(studentsPath))
+            AvailableStudents = StudentsService.LoadStudentsFromJson();
+
+            groupsList = GroupsService.LoadGroupsFromJson();
+            if (selectedGroup == -1)
             {
-                string json = File.ReadAllText(studentsPath);
-                if (json != null)
-                {
-                    AvailableStudents = JsonSerializer.Deserialize<List<Student>>(json);
-                }
-            }
-
-            if (File.Exists(groupPath))
-            {
-                string json = File.ReadAllText(groupPath);
-                groupsList = JsonSerializer.Deserialize<List<Group>>(json);
-
-                if (selectedGroup == -1)
-                {
-                    // Pas de groupe sélectionné, initialiser la liste des étudiants sélectionnés
-                    SelectedStudents = new List<Student>();
-                }
-                else if (groupsList != null) 
-                {
-                    // Groupe sélectionné, charger la liste des étudiants sélectionnés
-                    SelectedStudents =  groupsList[selectedGroup].StudentsList;
-                    nomTextBox.Text = groupsList[selectedGroup].GroupName;
-                }
-
-                // Supprimer les étudiants sélectionnés de la liste AvailableStudents
-                AvailableStudents?.RemoveAll(student => SelectedStudents.Any(s => s.Mail == student.Mail));
-            }
-            else
-            {
-                // Pas de fichier de groupe, initialiser la liste des étudiants sélectionnés
+                // Pas de groupe sélectionné, initialiser la liste des étudiants sélectionnés
                 SelectedStudents = new List<Student>();
             }
+            else if (groupsList != null)
+            {
+                // Groupe sélectionné, charger la liste des étudiants sélectionnés
+                SelectedStudents = groupsList[selectedGroup].StudentsList;
+                nomTextBox.Text = groupsList[selectedGroup].GroupName;
+            }
+
+            // Supprimer les étudiants sélectionnés de la liste AvailableStudents
+            AvailableStudents?.RemoveAll(student => SelectedStudents.Any(s => s.Mail == student.Mail));
 
             dgStudents2.ItemsSource = AvailableStudents;
             dgStudents1.ItemsSource = SelectedStudents;

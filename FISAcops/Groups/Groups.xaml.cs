@@ -12,9 +12,7 @@ namespace FISAcops
     public partial class Groups : Page
     {
 
-        private readonly string filePath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-
-        private List<Group> groupsList = new();
+        private readonly List<Group> groupsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -70,7 +68,7 @@ namespace FISAcops
                     groupsListView.ItemsSource = groupsList;
 
                     // Enregistrer les modifications dans le fichier JSON
-                    SaveGroupsToJson(groupsList);
+                    GroupsService.SaveGroupsToJson(groupsList);
                 }
             }
         }
@@ -81,33 +79,11 @@ namespace FISAcops
             mainWindow.frame.Navigate(new GroupEdition());
         }
 
-        private void SaveGroupsToJson(List<Group> groupList)
-        {
-            // Convertir la liste des groupes en JSON
-            string json = JsonSerializer.Serialize(groupList);
-
-            // Écrire le JSON dans le fichier
-            File.WriteAllText(filePath, json);
-        }
-
-        public void RefreshGroupsList()
-        {
-            // Charger les étudiants à partir du fichier JSON
-            if (File.Exists(filePath))
-            {
-                string json = File.ReadAllText(filePath);
-                groupsList = JsonSerializer.Deserialize<List<Group>>(json);
-            }
-
-            // Rafraîchir la source de données de la ListView
-            groupsListView.ItemsSource = null;
-            groupsListView.ItemsSource = groupsList;
-        }
 
         public Groups()
         {
             InitializeComponent();
-            RefreshGroupsList();
+            groupsList = GroupsService.LoadGroupsFromJson();
             groupsListView.ItemsSource = groupsList;
         }
 

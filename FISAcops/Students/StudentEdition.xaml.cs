@@ -15,8 +15,6 @@ namespace FISAcops
     /// </summary>
     public partial class StudentEdition : Page
     {
-        private readonly string filePath = System.IO.Path.Combine(new Settings().studentsPath, "students.json");
-
         private static List<Student> studentsList = new();
         private readonly int selectedStudent;
 
@@ -56,17 +54,7 @@ namespace FISAcops
                     null
                     );
             }
-            
-
-            // Sauvegarder la liste complète d'étudiants dans le fichier JSON
-            var options = new JsonSerializerOptions
-            {
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true // Ajouter cette option pour formater le JSON de manière plus lisible
-            };
-            string output = JsonSerializer.Serialize(studentsList, options);
-            File.WriteAllText(filePath, output, new UTF8Encoding(false));
-
+            StudentsService.SaveStudentsToJson(studentsList);
             ReturnAndLoad();
         }
 
@@ -124,23 +112,19 @@ namespace FISAcops
             InitializeComponent();
             this.selectedStudent = selectedStudent;
             // Charger les étudiants existants à partir du fichier JSON
-            if (File.Exists(filePath))
+            studentsList = StudentsService.LoadStudentsFromJson();
+
+            // Vérifier si un élève est sélectionné ou non
+            if (selectedStudent != -1 && studentsList != null)
             {
-                string json = File.ReadAllText(filePath);
-                studentsList = JsonSerializer.Deserialize<List<Student>>(json);
+                // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
+                var student = studentsList[selectedStudent];
 
-                // Vérifier si un élève est sélectionné ou non
-                if (selectedStudent != -1 && studentsList != null)
-                {
-                    // Récupérer l'élève à partir de la liste des étudiants en utilisant l'indice
-                    var student = studentsList[selectedStudent];
-
-                    // Remplir les champs du formulaire avec les valeurs de cet élève
-                    nomTextBox.Text = student.Nom;
-                    prenomTextBox.Text = student.Prenom;
-                    mailTextBox.Text = student.Mail;
-                    promoTextBox.Text = student.Promotion;
-                }
+                // Remplir les champs du formulaire avec les valeurs de cet élève
+                nomTextBox.Text = student.Nom;
+                prenomTextBox.Text = student.Prenom;
+                mailTextBox.Text = student.Mail;
+                promoTextBox.Text = student.Promotion;
             }
         }
     }
