@@ -11,7 +11,7 @@ namespace FISAcops.CheckIns
 
     internal class CheckIn
     {
-        public readonly string Mail;
+        public Student student;
         private readonly int code;
 
         public int GetCode() { return code; }
@@ -25,17 +25,17 @@ namespace FISAcops.CheckIns
             string result;
             if (enteredCode == code)
             {
-                result = Mail + " : Code bon";
+                result = $"{student.Prenom} {student.Nom} : Code bon";
             }
             else
             {
-                result = Mail + " : Code incorrect";
+                result = $"{student.Prenom} {student.Nom} : Code incorrect";
             }
             return result;
         }
 
-        public CheckIn(string Mail, int inputCode) {
-            this.Mail = Mail;
+        public CheckIn(Student student, int inputCode) {
+            this.student = student;
             this.code = inputCode;
         }
     }

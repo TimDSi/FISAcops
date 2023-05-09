@@ -13,9 +13,6 @@ namespace FISAcops
     /// </summary>
     public partial class GroupEdition : Page
     {
-
-        private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
-
         private readonly List<Student> AvailableStudents = new();
         private readonly List<Student> SelectedStudents = new();
 

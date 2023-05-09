@@ -39,8 +39,6 @@ namespace FISAcops
             {
                 cbStudents.Visibility = Visibility.Collapsed;
                 cbGroups.Visibility = Visibility.Visible;
-
-                
             }
         }
 
@@ -63,7 +61,7 @@ namespace FISAcops
 
             for (int i = 0; i < groupSize; i++)
             {
-                checkIns.Add(new CheckIn(students[i].Mail, codes[i]));
+                checkIns.Add(new CheckIn(students[i], codes[i]));
             }
 
             return checkIns;
@@ -101,7 +99,7 @@ namespace FISAcops
                                         if (checkIn.IsCodeGood(enteredCode))
                                         {
                                             
-                                            int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.Mail);
+                                            int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.student.Mail);
                                             if (index != -1)
                                             {
                                                 studentsListWithCode[index].UpdateCode("Code bon");
