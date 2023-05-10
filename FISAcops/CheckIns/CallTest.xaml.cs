@@ -14,7 +14,7 @@ namespace FISAcops
     /// <summary>
     /// Interaction logic for Page1.xaml
     /// </summary>
-    public partial class Call : Page
+    public partial class CallTest : Page
     {
         //private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
         private readonly List<Group> groupsList;
@@ -201,7 +201,7 @@ namespace FISAcops
         }
 
 
-        public Call()
+        public CallTest()
         {
             cbStudents = new ComboBox();
             cbGroups = new ComboBox();

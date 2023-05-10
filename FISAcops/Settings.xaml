@@ -26,8 +26,8 @@
         <TextBox x:Name="TxtStudentsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,48,0,0" Height="18" />
         <Button Content="Parcourir" Click="BtnStudentsPath_Click" Height="20" Grid.Row="1" Margin="301,46,440,184" />
 
-        <TextBox x:Name="TxtGroupPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,72,0,0" />
-        <Button Content="Parcourir" Click="BtnGroupPath_Click" Height="20" Grid.Row="1" Margin="301,71,440,159" />
+        <TextBox x:Name="TxtGroupsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,72,0,0" />
+        <Button Content="Parcourir" Click="BtnGroupsPath_Click" Height="20" Grid.Row="1" Margin="301,71,440,159" />
 
         <TextBox x:Name="TxtCallPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,96,0,0" />
         <Button Content="Parcourir" Click="BtnCallPath_Click" Height="20" Grid.Row="1" Margin="301,96,440,134" />

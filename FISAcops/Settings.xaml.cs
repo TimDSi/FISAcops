@@ -18,17 +18,17 @@ namespace FISAcops
 
         public string studentsPath = DefaultPath;
         public string groupsPath = DefaultPath;
-        public string callPath = DefaultPath;
+        public string callsPath = DefaultPath;
 
 
-        private void SaveSettings(string studentsPath, string groupPath, string callPath)
+        private void SaveSettings(string studentsPath, string groupsPath, string callsPath)
         {
             // Créer un objet JSON pour stocker les chemins de dossier
             var jsonObject = new
             {
                 StudentsPath = studentsPath,
-                GroupPath = groupPath,
-                CallPath = callPath
+                GroupsPath = groupsPath,
+                CallsPath = callsPath
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -64,7 +64,7 @@ namespace FISAcops
             }
         }
 
-        private void BtnGroupPath_Click(object sender, RoutedEventArgs e)
+        private void BtnGroupsPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -82,7 +82,7 @@ namespace FISAcops
                 if (selectedFolder != null)
                 {
                     groupsPath = selectedFolder;
-                    TxtGroupPath.Text = selectedFolder;
+                    TxtGroupsPath.Text = selectedFolder;
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace FISAcops
                 string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    callPath = selectedFolder;
+                    callsPath = selectedFolder;
                     TxtCallPath.Text = selectedFolder;
                 }
             }
@@ -114,7 +114,7 @@ namespace FISAcops
 
         private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
         {
-            SaveSettings(studentsPath, groupsPath, callPath);
+            SaveSettings(studentsPath, groupsPath, callsPath);
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -122,15 +122,15 @@ namespace FISAcops
             // Réinitialiser les valeurs par défaut
             studentsPath = DefaultPath;
             groupsPath = DefaultPath;
-            callPath = DefaultPath;
+            callsPath = DefaultPath;
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath, callPath);
+            SaveSettings(studentsPath, groupsPath, callsPath);
 
             // Mettre à jour le texte du TextBox
-            TxtGroupPath.Text = groupsPath;
+            TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
-            TxtCallPath.Text = callPath;
+            TxtCallPath.Text = callsPath;
         }
 
 
@@ -149,7 +149,7 @@ namespace FISAcops
                 var settingsObject = new
                 {
                     StudentsPath = defaultPath,
-                    GroupPath = defaultPath
+                    GroupsPath = defaultPath
                 };
 
                 // Convertir l'objet en une chaîne JSON
@@ -381,7 +381,7 @@ namespace FISAcops
 
         private void CreateCallFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(callPath, "Call.json")))
+            if (!File.Exists(Path.Combine(callsPath, "Call.json")))
             {
                 var callObject = new[]
                 {
@@ -400,7 +400,7 @@ namespace FISAcops
                 string jsonString = JsonSerializer.Serialize(callObject);
 
                 // Écrire la chaîne JSON dans le fichier "Call.json"
-                File.WriteAllText(Path.Combine(callPath, "Call.json"), jsonString);
+                File.WriteAllText(Path.Combine(callsPath, "Call.json"), jsonString);
             }
         }
         //-----------------------------------------------------------------------------------------------------------------------------
@@ -453,15 +453,15 @@ namespace FISAcops
                 // Affecter la valeur de CallPath à callPath
                 if (filePath != null)
                 {
-                    callPath = filePath;
+                    callsPath = filePath;
                 }
             }
             CreateCallFileIfNotExists();
 
 
-            TxtGroupPath.Text = groupsPath;
+            TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
-            TxtCallPath.Text = callPath;
+            TxtCallPath.Text = callsPath;
         }
 
 

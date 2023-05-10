@@ -23,7 +23,7 @@ namespace FISAcops
         private void BtnCall(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
-            mainWindow.frame.Navigate(new Call());
+            mainWindow.frame.Navigate(new CallTest());
         }
 
         private void BtnCalender(object sender, RoutedEventArgs e)
