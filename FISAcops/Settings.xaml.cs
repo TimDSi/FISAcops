@@ -18,15 +18,17 @@ namespace FISAcops
 
         public string studentsPath = DefaultPath;
         public string groupsPath = DefaultPath;
+        public string callPath = DefaultPath;
 
 
-        private void SaveSettings(string studentsPath, string groupPath)
+        private void SaveSettings(string studentsPath, string groupPath, string callPath)
         {
             // Créer un objet JSON pour stocker les chemins de dossier
             var jsonObject = new
             {
                 StudentsPath = studentsPath,
-                GroupPath = groupPath
+                GroupPath = groupPath,
+                CallPath = callPath
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -36,11 +38,9 @@ namespace FISAcops
             File.WriteAllText(settingsPath, jsonString);
         }
 
-        private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
-        {
-            SaveSettings(studentsPath, groupsPath);
-        }
 
+
+        //Btn change path --------------------------------------------------------------------------------------------------------
         private void BtnStudentsPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
@@ -87,38 +87,50 @@ namespace FISAcops
             }
         }
 
+        private void BtnCallPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "Folder Selection",
+                Filter = "Folders|*.none",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                if (selectedFolder != null)
+                {
+                    callPath = selectedFolder;
+                    TxtCallPath.Text = selectedFolder;
+                }
+            }
+        }
+        //-----------------------------------------------------------------------------------------------------------------
+
+
+        private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings(studentsPath, groupsPath, callPath);
+        }
+
         private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
-            //Réinitialiser les valeurs par défaut
+            // Réinitialiser les valeurs par défaut
             studentsPath = DefaultPath;
             groupsPath = DefaultPath;
+            callPath = DefaultPath;
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath);
+            SaveSettings(studentsPath, groupsPath, callPath);
 
             // Mettre à jour le texte du TextBox
             TxtGroupPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
-        }
-
-
-        private void BtnSetLocalFilePath_Click(object sender, RoutedEventArgs e)
-        {
-            studentsPath = DefaultPath;
-            groupsPath = DefaultPath;
-
-            // Créer un objet JSON pour stocker les chemins des fichiers
-            var jsonObject = new
-            {
-                studentsPath = DefaultPath,
-                groupPath = DefaultPath
-            };
-
-            // Convertir l'objet JSON en une chaîne JSON
-            string jsonString = JsonSerializer.Serialize(jsonObject);
-
-            // Enregistrer la chaîne JSON dans un fichier
-            File.WriteAllText(settingsPath, jsonString);
+            TxtCallPath.Text = callPath;
         }
 
 
@@ -129,7 +141,7 @@ namespace FISAcops
             mainWindow.frame.Navigate(new MainPage());
         }
 
-
+        //-----Create if not exists-------------------------------------------------------------------------------------------------------
         private static void CreateSettingsFileIfNotExists(string defaultPath)
         {
             if (!File.Exists("settings.json"))
@@ -367,6 +379,31 @@ namespace FISAcops
             }
         }
 
+        private void CreateCallFileIfNotExists()
+        {
+            if (!File.Exists(Path.Combine(callPath, "call.json")))
+            {
+                var callObject = new[]
+                {
+                    new {
+                        GroupName = "Gryffondor",
+                        DateHour = "10/05/2023-22:33"
+                    },
+                    new {
+                        GroupName = "Serpentar",
+                        DateHour = "10/05/2023-22:33"
+                    },
+                    
+                };
+
+                // Convertir l'objet en une chaîne JSON
+                string jsonString = JsonSerializer.Serialize(callObject);
+
+                // Écrire la chaîne JSON dans le fichier "call.json"
+                File.WriteAllText(Path.Combine(callPath, "call.json"), jsonString);
+            }
+        }
+        //-----------------------------------------------------------------------------------------------------------------------------
 
         private void LoadSettings()
         {
@@ -407,15 +444,30 @@ namespace FISAcops
             CreateStudentsFileIfNotExists();
 
 
+            // Vérifier si la propriété CallPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("CallPath", out JsonElement callPathElement))
+            {
+                // Récupérer la valeur de la propriété CallPath
+                string? filePath = callPathElement.GetString();
+
+                // Affecter la valeur de CallPath à callPath
+                if (filePath != null)
+                {
+                    callPath = filePath;
+                }
+            }
+            CreateCallFileIfNotExists();
+
+
             TxtGroupPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
+            TxtCallPath.Text = callPath;
         }
 
 
         public Settings()
         {
             InitializeComponent();
-
             
             CreateSettingsFileIfNotExists(DefaultPath);
 
