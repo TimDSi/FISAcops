@@ -12,7 +12,7 @@ namespace FISAcops
     /// </summary>
     public partial class Settings : Page
     {
-        public string settingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "settings.json");
+        public string settingsPath = Path.Combine(Environment.CurrentDirectory, "settings.json");
 
         private static readonly string DefaultPath = Environment.CurrentDirectory;
 
@@ -130,19 +130,22 @@ namespace FISAcops
         }
 
 
-        private static void CreateSettingsFile(string defaultPath)
+        private static void CreateSettingsFileIfNotExists(string defaultPath)
         {
-            var settingsObject = new
+            if (!File.Exists("settings.json"))
             {
-                StudentsPath = defaultPath,
-                GroupPath = defaultPath
-            };
+                var settingsObject = new
+                {
+                    StudentsPath = defaultPath,
+                    GroupPath = defaultPath
+                };
 
-            // Convertir l'objet en une chaîne JSON
-            string jsonString = JsonSerializer.Serialize(settingsObject);
+                // Convertir l'objet en une chaîne JSON
+                string jsonString = JsonSerializer.Serialize(settingsObject);
 
-            // Écrire la chaîne JSON dans le fichier "settings.json"
-            File.WriteAllText("settings.json", jsonString);
+                // Écrire la chaîne JSON dans le fichier "settings.json"
+                File.WriteAllText("settings.json", jsonString);
+            }
         }
 
 
@@ -413,10 +416,8 @@ namespace FISAcops
         {
             InitializeComponent();
 
-            if (!File.Exists("settings.json"))
-            {
-                CreateSettingsFile(DefaultPath);
-            }
+            
+            CreateSettingsFileIfNotExists(DefaultPath);
 
             LoadSettings();
         }
