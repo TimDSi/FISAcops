@@ -381,7 +381,7 @@ namespace FISAcops
 
         private void CreateCallFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(callPath, "call.json")))
+            if (!File.Exists(Path.Combine(callPath, "Call.json")))
             {
                 var callObject = new[]
                 {
@@ -399,8 +399,8 @@ namespace FISAcops
                 // Convertir l'objet en une chaîne JSON
                 string jsonString = JsonSerializer.Serialize(callObject);
 
-                // Écrire la chaîne JSON dans le fichier "call.json"
-                File.WriteAllText(Path.Combine(callPath, "call.json"), jsonString);
+                // Écrire la chaîne JSON dans le fichier "Call.json"
+                File.WriteAllText(Path.Combine(callPath, "Call.json"), jsonString);
             }
         }
         //-----------------------------------------------------------------------------------------------------------------------------
