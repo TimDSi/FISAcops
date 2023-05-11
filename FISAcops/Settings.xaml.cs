@@ -386,12 +386,16 @@ namespace FISAcops
                 var callObject = new[]
                 {
                     new {
+                        Date = "10/05/2023",
+                        Time = "10:30",
                         GroupName = "Gryffondor",
-                        DateHour = "10/05/2023-22:33"
+                        Frequency = "once"
                     },
                     new {
+                        Date = "10/05/2023",
+                        Time = "08:30",
                         GroupName = "Serpentar",
-                        DateHour = "10/05/2023-22:33"
+                        Frequency = "weekly"
                     },
                     
                 };
