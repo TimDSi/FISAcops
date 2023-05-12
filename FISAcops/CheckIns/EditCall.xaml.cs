@@ -25,6 +25,8 @@ namespace FISAcops
         public string SelectedTimeSlot { get; set; }
         public bool IsDateReadOnly { get; set; }
 
+        private readonly List<Group> groupsList;
+
         public EditCall(Call call)
         {
             InitializeComponent();
@@ -39,6 +41,13 @@ namespace FISAcops
             TimeSlots = GenerateTimeSlots();
 
             this.SelectedTimeSlot = call.Time;
+
+            groupsList = GroupsService.LoadGroupsFromJson();
+            foreach (var group in groupsList)
+            {
+                cbGroups.Items.Add(group.GroupName);
+            }
+            cbGroups.SelectedIndex = 0;
         }
 
         private static List<string> GenerateTimeSlots()

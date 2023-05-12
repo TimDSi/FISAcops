@@ -16,7 +16,6 @@ namespace FISAcops
     /// </summary>
     public partial class CallTest : Page
     {
-        //private readonly string groupPath = System.IO.Path.Combine(new Settings().groupsPath, "groups.json");
         private readonly List<Group> groupsList;
         private List<StudentWithCode> studentsListWithCode;
 

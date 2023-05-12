@@ -30,6 +30,7 @@
         <ComboBox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,75,0,0" Width="143"
           ItemsSource="{Binding TimeSlots}" SelectedItem="{Binding SelectedTimeSlot}" />
 
+        <ComboBox Grid.Row="1" x:Name="cbGroups" Margin="57,112,600,112"/>
 
 
         <!-- Bouton en bas à droite -->
