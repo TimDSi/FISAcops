@@ -149,7 +149,8 @@ namespace FISAcops
                 var settingsObject = new
                 {
                     StudentsPath = defaultPath,
-                    GroupsPath = defaultPath
+                    GroupsPath = defaultPath,
+                    CallsPath = defaultPath
                 };
 
                 // Convertir l'objet en une chaîne JSON
@@ -381,7 +382,7 @@ namespace FISAcops
 
         private void CreateCallFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(callsPath, "Call.json")))
+            if (!File.Exists(Path.Combine(callsPath, "Calls.json")))
             {
                 var callObject = new[]
                 {
@@ -389,13 +390,13 @@ namespace FISAcops
                         Date = "10/05/2023",
                         Time = "10:30",
                         GroupName = "Gryffondor",
-                        Frequency = "once"
+                        Frequency = "Once"
                     },
                     new {
                         Date = "10/05/2023",
                         Time = "08:30",
                         GroupName = "Serpentar",
-                        Frequency = "weekly"
+                        Frequency = "Weekly"
                     },
                     
                 };
@@ -404,7 +405,7 @@ namespace FISAcops
                 string jsonString = JsonSerializer.Serialize(callObject);
 
                 // Écrire la chaîne JSON dans le fichier "Call.json"
-                File.WriteAllText(Path.Combine(callsPath, "Call.json"), jsonString);
+                File.WriteAllText(Path.Combine(callsPath, "Calls.json"), jsonString);
             }
         }
         //-----------------------------------------------------------------------------------------------------------------------------
@@ -449,7 +450,7 @@ namespace FISAcops
 
 
             // Vérifier si la propriété CallPath existe dans l'objet JSON
-            if (jsonObject.TryGetProperty("CallPath", out JsonElement callPathElement))
+            if (jsonObject.TryGetProperty("CallsPath", out JsonElement callPathElement))
             {
                 // Récupérer la valeur de la propriété CallPath
                 string? filePath = callPathElement.GetString();

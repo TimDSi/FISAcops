@@ -32,6 +32,8 @@ namespace FISAcops
             }
         }
 
+        public List<Call>? Calls;
+
 
         public Calender()
         {
@@ -43,6 +45,17 @@ namespace FISAcops
         {
             DateTime selectedDate = ((Calendar)sender).SelectedDate.GetValueOrDefault();
             SelectedDateText = selectedDate.ToShortDateString();
+
+            // Filtrer les appels en fonction de la date sélectionnée
+            List<Call> filteredCalls = CallsService.LoadCallsForSelectedDate(SelectedDateText);
+
+            // Vider la collection Items du DataGrid
+            CallsByDate.ItemsSource = null;
+            CallsByDate.Items.Clear();
+
+            // Mettre à jour la liste des appels dans le DataGrid
+            CallsByDate.ItemsSource = filteredCalls;
+            OnPropertyChanged(nameof(Calls));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -61,6 +74,62 @@ namespace FISAcops
             if (selectedDate != null) {
                 // Naviguer vers la page "EditCall" en passant la date sélectionnée en tant que paramètre
                 mainWindow.frame.Navigate(new EditCall(new Call(selectedDate,"08:30","","once")));
+            }
+        }
+
+        private void ModifierButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtenir le bouton qui a déclenché l'événement
+            var modifierButton = (Button)sender;
+
+            // Obtenir l'objet Call associé à la ligne du bouton cliqué
+            var call = (Call)modifierButton.DataContext;
+
+            // Effectuer les actions de modification avec l'objet Call
+            // ...
+
+            // Exemple : Naviguer vers la page "EditCall" en passant l'objet Call en tant que paramètre
+            var mainWindow = (MainWindow)Window.GetWindow(this);
+            mainWindow.frame.Navigate(new EditCall(call));
+        }
+
+        private void SupprimerButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtenir le bouton qui a déclenché l'événement
+            var supprimerButton = (Button)sender;
+
+            // Obtenir l'objet Call associé à la ligne du bouton cliqué
+            var call = (Call)supprimerButton.DataContext;
+
+            // Charger la liste des appels depuis le fichier JSON
+            List<Call> calls = CallsService.LoadCallsFromJson();
+
+            // Recherche de l'index de l'appel dans la liste
+            var index = -1;
+            for (var i = 0; i < calls.Count; i++)
+            {
+                var callFromList = calls[i];
+                if (call.Date == callFromList.Date
+                    && call.Time == callFromList.Time
+                    && call.GroupName == callFromList.GroupName
+                    && call.Frequency == callFromList.Frequency)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index != -1)
+            {
+                // Supprimer l'appel de la liste
+                calls.RemoveAt(index);
+
+                // Sauvegarder la liste mise à jour dans le fichier JSON
+                CallsService.SaveCallsToJson(calls);
+
+                // Mettre à jour la source de données du DataGrid pour refléter la suppression
+                CallsByDate.ItemsSource = calls;
+                OnPropertyChanged(nameof(Calls));
             }
         }
 

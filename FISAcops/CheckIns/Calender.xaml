@@ -25,7 +25,7 @@
            VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
-        <Calendar Grid.Row="1" SelectionMode="SingleRange" Margin="-308,0,308,0"
+        <Calendar Grid.Row="1" SelectionMode="SingleRange" Margin="0,0,597,75"
               SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
         
         <!-- TextBox pour afficher la date sélectionnée -->
@@ -33,6 +33,29 @@
 
         <!-- Bouton pour naviguer vers la page "EditCall" -->
         <Button Grid.Row="1" Margin="20,212,629,20" Content="Create Call" Click="EditCallButton_Click"/>
+
+        <!-- DataGrid pour afficher la liste des appels -->
+        <DataGrid Grid.Row="1" Margin="320,10,20,20" AutoGenerateColumns="False" x:Name="CallsByDate">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
+                <DataGridTextColumn Header="Time Slot" Binding="{Binding Time}"/>
+                <DataGridTextColumn Header="Group" Binding="{Binding GroupName}"/>
+                <DataGridTextColumn Header="Frequency" Binding="{Binding Frequency}"/>
+                <!-- Colonne personnalisée pour les boutons Modifier et Supprimer -->
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Bouton Modifier -->
+                                <Button Content="Modifier" Click="ModifierButton_Click"/>
+                                <!-- Bouton Supprimer -->
+                                <Button Content="Supprimer" Click="SupprimerButton_Click"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!-- Bouton en bas à droite -->
         <Button Content="Mon Bouton" 

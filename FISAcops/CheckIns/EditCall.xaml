@@ -27,10 +27,23 @@
         <!-- Contenu de la page ici -->
         <TextBox Text="{Binding Date, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,38,0,0" Grid.Row="1" Width="143" IsReadOnly="{Binding IsDateReadOnly}" />
 
-        <ComboBox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,75,0,0" Width="143"
+        <ComboBox Grid.Row="1" x:Name="cbTimeSlots" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,75,0,0" Width="143"
           ItemsSource="{Binding TimeSlots}" SelectedItem="{Binding SelectedTimeSlot}" />
 
         <ComboBox Grid.Row="1" x:Name="cbGroups" Margin="57,112,600,112"/>
+
+        <ComboBox Grid.Row="1" x:Name="cbFrequency" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,148,0,0" Width="143" SelectedIndex="0">
+            <ComboBoxItem Content="Once" />
+            <ComboBoxItem Content="Weekly" />
+            <ComboBoxItem Content="Monthly" />
+        </ComboBox>
+
+        <Button Content="Valider"
+        Margin="0,0,672,29"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom"
+        Click="BtnValider_Click"
+        Grid.Row="1" Width="71"/>
 
 
         <!-- Bouton en bas à droite -->

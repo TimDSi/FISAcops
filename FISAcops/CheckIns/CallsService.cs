@@ -19,10 +19,24 @@ namespace FISAcops
             return calls;
         }
 
-        public static void SaveGroupsToJson(List<Call> calls)
+        public static void SaveCallsToJson(List<Call> calls)
         {
             var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(callsFilePath, json);
+        }
+
+        public static List<Call> LoadCallsForSelectedDate(string selectedDate)
+        {
+            var calls = LoadCallsFromJson();
+            var filteredCalls = new List<Call>();
+            foreach (var call in calls)
+            {
+                if (call.Date == selectedDate)
+                {
+                    filteredCalls.Add(call);
+                }
+            }
+            return filteredCalls;
         }
     }
 }

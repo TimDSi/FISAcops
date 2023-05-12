@@ -1,46 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FISAcops
 {
-    /// <summary>
-    /// Interaction logic for EditCall.xaml
-    /// </summary>
     public partial class EditCall : Page
     {
-        public string Date { get; set; } // Utilisez une propriété avec un getter et un setter
+        public string Date { get; set; }
         public List<string> TimeSlots { get; set; }
         public string SelectedTimeSlot { get; set; }
         public bool IsDateReadOnly { get; set; }
 
         private readonly List<Group> groupsList;
+        private readonly List<Call> callsList;
+        private readonly int originalCallIndex = -1;
 
         public EditCall(Call call)
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
 
-            // Initialisez la valeur de la propriété Date
-            this.Date = call.Date;
-            // Définissez IsDateReadOnly sur true pour rendre la TextBox en lecture seule
-            this.IsDateReadOnly = true;
+            Date = call.Date;
+            IsDateReadOnly = true;
 
-            // Initialisez la liste des tranches horaires
             TimeSlots = GenerateTimeSlots();
-
-            this.SelectedTimeSlot = call.Time;
+            SelectedTimeSlot = call.Time;
 
             groupsList = GroupsService.LoadGroupsFromJson();
             foreach (var group in groupsList)
@@ -48,6 +35,25 @@ namespace FISAcops
                 cbGroups.Items.Add(group.GroupName);
             }
             cbGroups.SelectedIndex = 0;
+
+            callsList = CallsService.LoadCallsFromJson();
+
+            if (!string.IsNullOrEmpty(call.GroupName))
+            {
+                // Édition : trouver l'index du Call original dans la liste des appels
+                for(var i = 0; i < callsList.Count ; i++)
+                {
+                    var callFromList = callsList[i];
+                    if (call.Date == callFromList.Date
+                        && call.Time == callFromList.Time
+                        && call.GroupName == callFromList.GroupName
+                        && call.Frequency == callFromList.Frequency)
+                    {
+                        originalCallIndex = i;
+                        break;
+                    }
+                }
+            }
         }
 
         private static List<string> GenerateTimeSlots()
@@ -65,7 +71,37 @@ namespace FISAcops
 
             return timeSlots;
         }
+
+        private void BtnValider_Click(object sender, RoutedEventArgs e)
+        {
+            string date = Date;
+            string selectedTimeSlot = (string)cbTimeSlots.SelectedItem;
+            string selectedGroup = (string)cbGroups.SelectedItem;
+            string? selectedFrequency = ((ComboBoxItem)cbFrequency.SelectedItem)?.Content.ToString();
+            List<Call> callsList = CallsService.LoadCallsFromJson();
+            selectedFrequency ??= "Once";
+
+            if (originalCallIndex != -1)
+            {
+                // Mettre à jour le Call à l'index avec les nouvelles valeurs
+                callsList[originalCallIndex] = new Call(date, selectedTimeSlot, selectedGroup, selectedFrequency);
+            }
+            else
+            {
+                // Ajout d'un nouveau Call à la liste
+                callsList.Add(new Call(date, selectedTimeSlot, selectedGroup, selectedFrequency));
+            }
+
+            CallsService.SaveCallsToJson(callsList);
+            NavigateToCalendar();
+        }
+
         private void BtnMainPage(object sender, RoutedEventArgs e)
+        {
+            NavigateToCalendar();
+        }
+
+        private void NavigateToCalendar()
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new Calender());
