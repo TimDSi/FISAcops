@@ -12,6 +12,8 @@ namespace FISAcops
         public string Time { get; set; }
         public string GroupName { get; set; }
         public string Frequency { get; set; }
+        public List<IStudent> StudentsWithState { get; set; }
+
 
         public Call(string date, string time, string groupName, string frequency)
         {
@@ -19,6 +21,20 @@ namespace FISAcops
             Time = time;
             GroupName = groupName;
             Frequency = frequency;
+
+            List<Group> groups = GroupsService.LoadGroupsFromJson();
+            Group? group = groups.FirstOrDefault(g => g.GroupName == groupName);
+
+            if (group != null)
+            {
+                StudentsWithState = group.StudentsList
+                    .Select(s => StudentFactory.CreateStudent(s.Nom, s.Prenom, s.Mail, s.Promotion, "Controle"))
+                    .ToList();
+            }
+            else
+            {
+                StudentsWithState = new List<IStudent>();
+            }
         }
 
         public override bool Equals(object? obj)
