@@ -33,12 +33,24 @@ namespace FISAcops
         }
 
         public List<Call>? Calls;
+        public List<Call>? FilteredCalls { get; set; }
 
 
         public Calender()
         {
             InitializeComponent();
             DataContext = this;
+
+            // Initialiser la date à la date d'aujourd'hui
+            DateTime today = DateTime.Today;
+            SelectedDateText = today.ToShortDateString();
+
+            // Filtrer les appels en fonction de la date d'aujourd'hui
+            FilteredCalls = CallsService.LoadCallsForSelectedDate(SelectedDateText);
+
+            // Mettre à jour la liste des appels dans le DataGrid
+            CallsByDate.ItemsSource = FilteredCalls;
+            OnPropertyChanged(nameof(FilteredCalls));
         }
 
         private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
@@ -47,15 +59,11 @@ namespace FISAcops
             SelectedDateText = selectedDate.ToShortDateString();
 
             // Filtrer les appels en fonction de la date sélectionnée
-            List<Call> filteredCalls = CallsService.LoadCallsForSelectedDate(SelectedDateText);
-
-            // Vider la collection Items du DataGrid
-            CallsByDate.ItemsSource = null;
-            CallsByDate.Items.Clear();
+            FilteredCalls = CallsService.LoadCallsForSelectedDate(SelectedDateText);
 
             // Mettre à jour la liste des appels dans le DataGrid
-            CallsByDate.ItemsSource = filteredCalls;
-            OnPropertyChanged(nameof(Calls));
+            CallsByDate.ItemsSource = FilteredCalls;
+            OnPropertyChanged(nameof(FilteredCalls));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -127,11 +135,15 @@ namespace FISAcops
                 // Sauvegarder la liste mise à jour dans le fichier JSON
                 CallsService.SaveCallsToJson(calls);
 
-                // Mettre à jour la source de données du DataGrid pour refléter la suppression
-                CallsByDate.ItemsSource = calls;
-                OnPropertyChanged(nameof(Calls));
+                // Supprimer l'appel de la liste filtrée
+                FilteredCalls?.Remove(call);
+
+                // Mettre à jour la liste des appels dans le DataGrid
+                CallsByDate.ItemsSource = null;
+                CallsByDate.ItemsSource = FilteredCalls;
             }
         }
+
 
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
