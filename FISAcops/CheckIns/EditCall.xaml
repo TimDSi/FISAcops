@@ -25,18 +25,26 @@
            VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
-        <TextBox Text="{Binding Date, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,38,0,0" Grid.Row="1" Width="143" IsReadOnly="{Binding IsDateReadOnly}" />
+        <!-- Contenu de la page ici -->
+        <Calendar Grid.Row="1" SelectionMode="SingleRange" Margin="0,0,597,75" 
+                  SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
 
-        <ComboBox Grid.Row="1" x:Name="cbTimeSlots" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,75,0,0" Width="143"
+
+        <!-- TextBox pour afficher la date sélectionnée -->
+        <TextBox Grid.Row="1" Margin="208,10,434,220" IsReadOnly="True" Text="{Binding Date}"/>
+
+
+        <ComboBox Grid.Row="1" x:Name="cbTimeSlots" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="208,49,0,0" Width="143"
           ItemsSource="{Binding TimeSlots}" SelectedItem="{Binding SelectedTimeSlot}" />
 
-        <ComboBox Grid.Row="1" x:Name="cbGroups" Margin="57,112,600,112"/>
+        <ComboBox Grid.Row="1" x:Name="cbGroups" ItemsSource="{Binding groupsList}" Margin="208,88,449,136"/>
 
-        <ComboBox Grid.Row="1" x:Name="cbFrequency" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="57,148,0,0" Width="143" SelectedIndex="0">
+        <ComboBox Grid.Row="1" x:Name="cbFrequency" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="208,125,0,0" Width="143">
             <ComboBoxItem Content="Once" />
             <ComboBoxItem Content="Weekly" />
             <ComboBoxItem Content="Monthly" />
         </ComboBox>
+
 
         <Button Content="Valider"
         Margin="0,0,672,29"

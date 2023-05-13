@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -7,12 +8,20 @@ using System.Windows.Controls;
 
 namespace FISAcops
 {
-    public partial class EditCall : Page
+    public partial class EditCall : Page, INotifyPropertyChanged
     {
-        public string Date { get; set; }
+        private string? _date;
+        public string? Date
+        {
+            get { return _date; }
+            set
+            {
+                _date = value;
+                OnPropertyChanged(nameof(Date));
+            }
+        }
         public List<string> TimeSlots { get; set; }
         public string SelectedTimeSlot { get; set; }
-        public bool IsDateReadOnly { get; set; }
 
         private readonly List<Group> groupsList;
         private readonly List<Call> callsList;
@@ -24,18 +33,28 @@ namespace FISAcops
             DataContext = this;
 
             Date = call.Date;
-            IsDateReadOnly = true;
 
             TimeSlots = GenerateTimeSlots();
             SelectedTimeSlot = call.Time;
 
+            var groupeIndex = 0;
             groupsList = GroupsService.LoadGroupsFromJson();
             foreach (var group in groupsList)
             {
+                if (group.GroupName == call.GroupName)
+                {
+                    groupeIndex = cbGroups.Items.Count;
+                }
                 cbGroups.Items.Add(group.GroupName);
             }
-            cbGroups.SelectedIndex = 0;
+            cbGroups.SelectedIndex = groupeIndex;
 
+            cbFrequency.SelectedIndex = call.Frequency switch
+            {
+                "Weakly" => 1,
+                "Monthly" => 2,
+                _ => 0,
+            };
             callsList = CallsService.LoadCallsFromJson();
 
             if (!string.IsNullOrEmpty(call.GroupName))
@@ -72,14 +91,41 @@ namespace FISAcops
             return timeSlots;
         }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime selectedDate = ((Calendar)sender).SelectedDate.GetValueOrDefault();
+            Date = selectedDate.ToShortDateString();
+        }
+
+
         private void BtnValider_Click(object sender, RoutedEventArgs e)
         {
-            string date = Date;
+            string? date = Date;
+            date ??= DateTime.Today.ToShortDateString();
             string selectedTimeSlot = (string)cbTimeSlots.SelectedItem;
             string selectedGroup = (string)cbGroups.SelectedItem;
             string? selectedFrequency = ((ComboBoxItem)cbFrequency.SelectedItem)?.Content.ToString();
-            List<Call> callsList = CallsService.LoadCallsFromJson();
             selectedFrequency ??= "Once";
+
+            bool callExists = callsList.Any(call =>
+                call.Date == date &&
+                call.Time == selectedTimeSlot &&
+                call.GroupName == selectedGroup &&
+                call.Frequency == selectedFrequency
+            );
+
+            if (callExists)
+            {
+                MessageBox.Show("Cet appel existe déjà.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             if (originalCallIndex != -1)
             {
