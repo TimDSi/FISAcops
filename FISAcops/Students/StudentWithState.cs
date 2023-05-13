@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FISAcops
 {
-    internal class StudentWithState : IStudent
+    public class StudentWithState : IStudent
     {
         public string Nom { get; set; }
         public string Prenom { get; set; }
