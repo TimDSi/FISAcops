@@ -50,23 +50,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" />
                 <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" />
-                <DataGridTemplateColumn Header="État">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding State}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <ComboBox x:Name="cbState" SelectedItem="{Binding State}" SelectionChanged="ComboBox_SelectionChanged">
-                                <ComboBoxItem Content="Contrôle" />
-                                <ComboBoxItem Content="Absence justifiée" />
-                                <ComboBoxItem Content="Retard justifié" />
-                            </ComboBox>
-
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="State" Binding="{Binding State}" />
             </DataGrid.Columns>
         </DataGrid>
 

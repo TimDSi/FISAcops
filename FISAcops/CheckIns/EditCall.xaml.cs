@@ -57,6 +57,8 @@ namespace FISAcops
             callsList = CallsService.LoadCallsFromJson();
 
 
+
+
             
 
 
@@ -156,11 +158,6 @@ namespace FISAcops
             Date = selectedDate.ToShortDateString();
         }
 
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
 
         private void BtnValider_Click(object sender, RoutedEventArgs e)
