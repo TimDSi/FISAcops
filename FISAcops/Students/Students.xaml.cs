@@ -12,12 +12,17 @@ namespace FISAcops
     /// </summary>
     public partial class Students : Page
     {
+        private StudentsPageMemento? currentMemento;
+
+
         private static List<Student> StudentsList = new();
         private void BtnMainPage(object sender, RoutedEventArgs e)
         {
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new MainPage());
         }
+
+        private bool filtered = false;
 
         private void EditStudent_Click(object sender, RoutedEventArgs e)
         {
@@ -84,9 +89,61 @@ namespace FISAcops
 
         }
 
+        public void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Créer un nouveau Memento avant la recherche
+            currentMemento = new StudentsPageMemento(StudentsList);
+
+            string promotion = searchTextBox.Text;
+
+            // Effectuer la recherche par promotion et mettre à jour la liste d'étudiants
+            StudentsList = StudentsList.Where(student => student.Promotion == promotion).ToList();
+            studentsListView.ItemsSource = StudentsList;
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string promotion = searchTextBox.Text;
+
+            if (promotion == "")
+            {
+                filtered = false;
+                UndoSearch();
+            }
+            else if (!filtered)
+            {
+                // Créer un nouveau Memento avant la recherche
+                currentMemento = new StudentsPageMemento(StudentsList);
+                filtered = true;
+            }
+
+            if (filtered)
+            {
+                StudentsList = StudentsList.Where(student => student.Promotion.Contains(promotion)).ToList();
+                studentsListView.ItemsSource = StudentsList;
+            }
+        }
+
+        private void RestoreFromMemento(StudentsPageMemento memento)
+        {
+            StudentsList = new List<Student>(memento.Students);
+            studentsListView.ItemsSource = StudentsList;
+        }
+
+        private void UndoSearch()
+        {
+            if (currentMemento != null)
+            {
+                RestoreFromMemento(currentMemento);
+            }
+        }
+
 
         public void AddStudent_Click(object sender, RoutedEventArgs e)
         {
+            // Annuler la recherche avant d'ajouter un nouvel étudiant
+            UndoSearch();
+
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new StudentEdition());
         }
@@ -100,6 +157,8 @@ namespace FISAcops
             studentsListView.ItemsSource = StudentsList;
             Title = "Liste des élèves"; // Ajoutez cette ligne pour modifier le titre de la fenêtre
 
+            // Ajouter un gestionnaire d'événement pour l'événement TextChanged du TextBox
+            searchTextBox.TextChanged += SearchTextBox_TextChanged;
         }
     }
 
