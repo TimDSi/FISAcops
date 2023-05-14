@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FISAcops
 {
@@ -15,14 +16,14 @@ namespace FISAcops
         public List<StudentWithState> StudentsWithState { get; set; }
 
 
-        public Call(string date, string time, string groupName, string frequency)
+        public Call(string date, string time, string groupName, string frequency, List<StudentWithState> studentsWithState)
         {
             Date = date;
             Time = time;
             GroupName = groupName;
             Frequency = frequency;
-            StudentsWithState = new List<StudentWithState>();
-
+            StudentsWithState = studentsWithState;
+            /*
             List<Group> groups = GroupsService.LoadGroupsFromJson();
             Group? group = groups.FirstOrDefault(g => g.GroupName == groupName);
 
@@ -34,18 +35,33 @@ namespace FISAcops
                     StudentsWithState.Add((StudentWithState)StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, "Controle"));
                 }
             }
+            */
         }
 
         public override bool Equals(object? obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            bool result = false;
+            if (obj != null && GetType() == obj.GetType())
             {
-                return false;
+                Call otherCall = (Call)obj;
+                result =  Date == otherCall.Date&& Time == otherCall.Time && GroupName == otherCall.GroupName && Frequency == otherCall.Frequency;
+                if (!result) 
+                {
+                    if (otherCall.StudentsWithState.Count == StudentsWithState.Count) {
+                        result = true;
+                        for (int i = 0; i < otherCall.StudentsWithState.Count; i++)
+                        {
+                            if (StudentsWithState[i].Mail != otherCall.StudentsWithState[i].Mail ||
+                                StudentsWithState[i].State != otherCall.StudentsWithState[i].State)
+                            {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-
-            Call otherCall = (Call)obj;
-
-            return Date == otherCall.Date && Time == otherCall.Time && GroupName == otherCall.GroupName && Frequency == otherCall.Frequency;
+            return result;
         }
 
         public override int GetHashCode()

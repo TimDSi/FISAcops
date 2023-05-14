@@ -58,10 +58,6 @@ namespace FISAcops
 
 
 
-
-            
-
-
             if (!string.IsNullOrEmpty(call.GroupName))
             {
                 // Édition : trouver l'index du Call original dans la liste des appels
@@ -169,12 +165,27 @@ namespace FISAcops
             string? selectedFrequency = ((ComboBoxItem)cbFrequency.SelectedItem)?.Content.ToString();
             selectedFrequency ??= "Once";
 
-            bool callExists = callsList.Any(call =>
-                call.Date == date &&
-                call.Time == selectedTimeSlot &&
-                call.GroupName == selectedGroup &&
-                call.Frequency == selectedFrequency
-            );
+            List<StudentWithState> studentsWithState = new List<StudentWithState>();
+
+            foreach (var item in dgStudentWithState.Items)
+            {
+                // Cast l'objet item en type correspondant à votre modèle de données StudentWithState
+                if (item is StudentWithState student)
+                {
+                    studentsWithState.Add(student);
+                }
+            }
+
+
+            bool callExists = false;
+            Call newCall = new(date, selectedTimeSlot, selectedGroup, selectedFrequency, studentsWithState);
+            foreach (Call call in callsList){
+                if (call == newCall)
+                {
+                    callExists = true;
+                    break;
+                }
+            }
 
             if (callExists)
             {
@@ -185,12 +196,12 @@ namespace FISAcops
             if (originalCallIndex != -1)
             {
                 // Mettre à jour le Call à l'index avec les nouvelles valeurs
-                callsList[originalCallIndex] = new Call(date, selectedTimeSlot, selectedGroup, selectedFrequency);
+                callsList[originalCallIndex] = newCall;
             }
             else
             {
                 // Ajout d'un nouveau Call à la liste
-                callsList.Add(new Call(date, selectedTimeSlot, selectedGroup, selectedFrequency));
+                callsList.Add(newCall);
             }
 
             CallsService.SaveCallsToJson(callsList);

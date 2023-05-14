@@ -78,10 +78,10 @@ namespace FISAcops
             var mainWindow = (MainWindow)Window.GetWindow(this);
 
             string? selectedDate = SelectedDateText; // Obtenir la valeur de la TextBox
-
+            List<StudentWithState> students = new();
             if (selectedDate != null) {
                 // Naviguer vers la page "EditCall" en passant la date sélectionnée en tant que paramètre
-                mainWindow.frame.Navigate(new EditCall(new Call(selectedDate,"08:30","","once")));
+                mainWindow.frame.Navigate(new EditCall(new Call(selectedDate,"08:30","","once", students)));
             }
         }
 

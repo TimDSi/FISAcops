@@ -46,13 +46,14 @@
             <ComboBoxItem Content="Monthly" />
         </ComboBox>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding StudentsWithState}" AutoGenerateColumns="False" Margin="400,0,0,0">
+        <DataGrid x:Name="dgStudentWithState" Grid.Row="1" ItemsSource="{Binding StudentsWithState}" AutoGenerateColumns="False" Margin="400,0,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" />
                 <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" />
                 <DataGridTextColumn Header="State" Binding="{Binding State}" />
             </DataGrid.Columns>
         </DataGrid>
+
 
 
 
