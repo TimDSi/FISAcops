@@ -50,9 +50,19 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" />
                 <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" />
-                <DataGridTextColumn Header="State" Binding="{Binding State}" />
+                <DataGridTemplateColumn Header="State">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox SelectedItem="{Binding State, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding DataContext.StateOptions, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
         </DataGrid>
+
+
 
 
 

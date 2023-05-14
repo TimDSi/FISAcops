@@ -21,7 +21,8 @@ namespace FISAcops
         public List<string> TimeSlots { get; set; }
         public string SelectedTimeSlot { get; set; }
 
-        private readonly List<Group> groupsList;
+        public List<string> StateOptions { get; } = new List<string> { "Controle", "Absence Justifiée", "Retard Justifié" };
+
         private readonly List<Call> callsList;
         private readonly int originalCallIndex = -1;
 
@@ -38,7 +39,7 @@ namespace FISAcops
             TimeSlots = GenerateTimeSlots();
             SelectedTimeSlot = call.Time;
 
-            groupsList = GroupsService.LoadGroupsFromJson();
+            List<Group> groupsList = GroupsService.LoadGroupsFromJson();
             foreach (var group in groupsList)
             {
                 cbGroups.Items.Add(group.GroupName);
@@ -166,16 +167,15 @@ namespace FISAcops
 
             foreach (var item in dgStudentWithState.Items)
             {
-                // Cast l'objet item en type correspondant à votre modèle de données StudentWithState
                 if (item is StudentWithState student)
                 {
                     studentsWithState.Add(student);
                 }
             }
 
+            Call newCall = new(date, selectedTimeSlot, selectedGroup, selectedFrequency, studentsWithState);
 
             bool callExists = false;
-            Call newCall = new(date, selectedTimeSlot, selectedGroup, selectedFrequency, studentsWithState);
             foreach (Call call in callsList){
                 if (call == newCall)
                 {
