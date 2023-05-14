@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -83,7 +80,7 @@ namespace FISAcops
             }
         }
 
-        private int GetGroupeIndex(string groupName)
+        private static int GetGroupeIndex(string groupName)
         {
             var groupsList = GroupsService.LoadGroupsFromJson();
             var groupeIndex = 0;
@@ -96,13 +93,13 @@ namespace FISAcops
             }
             return groupeIndex;
         }
-        private Group GetGroupData(string groupName)
+        private static Group GetGroupData(string groupName)
         {
             var groupsList = GroupsService.LoadGroupsFromJson();
             return groupsList[GetGroupeIndex(groupName)];
         }
 
-        private List<StudentWithState> GenerateStudentStateList(List<Student> students)
+        private static List<StudentWithState> GenerateStudentStateList(List<Student> students)
         {
             List<StudentWithState> statedStudents = new();
             foreach (var student in students)
@@ -165,7 +162,7 @@ namespace FISAcops
             string? selectedFrequency = ((ComboBoxItem)cbFrequency.SelectedItem)?.Content.ToString();
             selectedFrequency ??= "Once";
 
-            List<StudentWithState> studentsWithState = new List<StudentWithState>();
+            List<StudentWithState> studentsWithState = new();
 
             foreach (var item in dgStudentWithState.Items)
             {
