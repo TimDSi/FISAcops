@@ -37,13 +37,39 @@
         <ComboBox Grid.Row="1" x:Name="cbTimeSlots" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="208,49,0,0" Width="143"
           ItemsSource="{Binding TimeSlots}" SelectedItem="{Binding SelectedTimeSlot}" />
 
-        <ComboBox Grid.Row="1" x:Name="cbGroups" ItemsSource="{Binding groupsList}" Margin="208,88,449,136"/>
+        <ComboBox Grid.Row="1" x:Name="cbGroups" ItemsSource="{Binding groupsList}" Margin="208,88,449,136" SelectionChanged="ComboBox_SelectionGroupChanged"/>
+
 
         <ComboBox Grid.Row="1" x:Name="cbFrequency" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="208,125,0,0" Width="143">
             <ComboBoxItem Content="Once" />
             <ComboBoxItem Content="Weekly" />
             <ComboBoxItem Content="Monthly" />
         </ComboBox>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding StudentsWithState}" AutoGenerateColumns="False" Margin="400,0,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" />
+                <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" />
+                <DataGridTemplateColumn Header="État">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding State}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox x:Name="cbState" SelectedItem="{Binding State}" SelectionChanged="ComboBox_SelectionChanged">
+                                <ComboBoxItem Content="Contrôle" />
+                                <ComboBoxItem Content="Absence justifiée" />
+                                <ComboBoxItem Content="Retard justifié" />
+                            </ComboBox>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
 
 
         <Button Content="Valider"

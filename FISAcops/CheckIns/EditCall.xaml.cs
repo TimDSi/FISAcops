@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,9 @@ namespace FISAcops
         private readonly List<Call> callsList;
         private readonly int originalCallIndex = -1;
 
+        public List<StudentWithState> StudentsWithState { get; set; }
+
+
         public EditCall(Call call)
         {
             InitializeComponent();
@@ -37,17 +41,12 @@ namespace FISAcops
             TimeSlots = GenerateTimeSlots();
             SelectedTimeSlot = call.Time;
 
-            var groupeIndex = 0;
             groupsList = GroupsService.LoadGroupsFromJson();
             foreach (var group in groupsList)
             {
-                if (group.GroupName == call.GroupName)
-                {
-                    groupeIndex = cbGroups.Items.Count;
-                }
                 cbGroups.Items.Add(group.GroupName);
             }
-            cbGroups.SelectedIndex = groupeIndex;
+            cbGroups.SelectedIndex = GetGroupeIndex(call.GroupName);
 
             cbFrequency.SelectedIndex = call.Frequency switch
             {
@@ -56,6 +55,10 @@ namespace FISAcops
                 _ => 0,
             };
             callsList = CallsService.LoadCallsFromJson();
+
+
+            
+
 
             if (!string.IsNullOrEmpty(call.GroupName))
             {
@@ -72,8 +75,57 @@ namespace FISAcops
                         break;
                     }
                 }
+                StudentsWithState = call.StudentsWithState;
+            }
+            else
+            {
+                string groupName = (string)cbGroups.SelectedItem;
+                List<Student> students = GetGroupData(groupName).StudentsList;
+                StudentsWithState = GenerateStudentStateList(students);
             }
         }
+
+        private int GetGroupeIndex(string groupName)
+        {
+            var groupsList = GroupsService.LoadGroupsFromJson();
+            var groupeIndex = 0;
+            for (var i = 0; i < groupsList.Count; i++)
+            {
+                if (groupsList[i].GroupName == groupName)
+                {
+                    groupeIndex = i;
+                }
+            }
+            return groupeIndex;
+        }
+        private Group GetGroupData(string groupName)
+        {
+            var groupsList = GroupsService.LoadGroupsFromJson();
+            return groupsList[GetGroupeIndex(groupName)];
+        }
+
+        private List<StudentWithState> GenerateStudentStateList(List<Student> students)
+        {
+            List<StudentWithState> statedStudents = new();
+            foreach (var student in students)
+            {
+                statedStudents.Add((StudentWithState)StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, "Controle"));
+            }
+            return statedStudents;
+            
+        }
+
+        private void ComboBox_SelectionGroupChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbGroups.SelectedItem != null)
+            {
+                string groupName = (string)cbGroups.SelectedItem;
+                List<Student> students = GetGroupData(groupName).StudentsList;
+                StudentsWithState = GenerateStudentStateList(students);
+                OnPropertyChanged(nameof(StudentsWithState)); // Notifie le système de liaison de données du changement
+            }
+        }
+
 
         private static List<string> GenerateTimeSlots()
         {
@@ -102,6 +154,12 @@ namespace FISAcops
         {
             DateTime selectedDate = ((Calendar)sender).SelectedDate.GetValueOrDefault();
             Date = selectedDate.ToShortDateString();
+        }
+
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
 
 
