@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FISAcops
 {
@@ -21,6 +10,8 @@ namespace FISAcops
 
     public partial class MainWindow : Window
     {
+        private TimeCallDetection timeCallDetection;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -28,8 +19,14 @@ namespace FISAcops
             // Définir la couleur de fond souhaitée
             var backgroundColor = Brushes.LightBlue;
 
+            // Instancier la classe TimeCallDetection
+            timeCallDetection = new TimeCallDetection();
+
             // Changer la couleur de fond de la fenêtre principale
             Background = backgroundColor;
+
+            // Démarrer la détection des appels
+            timeCallDetection.StartDetection();
         }
     }
 }
