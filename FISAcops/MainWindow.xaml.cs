@@ -10,12 +10,14 @@ namespace FISAcops
 
     public partial class MainWindow : Window
     {
-        private TimeCallDetection timeCallDetection;
+        private readonly TimeCallDetection timeCallDetection;
+        private readonly Checker checker;
 
         public MainWindow()
         {
             InitializeComponent();
             frame.NavigationService.Navigate(new MainPage());
+
             // Définir la couleur de fond souhaitée
             var backgroundColor = Brushes.LightBlue;
 
@@ -27,6 +29,16 @@ namespace FISAcops
 
             // Démarrer la détection des appels
             timeCallDetection.StartDetection();
+
+            // Accéder à l'instance du Checker
+            checker = Checker.Instance;
+
+            // Démarrer le serveur Checker
+            Thread checkerThread = new(checker.CheckerStart)
+            {
+                IsBackground = true
+            };
+            checkerThread.Start();
         }
     }
 }

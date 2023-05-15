@@ -68,61 +68,67 @@ namespace FISAcops
 
         // serveur sur un thread -------------------------------------------------------------------
         private bool CheckerStarted = false;
-        private readonly Checker checker = new();
+        private readonly Checker checker;
+        Thread? updateThread;
 
         private void StartChecker()
         {
             CheckerStarted = true;
-            Thread checkerThread = new(checker.CheckerStart)
-            {
-                IsBackground = true
-            };
-            checkerThread.Start();
-
-            Thread updateThread = new(() =>
+            updateThread = new(() =>
             {
                 while (CheckerStarted)
                 {
                     string receivedMessage = checker.ReceivedMessage;
                     if (!string.IsNullOrEmpty(receivedMessage))
                     {
-                        Dispatcher.Invoke(() =>
+                        try
                         {
-                            if (Checker.LastClient != null)
+                            if (Application.Current != null)
                             {
-                                if (int.TryParse(receivedMessage, out int enteredCode))
+                                if (!Application.Current.Dispatcher.HasShutdownStarted)
                                 {
-                                    bool noCode = true;
-                                    foreach (CheckIn checkIn in checkIns)
+                                    Application.Current.Dispatcher.Invoke(() =>
                                     {
-                                        if (checkIn.IsCodeGood(enteredCode))
+                                        if (Checker.LastClient != null)
                                         {
-                                            
-                                            int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.student.Mail);
-                                            if (index != -1)
+                                            if (int.TryParse(receivedMessage, out int enteredCode))
                                             {
-                                                studentsListWithCode[index].UpdateCode("Code bon");
+                                                bool noCode = true;
+                                                foreach (CheckIn checkIn in checkIns)
+                                                {
+                                                    if (checkIn.IsCodeGood(enteredCode))
+                                                    {
+
+                                                        int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.student.Mail);
+                                                        if (index != -1)
+                                                        {
+                                                            studentsListWithCode[index].UpdateCode("Code bon");
+                                                        }
+                                                        dgStudents.Items.Refresh(); // Rafraîchir uniquement les éléments du DataGrid
+
+
+                                                        Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
+                                                        noCode = false;
+                                                    }
+                                                }
+                                                if (noCode)
+                                                {
+                                                    Checker.SendResponseToClient(Checker.LastClient, "Code incorrect");
+                                                }
                                             }
-                                            dgStudents.Items.Refresh(); // Rafraîchir uniquement les éléments du DataGrid
-
-
-                                            Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
-                                            noCode = false;
+                                            else
+                                            {
+                                                Checker.SendResponseToClient(Checker.LastClient, "Code format incorrect");
+                                            }
                                         }
-                                    }
-                                    if (noCode)
-                                    {
-                                        Checker.SendResponseToClient(Checker.LastClient, "Code incorrect");
-                                    }
-                                }
-                                else
-                                {
-                                    Checker.SendResponseToClient(Checker.LastClient, "Code format incorrect");
+                                    });
                                 }
                             }
-                        });
-
-                        
+                        }
+                        catch (NullReferenceException)
+                        {
+                            StopChecker();
+                        }
                     }
                     Thread.Sleep(100); // ralentir la boucle pour éviter la surcharge
                 }
@@ -135,8 +141,10 @@ namespace FISAcops
 
         private void StopChecker()
         {
-            checker.CheckerStop();
             CheckerStarted = false;
+
+            // Attendre la fin du thread avant de continuer
+            updateThread?.Join();
 
             // Réactiver les RadioButton
             rbStudents.IsEnabled = true;
@@ -202,6 +210,9 @@ namespace FISAcops
 
         public CallTest()
         {
+            // Accéder à l'instance du Checker
+            checker = Checker.Instance;
+
             cbStudents = new ComboBox();
             cbGroups = new ComboBox();
 

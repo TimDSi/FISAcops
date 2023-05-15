@@ -1,21 +1,41 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Collections.Generic;
+using System;
+using System.Text;
 
 namespace FISAcops
 {
     internal partial class Checker
     {
-        private readonly TcpListener server = new(IPAddress.Any, 8080);
-        private readonly List<TcpClient> TcpClientList = new();
-        public static TcpClient? LastClient ;
-        public string ReceivedMessage = "";
-        private bool ServerOnline = false;
+        private static Checker? instance;
+        private static readonly object lockObject = new();
 
-        public Checker() { }
+        private readonly TcpListener server;
+        private readonly List<TcpClient> TcpClientList;
+        public static TcpClient? LastClient;
+        public string ReceivedMessage = "";
+        private bool ServerOnline;
+
+        private Checker()
+        {
+            server = new TcpListener(IPAddress.Any, 8080);
+            TcpClientList = new List<TcpClient>();
+            ServerOnline = false;
+        }
+
+        public static Checker Instance
+        {
+            get
+            {
+                lock (lockObject)
+                {
+                    instance ??= new Checker();
+                    return instance;
+                }
+            }
+        }
         public void CheckerStart()
         {
             try
