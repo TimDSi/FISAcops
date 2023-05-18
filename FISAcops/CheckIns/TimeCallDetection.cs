@@ -11,8 +11,9 @@ namespace FISAcops
         private readonly Thread detectionThread;
         private bool stopDetection;
 
-        private List<CheckIn> StudentsWithCode = new();
-        private List<int> codes = new();
+        private List<CheckIn> CheckInList = new();
+        private List<int> Codes = new();
+        private List<DateTime> DeleteTime = new();
 
 
         public TimeCallDetection()
@@ -41,62 +42,71 @@ namespace FISAcops
         private int GenerateCode()
         {
             int newCode = new Random().Next(1, 100001);
-            while (codes.Contains(newCode))
+            while (Codes.Contains(newCode))
             {
                 newCode = new Random().Next(1, 100001);
             }
-            codes.Add(newCode);
             return newCode;
         }
 
-        private void DeleteStudentFromDetection(StudentWithCode student)
+        private void DeleteStudentFromDetection(int i)
         {
-            int i = 0;
-            while ( i < StudentsWithCode.Count)
-            {
-                if (StudentsWithCode[i].student.Mail == student.Mail)
-                {
-                    break;
-                }
-                i++;
-            }
-            codes.RemoveAt(i);
-            StudentsWithCode.RemoveAt(i);
+            Codes.RemoveAt(i);
+            CheckInList.RemoveAt(i);
         }
+
+        
 
         private void DetectionLoop()
         {
+
             while (!stopDetection)
             {
                 // Obtenir les appels pour la date actuelle
                 string currentDate = DateTime.Now.ToString("dd/MM/yyyy");
                 List<Call> calls = CallsService.LoadCallsForSelectedDate(currentDate);
 
+                DateTime currentDateTime = DateTime.Now;
+
+
                 // Vérifier si la pop-up doit être affichée pour chaque appel
                 foreach (Call call in calls)
                 {
                     DateTime callDateTime = ParseDateTime(call.Date, call.Time);
-                    DateTime currentDateTime = DateTime.Now;
 
                     DateTime callDateTimePlusOneMinute = callDateTime.AddMinutes(1);
+
+
+                    if (DeleteTime.Count > 0)
+                    {
+                        while (currentDateTime >= DeleteTime[0])
+                        {
+                            DeleteStudentFromDetection(0);
+                        }
+                    }
 
 
                     if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {
                         foreach(StudentWithState student in call.StudentsWithState)
                         {
-                            if(student.State == "Controle")
+                            if (student.State == "Controle")
                             {
-                                StudentsWithCode.Add(new ((StudentWithCode)StudentFactory.CreateStudent(
+                                StudentWithCode studentWithCode = (StudentWithCode)StudentFactory.CreateStudent(
                                     student.Nom, 
                                     student.Prenom, 
                                     student.Mail, 
                                     student.Promotion, 
                                     GenerateCode().ToString()
-                                )));
+                                );
+                                CheckInList.Add(new CheckIn(studentWithCode));
+                                Codes.Add(int.Parse(studentWithCode.Code));
+                                DeleteTime.Add(callDateTime.AddMinutes(2));
                             }
-                        }
+                            
 
+                        }
+                        ShowPopUp();
                     }
                 }
 
@@ -111,5 +121,16 @@ namespace FISAcops
             return DateTime.ParseExact(dateTimeString, "dd/MM/yyyy HH:mm", null);
         }
 
+
+        private void ShowPopUp()
+        {
+            string message = "Pop-up affichée pour le groupe : ";
+            foreach(CheckIn s in CheckInList)
+            {
+                message += s.student.Prenom + " " + s.student.Nom + " " + s.student.Code + " / ";
+            }
+            // Code pour afficher la pop-up ici
+            MessageBox.Show(message);
+        }
     }
 }
