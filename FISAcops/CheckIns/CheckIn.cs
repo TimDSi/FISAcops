@@ -11,7 +11,7 @@ namespace FISAcops.CheckIns
 
     internal class CheckIn
     {
-        public Student student;
+        public StudentWithCode student;
         private readonly int code;
 
         public int GetCode() { return code; }
@@ -34,9 +34,16 @@ namespace FISAcops.CheckIns
             return result;
         }
 
-        public CheckIn(Student student, int inputCode) {
+        public CheckIn(StudentWithCode student) {
             this.student = student;
-            this.code = inputCode;
+            if(int.TryParse(student.Code, out int code))
+            {
+                this.code = code ;
+            }
+            else
+            {
+                this.code = 0 ;
+            }
         }
     }
 }

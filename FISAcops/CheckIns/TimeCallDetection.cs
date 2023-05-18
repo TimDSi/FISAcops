@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FISAcops.CheckIns;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
@@ -9,7 +10,10 @@ namespace FISAcops
     {
         private readonly Thread detectionThread;
         private bool stopDetection;
-        private readonly HashSet<string> groupsWithPopUpShown = new();
+
+        private List<CheckIn> StudentsWithCode = new();
+        private List<int> codes = new();
+
 
         public TimeCallDetection()
         {
@@ -34,6 +38,32 @@ namespace FISAcops
             detectionThread.Join();
         }
 
+        private int GenerateCode()
+        {
+            int newCode = new Random().Next(1, 100001);
+            while (codes.Contains(newCode))
+            {
+                newCode = new Random().Next(1, 100001);
+            }
+            codes.Add(newCode);
+            return newCode;
+        }
+
+        private void DeleteStudentFromDetection(StudentWithCode student)
+        {
+            int i = 0;
+            while ( i < StudentsWithCode.Count)
+            {
+                if (StudentsWithCode[i].student.Mail == student.Mail)
+                {
+                    break;
+                }
+                i++;
+            }
+            codes.RemoveAt(i);
+            StudentsWithCode.RemoveAt(i);
+        }
+
         private void DetectionLoop()
         {
             while (!stopDetection)
@@ -45,19 +75,28 @@ namespace FISAcops
                 // Vérifier si la pop-up doit être affichée pour chaque appel
                 foreach (Call call in calls)
                 {
-                    if (!groupsWithPopUpShown.Contains(call.GroupName))
+                    DateTime callDateTime = ParseDateTime(call.Date, call.Time);
+                    DateTime currentDateTime = DateTime.Now;
+
+                    DateTime callDateTimePlusOneMinute = callDateTime.AddMinutes(1);
+
+
+                    if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {
-                        DateTime callDateTime = ParseDateTime(call.Date, call.Time);
-                        DateTime currentDateTime = DateTime.Now;
-
-                        if (currentDateTime >= callDateTime)
+                        foreach(StudentWithState student in call.StudentsWithState)
                         {
-                            // Afficher la pop-up pour le groupe
-                            ShowPopUp(call.GroupName);
-
-                            // Ajouter le groupe à l'ensemble des groupes ayant la pop-up affichée
-                            groupsWithPopUpShown.Add(call.GroupName);
+                            if(student.State == "Controle")
+                            {
+                                StudentsWithCode.Add(new ((StudentWithCode)StudentFactory.CreateStudent(
+                                    student.Nom, 
+                                    student.Prenom, 
+                                    student.Mail, 
+                                    student.Promotion, 
+                                    GenerateCode().ToString()
+                                )));
+                            }
                         }
+
                     }
                 }
 
@@ -72,11 +111,5 @@ namespace FISAcops
             return DateTime.ParseExact(dateTimeString, "dd/MM/yyyy HH:mm", null);
         }
 
-
-        private static void ShowPopUp(string groupName)
-        {
-            // Code pour afficher la pop-up ici
-            MessageBox.Show($"Pop-up affichée pour le groupe {groupName}");
-        }
     }
 }

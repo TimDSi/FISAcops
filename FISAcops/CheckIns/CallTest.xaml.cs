@@ -17,7 +17,7 @@ namespace FISAcops
     public partial class CallTest : Page
     {
         private readonly List<Group> groupsList;
-        private List<StudentWithCode> studentsListWithCode;
+        private List<IStudent> studentsListWithCode;
 
 
         private void BtnMainPage(object sender, RoutedEventArgs e)
@@ -60,7 +60,13 @@ namespace FISAcops
 
             for (int i = 0; i < groupSize; i++)
             {
-                checkIns.Add(new CheckIn(students[i], codes[i]));
+                checkIns.Add(new CheckIn((StudentWithCode)StudentFactory.CreateStudent(
+                    students[i].Nom,
+                    students[i].Prenom,
+                    students[i].Mail,
+                    students[i].Promotion, 
+                    codes[i].ToString())
+                    ));
             }
 
             return checkIns;
@@ -102,7 +108,8 @@ namespace FISAcops
                                                         int index = studentsListWithCode.FindIndex(s => s.Mail == checkIn.student.Mail);
                                                         if (index != -1)
                                                         {
-                                                            studentsListWithCode[index].UpdateCode("Code bon");
+                                                            IStudent s = studentsListWithCode[index];
+                                                            studentsListWithCode[index] = StudentFactory.CreateStudent(s.Nom, s.Prenom, s.Mail, s.Promotion, "Code bon");
                                                         }
                                                         dgStudents.Items.Refresh(); // Rafraîchir uniquement les éléments du DataGrid
 
@@ -181,7 +188,7 @@ namespace FISAcops
             {
                 Student student = studentsList[i];
                 CheckIn checkIn = checkIns[i];
-                studentsListWithCode.Add((StudentWithCode)StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
+                studentsListWithCode.Add(StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
             }
             StartChecker();
 

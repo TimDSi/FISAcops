@@ -63,7 +63,16 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="*"/>
                         <DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" Width="*"/>
-                        <DataGridTextColumn Header="Statut" Binding="{Binding Code}" Width="*"/>
+                        <DataGridTemplateColumn Header="Code / Statut" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Code}" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding State}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>
