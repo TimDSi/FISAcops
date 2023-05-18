@@ -15,6 +15,8 @@ namespace FISAcops
         private List<int> Codes = new();
         private List<DateTime> DeleteTime = new();
 
+        List<Result> resultList = new();
+
 
         public TimeCallDetection()
         {
@@ -51,6 +53,19 @@ namespace FISAcops
 
         private void DeleteStudentFromDetection(int i)
         {
+            for (int resultId = 0; resultId < resultList.Count; resultId++)
+            {
+                for (int studentId = 0; studentId < resultList[resultId].StudentsWithStateList.Count; studentId++)
+                {
+                    if (resultList[resultId].StudentsWithStateList[studentId].Mail == CheckInList[i].student.Mail)
+                    {
+                        if (resultList[resultId].StudentsWithStateList[studentId].State == "Controle")
+                        {
+                            resultList[resultId].StudentsWithStateList[studentId].UpdateState("Absent");
+                        }
+                    }
+                }
+            }
             Codes.RemoveAt(i);
             CheckInList.RemoveAt(i);
         }
@@ -88,7 +103,8 @@ namespace FISAcops
 
                     if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {
-                        foreach(StudentWithState student in call.StudentsWithState)
+                        resultList.Add(new Result(call.Time, call.GroupName, call.StudentsWithState));
+                        foreach (StudentWithState student in call.StudentsWithState)
                         {
                             if (student.State == "Controle")
                             {
@@ -103,8 +119,6 @@ namespace FISAcops
                                 Codes.Add(int.Parse(studentWithCode.Code));
                                 DeleteTime.Add(callDateTime.AddMinutes(2));
                             }
-                            
-
                         }
                         ShowPopUp();
                     }

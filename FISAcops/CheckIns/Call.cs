@@ -23,19 +23,6 @@ namespace FISAcops
             GroupName = groupName;
             Frequency = frequency;
             StudentsWithState = studentsWithState;
-            /*
-            List<Group> groups = GroupsService.LoadGroupsFromJson();
-            Group? group = groups.FirstOrDefault(g => g.GroupName == groupName);
-
-            if (group != null)
-            {
-                List<Student> students = group.StudentsList;
-                foreach(Student student in students)
-                {
-                    StudentsWithState.Add((StudentWithState)StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, "Controle"));
-                }
-            }
-            */
         }
 
         public override bool Equals(object? obj)
