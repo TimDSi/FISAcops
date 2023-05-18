@@ -22,7 +22,11 @@ namespace FISAcops
 
         public static void SaveStudentsToJson(List<Student> students)
         {
-            var json = JsonSerializer.Serialize(students, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(students, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
             File.WriteAllText(studentsFilePath, json);
         }
     }

@@ -21,7 +21,11 @@ namespace FISAcops
 
         public static void SaveGroupsToJson(List<Group> groups)
         {
-            var json = JsonSerializer.Serialize(groups, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(groups, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
             File.WriteAllText(groupsFilePath, json);
         }
     }

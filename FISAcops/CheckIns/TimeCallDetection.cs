@@ -1,6 +1,7 @@
 ﻿using FISAcops.CheckIns;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Windows;
 
@@ -68,6 +69,7 @@ namespace FISAcops
             }
             Codes.RemoveAt(i);
             CheckInList.RemoveAt(i);
+            DeleteTime.RemoveAt(i);
         }
 
         
@@ -97,6 +99,10 @@ namespace FISAcops
                         while (currentDateTime >= DeleteTime[0])
                         {
                             DeleteStudentFromDetection(0);
+                            if (DeleteTime.Count == 0)
+                            {
+                                break;
+                            }
                         }
                     }
 
@@ -105,6 +111,10 @@ namespace FISAcops
                         Result result = resultList[i];
                         if (result.IsResultDone())
                         {
+                            string jsonFileName = currentDate.Replace("/", "-");
+                            List<Result> datedResults = ResultsService.LoadResultsFromJson(jsonFileName);
+                            datedResults.Add(result);
+                            ResultsService.SaveResultsToJson(datedResults, jsonFileName);
                             resultList.RemoveAt(i);
                         }
                     }
@@ -127,7 +137,7 @@ namespace FISAcops
                                 );
                                 CheckInList.Add(new CheckIn(studentWithCode));
                                 Codes.Add(int.Parse(studentWithCode.Code));
-                                DeleteTime.Add(callDateTime.AddMinutes(2));
+                                DeleteTime.Add(callDateTime.AddMinutes(1));
                             }
                         }
                         ShowPopUp();

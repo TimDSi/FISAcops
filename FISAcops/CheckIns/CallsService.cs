@@ -21,7 +21,11 @@ namespace FISAcops
 
         public static void SaveCallsToJson(List<Call> calls)
         {
-            var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
             File.WriteAllText(callsFilePath, json);
         }
 
