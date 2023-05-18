@@ -19,16 +19,18 @@ namespace FISAcops
         public string studentsPath = DefaultPath;
         public string groupsPath = DefaultPath;
         public string callsPath = DefaultPath;
+        public string resultsPath = DefaultPath;
 
 
-        private void SaveSettings(string studentsPath, string groupsPath, string callsPath)
+        private void SaveSettings(string studentsPath, string groupsPath, string callsPath, string resultPath)
         {
             // Créer un objet JSON pour stocker les chemins de dossier
             var jsonObject = new
             {
                 StudentsPath = studentsPath,
                 GroupsPath = groupsPath,
-                CallsPath = callsPath
+                CallsPath = callsPath,
+                ResultsPath = resultPath
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -37,6 +39,7 @@ namespace FISAcops
             // Enregistrer la chaîne JSON dans un fichier
             File.WriteAllText(settingsPath, jsonString);
         }
+
 
 
 
@@ -87,7 +90,7 @@ namespace FISAcops
             }
         }
 
-        private void BtnCallPath_Click(object sender, RoutedEventArgs e)
+        private void BtnCallsPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -105,8 +108,28 @@ namespace FISAcops
                 if (selectedFolder != null)
                 {
                     callsPath = selectedFolder;
-                    TxtCallPath.Text = selectedFolder;
+                    TxtCallsPath.Text = selectedFolder;
                 }
+            }
+        }
+
+        private void BtnResultsPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "File Selection",
+                Filter = "JSON Files|*.json",
+                ValidateNames = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                string selectedFile = dialog.FileName;
+                resultsPath = selectedFile;
+                TxtResultsPath.Text = selectedFile;
             }
         }
         //-----------------------------------------------------------------------------------------------------------------
@@ -114,7 +137,7 @@ namespace FISAcops
 
         private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
         {
-            SaveSettings(studentsPath, groupsPath, callsPath);
+            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath);
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -123,14 +146,16 @@ namespace FISAcops
             studentsPath = DefaultPath;
             groupsPath = DefaultPath;
             callsPath = DefaultPath;
+            resultsPath= DefaultPath;
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath, callsPath);
+            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath);
 
             // Mettre à jour le texte du TextBox
             TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
-            TxtCallPath.Text = callsPath;
+            TxtCallsPath.Text = callsPath;
+            TxtResultsPath.Text = resultsPath;
         }
 
 
@@ -150,7 +175,8 @@ namespace FISAcops
                 {
                     StudentsPath = defaultPath,
                     GroupsPath = defaultPath,
-                    CallsPath = defaultPath
+                    CallsPath = defaultPath,
+                    ResultsPath = defaultPath
                 };
 
                 // Convertir l'objet en une chaîne JSON
@@ -380,7 +406,7 @@ namespace FISAcops
             }
         }
 
-        private void CreateCallFileIfNotExists()
+        private void CreateCallsFileIfNotExists()
         {
             if (!File.Exists(Path.Combine(callsPath, "Calls.json")))
             {
@@ -461,12 +487,27 @@ namespace FISAcops
                     callsPath = filePath;
                 }
             }
-            CreateCallFileIfNotExists();
+            CreateCallsFileIfNotExists();
+
+
+            // Vérifier si la propriété ResultsPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("ResultsPath", out JsonElement resultsPathElement))
+            {
+                // Récupérer la valeur de la propriété ResultsPath
+                string? filePath = resultsPathElement.GetString();
+
+                // Affecter la valeur de ResultsPath à resultsPath
+                if (filePath != null)
+                {
+                    resultsPath = filePath;
+                }
+            }
 
 
             TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
-            TxtCallPath.Text = callsPath;
+            TxtCallsPath.Text = callsPath;
+            TxtResultsPath.Text = resultsPath;
         }
 
 

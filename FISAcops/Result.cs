@@ -15,5 +15,18 @@ namespace FISAcops
             GroupName = groupName;
             StudentsWithStateList = studentsWithStateList;
         }
+
+        public bool IsResultDone()
+        {
+            bool result = true;
+            foreach (var student in StudentsWithStateList)
+            {
+                if (student.State == "Controle")
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
     }
 }

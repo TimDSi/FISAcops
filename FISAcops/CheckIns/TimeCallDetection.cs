@@ -100,6 +100,16 @@ namespace FISAcops
                         }
                     }
 
+                    for (int i = resultList.Count - 1; i >= 0; i--)
+                    {
+                        Result result = resultList[i];
+                        if (result.IsResultDone())
+                        {
+                            resultList.RemoveAt(i);
+                        }
+                    }
+
+
 
                     if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {

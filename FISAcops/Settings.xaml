@@ -29,8 +29,11 @@
         <TextBox x:Name="TxtGroupsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,72,0,0" />
         <Button Content="Parcourir" Click="BtnGroupsPath_Click" Height="20" Grid.Row="1" Margin="301,71,440,159" />
 
-        <TextBox x:Name="TxtCallPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,96,0,0" />
-        <Button Content="Parcourir" Click="BtnCallPath_Click" Height="20" Grid.Row="1" Margin="301,96,440,134" />
+        <TextBox x:Name="TxtCallsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,96,0,0" />
+        <Button Content="Parcourir" Click="BtnCallsPath_Click" Height="20" Grid.Row="1" Margin="301,96,440,134" />
+
+        <TextBox x:Name="TxtResultsPath" Text="" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" Width="224" Margin="77,125,0,0" />
+        <Button Content="Parcourir" Click="BtnResultsPath_Click" Height="20" Grid.Row="1" Margin="301,125,440,105" />
 
         <Button x:Name="BtnSetFilePath" Content="Enregistrer" Height="20" Width="70" Click="BtnSetFilePath_Click" Margin="365,46,365,184" Grid.Row="1"/>
         <Button x:Name="BtnReset" Content="Reset" Height="20" Width="70" Click="BtnReset_Click" Margin="365,71,365,159" Grid.Row="1" RenderTransformOrigin="0.473,0.22"/>
