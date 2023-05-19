@@ -1,6 +1,5 @@
 ﻿namespace FISAcops.CheckIns
 {
-
     internal class CheckIn
     {
         public StudentWithCode student;
