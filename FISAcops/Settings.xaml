@@ -49,7 +49,21 @@
                 <CheckBox x:Name="ChkDisplayPopUpWhenCall" Margin="10,5,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="BtnSetFilePath" Content="Enregistrer" Height="20" Width="70" Click="BtnSetFilePath_Click" Margin="0,10,0,0"/>
+                <TextBlock Text="Courrier électronique du superviseur: "/>
+                <TextBox x:Name="TxtSupervisorEmail" Text="" Width="224" Height="18" Margin="0,5,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Mot de passe du superviseur: "/>
+                <Grid>
+                    <PasswordBox x:Name="PwdSupervisorPassword" Width="200" Height="20" Margin="0,5,0,0" 
+                        PasswordChanged="PwdSupervisorPassword_PasswordChanged" />
+                    <TextBox x:Name="TxtSupervisorPassword" Width="200" Height="20" Margin="0,5,0,0"
+                        TextChanged="TxtSupervisorPassword_TextChanged" Visibility="Collapsed"/>
+                </Grid>
+                <Button x:Name="BtnShowPassword" Content=" - - " Height="18" Width="30" Click="BtnShowPassword_Click"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnSetFilePath" Content="Enregistrer" Height="20" Width="70" Click="BtnSaveSettings_Click" Margin="0,10,0,0"/>
                 <Button x:Name="BtnReset" Content="Reset" Height="20" Width="70" Click="BtnReset_Click" Margin="10,10,0,0"/>
             </StackPanel>
         </StackPanel>

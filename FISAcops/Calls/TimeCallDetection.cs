@@ -145,9 +145,9 @@ namespace FISAcops
                         show = true;
                     }
                 }
-                if (show && new Settings().displayPopUpWhenCall)
+                if (show)
                 {
-                    ShowPopUp();
+                    PrintStudentsPasswords();
                 }
 
                 // Attendre avant de vérifier à nouveau
@@ -248,21 +248,28 @@ namespace FISAcops
         }
 
 
-        private void ShowPopUp()
+        private void PrintStudentsPasswords()
         {
-            string message = "Pop-up affichée pour le groupe : ";
-            foreach(CheckIn s in CheckInList)
+            string message = "Liste actuel des élèves appelés : ";
+            foreach (CheckIn s in CheckInList)
             {
-                message += "\n" + s.student.Prenom + " " + s.student.Nom + " " + s.student.Code + " / ";
+                message += "\n" + s.student.Prenom + " " + s.student.Nom + ", Code :" + s.student.Code + " / ";
             }
-            // Code pour afficher la pop-up ici
-            MessageBox.Show(message);
+            if (new Settings().displayPopUpWhenCall)
+            {
+                // Code pour afficher la pop-up ici
+                MessageBox.Show(message);
+            }
+            if(!string.IsNullOrEmpty(new Settings().superviserEmail)) {
+                //SendEmail(new Settings().superviserEmail, "Appel pour des élèves", message);
+            }
+            
         }
 
         public static void SendEmail(string toEmail, string subject, string message)
         {
             // Adresse e-mail de l'expéditeur
-            string fromEmail = "votre_adresse_email@gmail.com";
+            string fromEmail = new Settings().superviserEmail;
 
             // Créer un objet MailMessage
             MailMessage mailMessage = new(fromEmail, toEmail)
@@ -282,17 +289,19 @@ namespace FISAcops
                     EnableSsl = true,
 
                     // Identifiants d'authentification pour le compte Gmail
-                    Credentials = new NetworkCredential("votre_adresse_email@gmail.com", "votre_mot_de_passe")
+                    Credentials = new NetworkCredential(
+                        "363509770901-29djk7igoij8ouk4a8mb036kj693n646.apps.googleusercontent.com ",
+                        "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"
+                    )
                 };
 
                 // Envoyer le courrier électronique
                 smtpClient.Send(mailMessage);
-
-                Console.WriteLine("Le courrier électronique a été envoyé avec succès.");
+                MessageBox.Show("Mail envoyé");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erreur lors de l'envoi du courrier électronique : " + ex.Message);
+                MessageBox.Show("Erreur : " +ex );
             }
         }
 

@@ -22,8 +22,18 @@ namespace FISAcops
         public string resultsPath = DefaultPath;
 
         public bool displayPopUpWhenCall = false;
+        public string superviserEmail = "fisa.cops@gmail.com";
+        public string superviserPassword = "MDPlongDonc5ecurise";
 
-        private void SaveSettings(string studentsPath, string groupsPath, string callsPath, string resultPath, bool displayPopUpWhenCall)
+        private void SaveSettings(
+            string studentsPath, 
+            string groupsPath, 
+            string callsPath, 
+            string resultPath, 
+            bool displayPopUpWhenCall, 
+            string superviserEmail, 
+            string superviserPassword
+            )
         {
             // Créer un objet JSON pour stocker les chemins de dossier
             var jsonObject = new
@@ -32,7 +42,9 @@ namespace FISAcops
                 GroupsPath = groupsPath,
                 CallsPath = callsPath,
                 ResultsPath = resultPath,
-                DisplayPopUpWhenCall = displayPopUpWhenCall
+                DisplayPopUpWhenCall = displayPopUpWhenCall,
+                SuperviserEmail = superviserEmail,
+                SuperviserPassword = superviserPassword
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -138,12 +150,54 @@ namespace FISAcops
                 TxtResultsPath.Text = selectedFile;
             }
         }
+
+
+
         //-----------------------------------------------------------------------------------------------------------------
 
+        // Email -------------------------------------------------------------------------------------------------
 
-        private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
+        private void PwdSupervisorPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath, ChkDisplayPopUpWhenCall.IsChecked == true);
+            TxtSupervisorPassword.Text = PwdSupervisorPassword.Password;
+        }
+
+        private void TxtSupervisorPassword_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PwdSupervisorPassword.Password = TxtSupervisorPassword.Text;
+        }
+
+        private void BtnShowPassword_Click(object sender, RoutedEventArgs e)
+        {
+            if (PwdSupervisorPassword.Visibility == Visibility.Visible)
+            {
+                PwdSupervisorPassword.Visibility = Visibility.Collapsed;
+                TxtSupervisorPassword.Visibility = Visibility.Visible;
+                TxtSupervisorPassword.Text = PwdSupervisorPassword.Password;
+                BtnShowPassword.Content = " o o ";
+            }
+            else
+            {
+                PwdSupervisorPassword.Visibility = Visibility.Visible;
+                TxtSupervisorPassword.Visibility = Visibility.Collapsed;
+                BtnShowPassword.Content = " - - ";
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------
+
+
+        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings(
+                studentsPath, 
+                groupsPath, 
+                callsPath, 
+                resultsPath, 
+                ChkDisplayPopUpWhenCall.IsChecked == true,
+                superviserEmail,
+                superviserPassword
+            );
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -154,9 +208,19 @@ namespace FISAcops
             callsPath = DefaultPath;
             resultsPath= DefaultPath;
             displayPopUpWhenCall = false;
+            superviserEmail = "fisa.cops@gmail.com";
+            superviserPassword = "MDPlongDonc5ecurise";
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath, displayPopUpWhenCall);
+            SaveSettings(
+                studentsPath,
+                groupsPath,
+                callsPath,
+                resultsPath,
+                displayPopUpWhenCall,
+                superviserEmail,
+                superviserPassword
+            );
 
             // Mettre à jour le texte du TextBox
             TxtGroupsPath.Text = groupsPath;
@@ -164,6 +228,8 @@ namespace FISAcops
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
             ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
+            TxtSupervisorEmail.Text = superviserEmail;
+            PwdSupervisorPassword.Password = superviserPassword;
         }
 
 
@@ -522,12 +588,40 @@ namespace FISAcops
                 displayPopUpWhenCall = displayPopUpWhenCallValue;
             }
 
+            // Vérifier si la propriété ResultsPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("SuperviserEmail", out JsonElement superviserEmailElement))
+            {
+                // Récupérer la valeur de la propriété ResultsPath
+                string? superEmail = superviserEmailElement.GetString();
+
+                // Affecter la valeur de ResultsPath à resultsPath
+                if (superEmail != null)
+                {
+                    superviserEmail = superEmail;
+                }
+            }
+
+            // Vérifier si la propriété ResultsPath existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("SuperviserPassword", out JsonElement supervierPasswordElement))
+            {
+                // Récupérer la valeur de la propriété ResultsPath
+                string? superPassword = supervierPasswordElement.GetString();
+
+                // Affecter la valeur de ResultsPath à resultsPath
+                if (superPassword != null)
+                {
+                    superviserPassword = superPassword;
+                }
+            }
+
 
             TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
             ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
+            TxtSupervisorEmail.Text = superviserEmail;
+            PwdSupervisorPassword.Password = superviserPassword;
         }
 
 
