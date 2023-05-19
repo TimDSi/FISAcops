@@ -12,15 +12,18 @@ namespace FISAcops
         private readonly Thread detectionThread;
         private bool stopDetection;
 
-        private List<CheckIn> CheckInList = new();
-        private List<int> Codes = new();
-        private List<DateTime> DeleteTime = new();
+        private readonly List<CheckIn> CheckInList = new();
+        private readonly List<int> Codes = new();
+        private readonly List<DateTime> DeleteTime = new();
 
-        List<Result> resultList = new();
+        private readonly List<Result> resultList = new();
 
 
         public TimeCallDetection()
         {
+            // Accéder à l'instance du Checker
+            checker = Checker.Instance;
+
             detectionThread = new Thread(DetectionLoop)
             {
                 IsBackground = true
@@ -34,6 +37,7 @@ namespace FISAcops
         {
             stopDetection = false;
             detectionThread.Start();
+            StartChecker();
         }
 
         public void StopDetection()
@@ -85,7 +89,7 @@ namespace FISAcops
 
                 DateTime currentDateTime = DateTime.Now;
 
-
+                bool show = false;
                 // Vérifier si la pop-up doit être affichée pour chaque appel
                 foreach (Call call in calls)
                 {
@@ -137,11 +141,15 @@ namespace FISAcops
                                 );
                                 CheckInList.Add(new CheckIn(studentWithCode));
                                 Codes.Add(int.Parse(studentWithCode.Code));
-                                DeleteTime.Add(callDateTime.AddMinutes(1));
+                                DeleteTime.Add(callDateTime.AddMinutes(2));
                             }
                         }
-                        ShowPopUp();
+                        show = true;
                     }
+                }
+                if (show)
+                {
+                    ShowPopUp();
                 }
 
                 // Attendre avant de vérifier à nouveau
@@ -153,6 +161,93 @@ namespace FISAcops
         {
             string dateTimeString = $"{date} {time}";
             return DateTime.ParseExact(dateTimeString, "dd/MM/yyyy HH:mm", null);
+        }
+
+        // serveur sur un thread -------------------------------------------------------------------
+        private bool CheckerStarted = false;
+        private readonly Checker checker;
+        Thread? updateThread;
+
+        private void StartChecker()
+        {
+            CheckerStarted = true;
+            updateThread = new(() =>
+            {
+                while (CheckerStarted)
+                {
+                    string receivedMessage = checker.ReceivedMessage;
+                    if (!string.IsNullOrEmpty(receivedMessage))
+                    {
+                        try
+                        {
+                            if (Application.Current != null)
+                            {
+                                if (!Application.Current.Dispatcher.HasShutdownStarted)
+                                {
+                                    Application.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        if (Checker.LastClient != null)
+                                        {
+                                            if (int.TryParse(receivedMessage, out int enteredCode))
+                                            {
+                                                bool noCode = true;
+                                                foreach (CheckIn checkIn in CheckInList)
+                                                {
+                                                    if (checkIn.IsCodeGood(enteredCode))
+                                                    {
+                                                        //mise à jour du state d'un student
+                                                        for (int resultId = 0; resultId < resultList.Count; resultId++)
+                                                        {
+                                                            for (int studentId = 0; studentId < resultList[resultId].StudentsWithStateList.Count; studentId++)
+                                                            {
+                                                                if (resultList[resultId].StudentsWithStateList[studentId].Mail == checkIn.student.Mail)
+                                                                {
+                                                                    if (resultList[resultId].StudentsWithStateList[studentId].State == "Controle")
+                                                                    {
+                                                                        resultList[resultId].StudentsWithStateList[studentId].UpdateState("Présent");
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
+                                                        noCode = false;
+                                                    }
+                                                }
+                                                if (noCode)
+                                                {
+                                                    Checker.SendResponseToClient(Checker.LastClient, "Code incorrect");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Checker.SendResponseToClient(Checker.LastClient, "Code format incorrect");
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        catch (NullReferenceException)
+                        {
+                            StopChecker();
+                        }
+                    }
+                    Thread.Sleep(100); // ralentir la boucle pour éviter la surcharge
+                }
+            })
+            {
+                IsBackground = true
+            };
+            updateThread.Start();
+        }
+
+        private void StopChecker()
+        {
+            CheckerStarted = false;
+
+            // Attendre la fin du thread avant de continuer
+            updateThread?.Join();
         }
 
 
