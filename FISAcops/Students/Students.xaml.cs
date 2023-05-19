@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -37,7 +35,7 @@ namespace FISAcops
                 index = StudentsList.IndexOf(selectedStudent);
             }
 
-            if (index >= 0)
+            if (index != -1)
             {
                 // Naviguer vers la page d'édition de l'étudiant
                 var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -87,18 +85,6 @@ namespace FISAcops
                 }
             }
 
-        }
-
-        public void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Créer un nouveau Memento avant la recherche
-            currentMemento = new StudentsPageMemento(StudentsList);
-
-            string promotion = searchTextBox.Text;
-
-            // Effectuer la recherche par promotion et mettre à jour la liste d'étudiants
-            StudentsList = StudentsList.Where(student => student.Promotion == promotion).ToList();
-            studentsListView.ItemsSource = StudentsList;
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
