@@ -5,9 +5,24 @@ namespace FISAcops
 {
     internal class TcpClientPool
     {
+        private static TcpClientPool? instance;
+        private static readonly object lockObject = new();
         private readonly Stack<TcpClient> pool;
 
-        public TcpClientPool()
+
+        public static TcpClientPool GetInstance()
+        {
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    instance ??= new TcpClientPool();
+                }
+            }
+            return instance;
+        }
+
+        private TcpClientPool()
         {
             pool = new Stack<TcpClient>();
         }
@@ -20,18 +35,21 @@ namespace FISAcops
                 {
                     return pool.Pop();
                 }
-                else
-                {
-                    return new TcpClient();
-                }
             }
+
+            // Si le pool est vide, créez un nouveau TcpClient
+            return new TcpClient();
         }
 
         public void Release(TcpClient client)
         {
-            lock (pool)
+            // Assurez-vous que le client n'est pas déjà fermé avant de le remettre dans le pool
+            if (client != null && client.Connected)
             {
-                pool.Push(client);
+                lock (pool)
+                {
+                    pool.Push(client);
+                }
             }
         }
     }

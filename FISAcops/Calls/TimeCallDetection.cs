@@ -141,7 +141,7 @@ namespace FISAcops
                                 );
                                 CheckInList.Add(new CheckIn(studentWithCode));
                                 Codes.Add(studentWithCode.Code);
-                                DeleteTime.Add(callDateTime.AddMinutes(2));
+                                DeleteTime.Add(callDateTime.AddMinutes(1));
                             }
                         }
                         show = true;
