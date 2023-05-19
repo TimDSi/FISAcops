@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FISAcops
 {
@@ -93,10 +83,7 @@ namespace FISAcops
             // Obtenir l'objet Call associé à la ligne du bouton cliqué
             var call = (Call)modifierButton.DataContext;
 
-            // Effectuer les actions de modification avec l'objet Call
-            // ...
-
-            // Exemple : Naviguer vers la page "EditCall" en passant l'objet Call en tant que paramètre
+            //Naviguer vers la page "EditCall" en passant l'objet Call en tant que paramètre
             var mainWindow = (MainWindow)Window.GetWindow(this);
             mainWindow.frame.Navigate(new EditCall(call));
         }

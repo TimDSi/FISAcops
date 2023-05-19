@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <!-- Titre centré en haut -->
-        <TextBlock Text="Calender" 
+        <TextBlock Text="Calendar" 
            FontSize="20" 
            FontWeight="Bold" 
            HorizontalAlignment="Center" 
