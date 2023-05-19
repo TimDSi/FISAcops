@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System;
@@ -13,15 +12,16 @@ namespace FISAcops
         private static readonly object lockObject = new();
 
         private readonly TcpListener server;
-        private readonly List<TcpClient> TcpClientList;
+        private readonly TcpClientPool clientPool;
+        private bool ServerOnline;
+
         public static TcpClient? LastClient;
         public string ReceivedMessage = "";
-        private bool ServerOnline;
 
         private Checker()
         {
             server = new TcpListener(IPAddress.Any, 8080);
-            TcpClientList = new List<TcpClient>();
+            clientPool = new TcpClientPool();
             ServerOnline = false;
         }
 
@@ -46,11 +46,20 @@ namespace FISAcops
                 while (ServerOnline)
                 {
                     // Attendre une connexion de client
-                    TcpClient client = server.AcceptTcpClient();
-                    TcpClientList.Add(client);
+                    TcpClient client = clientPool.Acquire();
 
                     // Créer un nouveau thread pour gérer la communication avec le client
-                    Thread clientThread = new(() => HandleClient(client))
+                    Thread clientThread = new(() =>
+                    {
+                        try
+                        {
+                            HandleClient(client);
+                        }
+                        finally
+                        {
+                            clientPool.Release(client);
+                        }
+                    })
                     {
                         IsBackground = true
                     };
@@ -65,20 +74,6 @@ namespace FISAcops
 
         public void CheckerStop()
         {
-            foreach (TcpClient client in TcpClientList)
-            {
-                if (client.Connected)
-                {
-                    // Envoyer un message de déconnexion au client
-                    byte[] disconnectMessage = Encoding.ASCII.GetBytes("disconnect");
-                    NetworkStream stream = client.GetStream();
-                    stream.Write(disconnectMessage, 0, disconnectMessage.Length);
-
-                    // Fermer la connexion avec le client
-                    client.Close();
-                }
-            }
-            TcpClientList.Clear();
             ServerOnline = false;
             server.Stop();
         }
@@ -117,9 +112,7 @@ namespace FISAcops
             catch (Exception)
             {
             }
-
-            // Fermeture de la connexion avec le client
-            client.Close();
         }
     }
+
 }
