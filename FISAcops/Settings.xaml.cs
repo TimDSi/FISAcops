@@ -21,8 +21,9 @@ namespace FISAcops
         public string callsPath = DefaultPath;
         public string resultsPath = DefaultPath;
 
+        public bool displayPopUpWhenCall = false;
 
-        private void SaveSettings(string studentsPath, string groupsPath, string callsPath, string resultPath)
+        private void SaveSettings(string studentsPath, string groupsPath, string callsPath, string resultPath, bool displayPopUpWhenCall)
         {
             // Créer un objet JSON pour stocker les chemins de dossier
             var jsonObject = new
@@ -30,11 +31,16 @@ namespace FISAcops
                 StudentsPath = studentsPath,
                 GroupsPath = groupsPath,
                 CallsPath = callsPath,
-                ResultsPath = resultPath
+                ResultsPath = resultPath,
+                DisplayPopUpWhenCall = displayPopUpWhenCall
             };
 
             // Convertir l'objet JSON en une chaîne JSON
-            string jsonString = JsonSerializer.Serialize(jsonObject);
+            string jsonString = JsonSerializer.Serialize(jsonObject, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
 
             // Enregistrer la chaîne JSON dans un fichier
             File.WriteAllText(settingsPath, jsonString);
@@ -58,7 +64,7 @@ namespace FISAcops
 
             if (dialog.ShowDialog() == true)
             {
-                string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                string? selectedFolder = Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
                     studentsPath = selectedFolder;
@@ -137,7 +143,7 @@ namespace FISAcops
 
         private void BtnSetFilePath_Click(object sender, RoutedEventArgs e)
         {
-            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath);
+            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath, ChkDisplayPopUpWhenCall.IsChecked == true);
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -147,15 +153,17 @@ namespace FISAcops
             groupsPath = DefaultPath;
             callsPath = DefaultPath;
             resultsPath= DefaultPath;
+            displayPopUpWhenCall = false;
 
             // Mettre à jour les fichiers de configuration JSON
-            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath);
+            SaveSettings(studentsPath, groupsPath, callsPath, resultsPath, displayPopUpWhenCall);
 
             // Mettre à jour le texte du TextBox
             TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
+            ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
         }
 
 
@@ -504,10 +512,22 @@ namespace FISAcops
             }
 
 
+            // Vérifier si la propriété DisplayPopUpWhenCall existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("DisplayPopUpWhenCall", out JsonElement displayPopUpWhenCallElement))
+            {
+                // Récupérer la valeur de la propriété DisplayPopUpWhenCall
+                bool displayPopUpWhenCallValue = displayPopUpWhenCallElement.GetBoolean();
+
+                // Affecter la valeur de DisplayPopUpWhenCall à displayPopUpWhenCall
+                displayPopUpWhenCall = displayPopUpWhenCallValue;
+            }
+
+
             TxtGroupsPath.Text = groupsPath;
             TxtStudentsPath.Text = studentsPath;
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
+            ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
         }
 
 

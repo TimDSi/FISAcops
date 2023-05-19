@@ -1,7 +1,8 @@
 ﻿using FISAcops.CheckIns;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using System.Net.Mail;
+using System.Net;
 using System.Threading;
 using System.Windows;
 
@@ -144,7 +145,7 @@ namespace FISAcops
                         show = true;
                     }
                 }
-                if (show)
+                if (show && new Settings().displayPopUpWhenCall)
                 {
                     ShowPopUp();
                 }
@@ -252,10 +253,48 @@ namespace FISAcops
             string message = "Pop-up affichée pour le groupe : ";
             foreach(CheckIn s in CheckInList)
             {
-                message += s.student.Prenom + " " + s.student.Nom + " " + s.student.Code + " / ";
+                message += "\n" + s.student.Prenom + " " + s.student.Nom + " " + s.student.Code + " / ";
             }
             // Code pour afficher la pop-up ici
             MessageBox.Show(message);
         }
+
+        public static void SendEmail(string toEmail, string subject, string message)
+        {
+            // Adresse e-mail de l'expéditeur
+            string fromEmail = "votre_adresse_email@gmail.com";
+
+            // Créer un objet MailMessage
+            MailMessage mailMessage = new(fromEmail, toEmail)
+            {
+                // Sujet du courrier électronique
+                Subject = subject,
+
+                // Corps du courrier électronique
+                Body = message
+            };
+
+            try
+            {
+                // Créer un objet SmtpClient pour envoyer le courrier électronique
+                SmtpClient smtpClient = new("smtp.gmail.com", 587)
+                {
+                    EnableSsl = true,
+
+                    // Identifiants d'authentification pour le compte Gmail
+                    Credentials = new NetworkCredential("votre_adresse_email@gmail.com", "votre_mot_de_passe")
+                };
+
+                // Envoyer le courrier électronique
+                smtpClient.Send(mailMessage);
+
+                Console.WriteLine("Le courrier électronique a été envoyé avec succès.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de l'envoi du courrier électronique : " + ex.Message);
+            }
+        }
+
     }
 }
