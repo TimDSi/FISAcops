@@ -78,6 +78,7 @@ namespace FISAcops
                     client.Close();
                 }
             }
+            TcpClientList.Clear();
             ServerOnline = false;
             server.Stop();
         }
@@ -103,7 +104,7 @@ namespace FISAcops
                 while (true)
                 {
                     int bytesRead = stream.Read(data, 0, data.Length);
-                    ReceivedMessage = Encoding.ASCII.GetString(data, 0, bytesRead);
+                    ReceivedMessage = Encoding.UTF8.GetString(data, 0, bytesRead);
                     LastClient = client;
 
                     // Condition de sortie

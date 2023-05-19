@@ -110,10 +110,9 @@ namespace ImHere
                     return;
                 }
 
-                byte[] data = Encoding.ASCII.GetBytes(tbCode.Text);
+                byte[] data = Encoding.UTF8.GetBytes(tbCode.Text);
                 NetworkStream stream = client.GetStream();
                 stream.Write(data, 0, data.Length);
-                tbState.Text = "Message envoyé : " + tbCode.Text;
             }
             catch (Exception ex)
             {
