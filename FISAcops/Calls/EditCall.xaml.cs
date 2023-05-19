@@ -175,16 +175,8 @@ namespace FISAcops
 
             Call newCall = new(date, selectedTimeSlot, selectedGroup, selectedFrequency, studentsWithState);
 
-            bool callExists = false;
-            foreach (Call call in callsList){
-                if (call == newCall)
-                {
-                    callExists = true;
-                    break;
-                }
-            }
 
-            if (callExists)
+            if (callsList.Contains(newCall))
             {
                 MessageBox.Show("Cet appel existe déjà.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

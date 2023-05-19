@@ -25,7 +25,6 @@
            VerticalAlignment="Center"/>
 
         <!-- Contenu de la page ici -->
-        <!-- Contenu de la page ici -->
         <Calendar Grid.Row="1" SelectionMode="SingleRange" Margin="0,0,597,75" 
                   SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
 
