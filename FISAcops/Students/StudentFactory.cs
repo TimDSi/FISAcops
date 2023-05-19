@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FISAcops
+﻿namespace FISAcops
 {
     public static class StudentFactory
     {
