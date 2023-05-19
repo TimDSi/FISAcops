@@ -37,13 +37,11 @@ namespace FISAcops
                 }
             }
 
-            // Si le pool est vide, créez un nouveau TcpClient
             return new TcpClient();
         }
 
         public void Release(TcpClient client)
         {
-            // Assurez-vous que le client n'est pas déjà fermé avant de le remettre dans le pool
             if (client != null && client.Connected)
             {
                 lock (pool)
