@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -63,9 +61,8 @@ namespace FISAcops
                     // Supprimer l'élève de la liste des étudiants
                     groupsList.Remove(selectedGroup);
 
-                    // Rafraîchir la liste des étudiants
-                    groupsListView.ItemsSource = null;
-                    groupsListView.ItemsSource = groupsList;
+                    // Supprimer visuellement le groupe du ListView
+                    groupsListView.Items.Remove(selectedGroup);
 
                     // Enregistrer les modifications dans le fichier JSON
                     GroupsService.SaveGroupsToJson(groupsList);

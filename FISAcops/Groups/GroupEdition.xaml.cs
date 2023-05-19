@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -50,41 +47,48 @@ namespace FISAcops
 
         private void SaveGroup_Click(object sender, RoutedEventArgs e)
         {
+            string errorMessage = "";
 
             // Vérifier si le nom du groupe est déjà utilisé
             bool groupNameExists = groupsList.Any(group => group.GroupName == nomTextBox.Text);
-
 
             if (selectedGroup == -1)
             {
                 if (groupNameExists)
                 {
-                    // Afficher un message d'erreur si un groupe avec le même nom existe déjà
-                    MessageBox.Show("Un groupe avec le même nom existe déjà. Veuillez choisir un nom différent.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    errorMessage = "Un groupe avec le même nom existe déjà. Veuillez choisir un nom différent.";
                 }
-
-                // Ajouter un nouveau groupe à la liste
-                groupsList.Add(new Group(nomTextBox.Text, SelectedStudents));
+                else
+                {
+                    // Ajouter un nouveau groupe à la liste
+                    groupsList.Add(new Group(nomTextBox.Text, SelectedStudents));
+                }
             }
             else
             {
                 if (groupNameExists && groupsList[selectedGroup].GroupName != nomTextBox.Text)
                 {
-                    // Afficher un message d'erreur si un groupe avec le même nom existe déjà et que ce n'est pas le groupe actuellement sélectionné
-                    MessageBox.Show("Un groupe avec le même nom existe déjà. Veuillez choisir un nom différent.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    errorMessage = "Un groupe avec le même nom existe déjà. Veuillez choisir un nom différent.";
                 }
-
-                // Modifier le groupe sélectionné dans la liste
-                groupsList[selectedGroup].GroupName = nomTextBox.Text;
-                groupsList[selectedGroup].StudentsList = SelectedStudents;
+                else
+                {
+                    // Modifier le groupe sélectionné dans la liste
+                    groupsList[selectedGroup].GroupName = nomTextBox.Text;
+                    groupsList[selectedGroup].StudentsList = SelectedStudents;
+                }
             }
-            
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                MessageBox.Show(errorMessage, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             GroupsService.SaveGroupsToJson(groupsList);
 
             ReturnAndLoad();
         }
+
 
         private void ReturnAndLoad()
         {

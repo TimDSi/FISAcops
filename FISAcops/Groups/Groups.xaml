@@ -27,13 +27,6 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding GroupName}" Width="120"/>
-                    <GridViewColumn Header="Membres" Width="250">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <ListBox ItemsSource="{Binding Membres}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                     <GridViewColumn Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
