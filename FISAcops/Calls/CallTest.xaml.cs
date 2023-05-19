@@ -71,7 +71,6 @@ namespace FISAcops
 
         // serveur sur un thread -------------------------------------------------------------------
         private bool CheckerStarted = false;
-        private readonly Checker checker;
         Thread? updateThread;
 
         private void StartChecker()
@@ -81,7 +80,7 @@ namespace FISAcops
             {
                 while (CheckerStarted)
                 {
-                    string receivedMessage = checker.ReceivedMessage;
+                    string receivedMessage = Checker.ReceivedMessage;
                     if (!string.IsNullOrEmpty(receivedMessage))
                     {
                         try
@@ -111,18 +110,18 @@ namespace FISAcops
                                                         dgStudents.Items.Refresh(); // Rafraîchir uniquement les éléments du DataGrid
 
 
-                                                        Checker.SendResponseToClient(Checker.LastClient, checkIn.CodeMessage(enteredCode));
+                                                        Checker.SendResponseToClient(checkIn.CodeMessage(enteredCode));
                                                         noCode = false;
                                                     }
                                                 }
                                                 if (noCode)
                                                 {
-                                                    Checker.SendResponseToClient(Checker.LastClient, "Code incorrect");
+                                                    Checker.SendResponseToClient("Code incorrect");
                                                 }
                                             }
                                             else
                                             {
-                                                Checker.SendResponseToClient(Checker.LastClient, "Code format incorrect");
+                                                Checker.SendResponseToClient("Code format incorrect");
                                             }
                                         }
                                     });
@@ -214,9 +213,6 @@ namespace FISAcops
 
         public CallTest()
         {
-            // Accéder à l'instance du Checker
-            checker = Checker.Instance;
-
             cbStudents = new ComboBox();
             cbGroups = new ComboBox();
 

@@ -15,8 +15,28 @@ namespace FISAcops
         private readonly TcpClientPool tcpClientPool;
         private bool ServerOnline;
 
+        private static int responseCount;
         public static TcpClient? LastClient;
-        public string ReceivedMessage = "";
+        private static readonly object receivedMessageLock = new();
+        private static string receivedMessage = "";
+        public static string ReceivedMessage
+        {
+            get
+            {
+                lock (receivedMessageLock)
+                {
+                    return receivedMessage;
+                }
+            }
+            set
+            {
+                lock (receivedMessageLock)
+                {
+                    receivedMessage = value;
+                    responseCount = 0;
+                }
+            }
+        }
 
         private Checker()
         {
@@ -63,13 +83,25 @@ namespace FISAcops
         }
 
 
-        public static void SendResponseToClient(TcpClient client, string response)
+        private readonly static object responseLock = new();
+        public static void SendResponseToClient(string response)
         {
-            if (client.Connected)
+            if (LastClient != null)
             {
-                byte[] buffer = Encoding.UTF8.GetBytes(response);
-                NetworkStream stream = client.GetStream();
-                stream.Write(buffer, 0, buffer.Length);
+                responseCount++;
+                if (LastClient.Connected)
+                {
+                    lock (responseLock)
+                    {
+                        byte[] buffer = Encoding.UTF8.GetBytes(response);
+                        NetworkStream stream = LastClient.GetStream();
+                        stream.Write(buffer, 0, buffer.Length);
+                        if (response.Contains("Code bon") || responseCount>10)
+                        {
+                            LastClient = null;
+                        }
+                    }
+                }
             }
         }
 
