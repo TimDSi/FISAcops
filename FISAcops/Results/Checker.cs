@@ -13,7 +13,7 @@ namespace FISAcops
         private static readonly object lockObject = new();
 
         private readonly TcpListener server;
-        private readonly List<TcpClient> TcpClientList;
+        private readonly TcpClientPool tcpClientPool;
         private bool ServerOnline;
 
         public static TcpClient? LastClient;
@@ -22,7 +22,7 @@ namespace FISAcops
         private Checker()
         {
             server = new TcpListener(IPAddress.Any, 8080);
-            TcpClientList = new List<TcpClient>();
+            tcpClientPool = TcpClientPool.GetInstance();
             ServerOnline = false;
         }
 
@@ -48,7 +48,9 @@ namespace FISAcops
                 {
                     // Attendre une connexion de client
                     TcpClient client = server.AcceptTcpClient();
-                    TcpClientList.Add(client);
+
+                    // Ajouter le client à la pool
+                    tcpClientPool.Release(client);
 
                     // Créer un nouveau thread pour gérer la communication avec le client
                     Thread clientThread = new(() => HandleClient(client))
@@ -58,31 +60,9 @@ namespace FISAcops
                     clientThread.Start();
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception: {0}", ex.Message);
-            }
+            catch (Exception) {}
         }
 
-        public void CheckerStop()
-        {
-            foreach (TcpClient client in TcpClientList)
-            {
-                if (client.Connected)
-                {
-                    // Envoyer un message de déconnexion au client
-                    byte[] disconnectMessage = Encoding.ASCII.GetBytes("disconnect");
-                    NetworkStream stream = client.GetStream();
-                    stream.Write(disconnectMessage, 0, disconnectMessage.Length);
-
-                    // Fermer la connexion avec le client
-                    client.Close();
-                }
-            }
-            TcpClientList.Clear();
-            ServerOnline = false;
-            server.Stop();
-        }
 
         public static void SendResponseToClient(TcpClient client, string response)
         {
@@ -96,31 +76,39 @@ namespace FISAcops
 
         private void HandleClient(TcpClient client)
         {
-            // Boucle de lecture de messages du client
-            byte[] data = new byte[1024];
-            NetworkStream stream = client.GetStream();
-
-            try
+            if (client.Connected)
             {
-                while (true)
-                {
-                    int bytesRead = stream.Read(data, 0, data.Length);
-                    ReceivedMessage = Encoding.UTF8.GetString(data, 0, bytesRead);
-                    LastClient = client;
+                byte[] data = new byte[1024];
+                NetworkStream stream = client.GetStream();
 
-                    // Condition de sortie
-                    if (bytesRead == 0)
+                try
+                {
+                    while (true)
                     {
-                        break;
+                        int bytesRead = stream.Read(data, 0, data.Length);
+                        ReceivedMessage = Encoding.UTF8.GetString(data, 0, bytesRead);
+                        LastClient = client;
+
+                        // Condition de sortie
+                        if (bytesRead == 0)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
-            }
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    // Fermer le flux réseau du client
+                    stream.Close();
 
-            // Fermeture de la connexion avec le client
-            client.Close();
+                    // Libérer le client en le remettant dans le pool
+                    tcpClientPool.Release(client);
+                }
+            }
         }
+
     }
 }
