@@ -1,13 +1,10 @@
 ﻿using FISAcops.CheckIns;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace FISAcops
 {
@@ -65,7 +62,7 @@ namespace FISAcops
                     students[i].Prenom,
                     students[i].Mail,
                     students[i].Promotion, 
-                    codes[i].ToString())
+                    codes[i])
                     ));
             }
 
@@ -188,7 +185,7 @@ namespace FISAcops
             {
                 Student student = studentsList[i];
                 CheckIn checkIn = checkIns[i];
-                studentsListWithCode.Add(StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode().ToString()));
+                studentsListWithCode.Add(StudentFactory.CreateStudent(student.Nom, student.Prenom, student.Mail, student.Promotion, checkIn.GetCode()));
             }
             StartChecker();
 

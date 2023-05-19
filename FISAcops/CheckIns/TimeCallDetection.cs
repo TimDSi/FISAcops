@@ -137,10 +137,10 @@ namespace FISAcops
                                     student.Prenom, 
                                     student.Mail, 
                                     student.Promotion, 
-                                    GenerateCode().ToString()
+                                    GenerateCode()
                                 );
                                 CheckInList.Add(new CheckIn(studentWithCode));
-                                Codes.Add(int.Parse(studentWithCode.Code));
+                                Codes.Add(studentWithCode.Code);
                                 DeleteTime.Add(callDateTime.AddMinutes(2));
                             }
                         }
