@@ -1,29 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using System.Windows;
-
-namespace FISAcops.CheckIns
+﻿namespace FISAcops.CheckIns
 {
 
     internal class CheckIn
     {
         public StudentWithCode student;
-        private readonly int code;
 
-        public int GetCode() { return code; }
+        public int GetCode() { return student.Code; }
 
         public bool IsCodeGood(int enteredCode)
         {
-            return code == enteredCode;
+            return student.Code == enteredCode;
         }
         public string CodeMessage(int enteredCode)
         {
             string result;
-            if (enteredCode == code)
+            if (enteredCode == student.Code)
             {
                 result = $"{student.Prenom} {student.Nom} : Code bon";
             }
@@ -36,14 +27,6 @@ namespace FISAcops.CheckIns
 
         public CheckIn(StudentWithCode student) {
             this.student = student;
-            if(int.TryParse(student.Code, out int code))
-            {
-                this.code = code ;
-            }
-            else
-            {
-                this.code = 0 ;
-            }
         }
     }
 }

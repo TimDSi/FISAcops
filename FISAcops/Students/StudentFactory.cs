@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FISAcops
 {
     public static class StudentFactory
     {
-        public static IStudent CreateStudent(string nom, string prenom, string mail, string promotion, string? obj)
+        public static IStudent CreateStudent(string nom, string prenom, string mail, string promotion, object obj)
         {
-            if (int.TryParse(obj, out int code))
+            if (obj is int code)
             {
-                return new StudentWithCode(nom, prenom, mail, promotion, code.ToString());
+                return new StudentWithCode(nom, prenom, mail, promotion, code);
             }
-            else if (!string.IsNullOrEmpty(obj))
+            else if (obj is string state)
             {
-                return new StudentWithState(nom, prenom, mail, promotion, obj);
+                return new StudentWithState(nom, prenom, mail, promotion, state);
             }
             else
             {

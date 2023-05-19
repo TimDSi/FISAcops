@@ -13,7 +13,7 @@ namespace FISAcops
         public string Mail { get; set; }
         public string Promotion { get; set; }
 
-        public StudentWithCode(string nom, string prenom, string mail, string promotion, string code)
+        public StudentWithCode(string nom, string prenom, string mail, string promotion, int code)
         {
             Nom = nom;
             Prenom = prenom;
@@ -22,9 +22,9 @@ namespace FISAcops
             Code = code;
         }
 
-        public string Code { get; set; }
+        public int Code { get; set; }
 
-        public void UpdateCode(string newCode)
+        public void UpdateCode(int newCode)
         {
             Code = newCode;
         }
