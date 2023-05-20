@@ -25,5 +25,16 @@ namespace FISAcops
             });
             File.WriteAllText(studentsFilePath, json);
         }
+
+        //barrière de protection suplémentaire au cas ou le fichier n'existe pas.
+        public static void CreateStudentsJson()
+        {
+            // Créer le dossier s'il n'existe pas
+            Directory.CreateDirectory(Settings.StudentsPath);
+
+            string studentsFilePath = Path.Combine(Settings.StudentsPath, "Students.json");
+            var json = "[]";
+            File.WriteAllText(studentsFilePath, json);
+        }
     }
 }

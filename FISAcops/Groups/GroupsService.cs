@@ -24,5 +24,16 @@ namespace FISAcops
             });
             File.WriteAllText(groupsFilePath, json);
         }
+
+        //barrière de protection suplémentaire au cas ou le fichier n'existe pas.
+        public static void CreateGroupsJson()
+        {
+            // Créer le dossier s'il n'existe pas
+            Directory.CreateDirectory(Settings.GroupsPath);
+
+            string groupsFilePath = Path.Combine(Settings.GroupsPath, "Groups.json");
+            var json = "[]";
+            File.WriteAllText(groupsFilePath, json);
+        }
     }
 }

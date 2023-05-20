@@ -16,6 +16,8 @@ namespace FISAcops
         public MainWindow()
         {
             InitializeComponent();
+            Settings.LoadSettings();
+
             frame.NavigationService.Navigate(new MainPage());
 
             // Définir la couleur de fond souhaitée

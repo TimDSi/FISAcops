@@ -44,6 +44,9 @@ namespace FISAcops
 
         public static void CreateResultsJson(string date)
         {
+            // Créer le dossier s'il n'existe pas
+            Directory.CreateDirectory(Settings.CallsPath);
+
             string resultsFilePath = Path.Combine(Settings.CallsPath, "Results" + date + ".json");
             var json = "[]"; // JSON vide représentant une liste vide
             File.WriteAllText(resultsFilePath, json);

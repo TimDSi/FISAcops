@@ -46,5 +46,16 @@ namespace FISAcops
             }
             return filteredCalls;
         }
+
+        //barrière de protection suplémentaire au cas ou le fichier n'existe pas.
+        public static void CreateCallsJson()
+        {
+            // Créer le dossier s'il n'existe pas
+            Directory.CreateDirectory(Settings.CallsPath);
+
+            string callsFilePath = Path.Combine(Settings.CallsPath, "Calls.json");
+            var json = "[]";
+            File.WriteAllText(callsFilePath, json);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace FISAcops
     /// </summary>
     public partial class Settings : Page
     {
-        public string settingsPath = Path.Combine(Environment.CurrentDirectory, "settings.json");
+        private static readonly string settingsPath = Path.Combine(Environment.CurrentDirectory, "settings.json");
 
         private static readonly string DefaultPath = Environment.CurrentDirectory;
 
@@ -28,7 +28,7 @@ namespace FISAcops
         //public string superviserEmail = "fisa.cops@gmail.com";
         //public string superviserPassword = "MDPlongDonc5ecurise";
 
-        private void SaveSettings(
+        private static void SaveSettings(
             string studentsPath, 
             string groupsPath, 
             string callsPath, 
@@ -104,7 +104,7 @@ namespace FISAcops
 
             if (dialog.ShowDialog() == true)
             {
-                string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                string? selectedFolder = Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
                     GroupsPath = selectedFolder;
@@ -286,6 +286,9 @@ namespace FISAcops
         {
             if (!File.Exists(Path.Combine(StudentsPath, "Students.json")))
             {
+                // Créer le dossier s'il n'existe pas
+                Directory.CreateDirectory(StudentsPath);
+
                 var studentsObject = new[]
                 {
                     new {
@@ -390,6 +393,9 @@ namespace FISAcops
         {
             if (!File.Exists(Path.Combine(GroupsPath, "Groups.json")))
             {
+                // Créer le dossier s'il n'existe pas
+                Directory.CreateDirectory(GroupsPath);
+
                 var groupsObject = new[]
                 {
                     new {
@@ -512,6 +518,9 @@ namespace FISAcops
         {
             if (!File.Exists(Path.Combine(CallsPath, "Calls.json")))
             {
+                // Créer le dossier s'il n'existe pas
+                Directory.CreateDirectory(CallsPath);
+
                 var callObject = new[]
                 {
                     new {
@@ -545,7 +554,7 @@ namespace FISAcops
         }
         //-----------------------------------------------------------------------------------------------------------------------------
 
-        private void LoadSettings()
+        public static void LoadSettings()
         {
             // Lire le contenu du fichier JSON
             string jsonString = File.ReadAllText(settingsPath);
@@ -612,7 +621,6 @@ namespace FISAcops
                 }
             }
 
-
             // Vérifier si la propriété DisplayPopUpWhenCall existe dans l'objet JSON
             if (jsonObject.TryGetProperty("DisplayPopUpWhenCall", out JsonElement displayPopUpWhenCallElement))
             {
@@ -661,14 +669,8 @@ namespace FISAcops
             }
             */
 
-            TxtGroupsPath.Text = GroupsPath;
-            TxtStudentsPath.Text = StudentsPath;
-            TxtCallsPath.Text = CallsPath;
-            TxtResultsPath.Text = ResultsPath;
-            ChkDisplayPopUpWhenCall.IsChecked = DisplayPopUpWhenCall;
-            TxtCallTime.Text = CallTime.ToString();
-            //TxtSupervisorEmail.Text = superviserEmail;
-            //PwdSupervisorPassword.Password = superviserPassword;
+            
+            
         }
 
 
@@ -679,6 +681,15 @@ namespace FISAcops
             CreateSettingsFileIfNotExists(DefaultPath);
 
             LoadSettings();
+
+            TxtGroupsPath.Text = GroupsPath;
+            TxtStudentsPath.Text = StudentsPath;
+            TxtCallsPath.Text = CallsPath;
+            TxtResultsPath.Text = ResultsPath;
+            ChkDisplayPopUpWhenCall.IsChecked = DisplayPopUpWhenCall;
+            TxtCallTime.Text = CallTime.ToString();
+            //TxtSupervisorEmail.Text = superviserEmail;
+            //PwdSupervisorPassword.Password = superviserPassword;
         }
     }
 }
