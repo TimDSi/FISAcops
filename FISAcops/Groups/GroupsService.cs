@@ -9,6 +9,13 @@ namespace FISAcops
         public static string groupsFilePath = Path.Combine(Settings.CallsPath, "groups.json");
         public static List<Group> LoadGroupsFromJson()
         {
+            // Vérifier si le fichier existe
+            if (!File.Exists(groupsFilePath))
+            {
+                // Créer un fichier JSON vide
+                CreateGroupsJson();
+            }
+
             var json = File.ReadAllText(groupsFilePath);
             var groups = JsonSerializer.Deserialize<List<Group>>(json);
             groups ??= new List<Group>();
@@ -17,6 +24,13 @@ namespace FISAcops
 
         public static void SaveGroupsToJson(List<Group> groups)
         {
+            // Vérifier si le fichier existe
+            if (!File.Exists(groupsFilePath))
+            {
+                // Créer un fichier JSON vide
+                CreateGroupsJson();
+            }
+
             var json = JsonSerializer.Serialize(groups, new JsonSerializerOptions
             {
                 WriteIndented = true,

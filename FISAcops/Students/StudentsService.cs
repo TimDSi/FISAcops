@@ -10,6 +10,13 @@ namespace FISAcops
 
         public static List<Student> LoadStudentsFromJson()
         {
+            // Vérifier si le fichier existe
+            if (!File.Exists(studentsFilePath))
+            {
+                // Créer un fichier JSON vide
+                CreateStudentsJson();
+            }
+
             var json = File.ReadAllText(studentsFilePath);
             var students = JsonSerializer.Deserialize<List<Student>>(json);
             students ??= new List<Student>();
@@ -18,6 +25,13 @@ namespace FISAcops
 
         public static void SaveStudentsToJson(List<Student> students)
         {
+            // Vérifier si le fichier existe
+            if (!File.Exists(studentsFilePath))
+            {
+                // Créer un fichier JSON vide
+                CreateStudentsJson();
+            }
+
             var json = JsonSerializer.Serialize(students, new JsonSerializerOptions
             {
                 WriteIndented = true,

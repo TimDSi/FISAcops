@@ -13,6 +13,13 @@ namespace FISAcops
         {
             lock (lockObject)
             {
+                // Vérifier si le fichier existe
+                if (!File.Exists(callsFilePath))
+                {
+                    // Créer un fichier JSON vide
+                    CreateCallsJson();
+                }
+
                 var json = File.ReadAllText(callsFilePath);
                 var calls = JsonSerializer.Deserialize<List<Call>>(json);
                 calls ??= new List<Call>();
@@ -24,6 +31,13 @@ namespace FISAcops
         {
             lock (lockObject)
             {
+                // Vérifier si le fichier existe
+                if (!File.Exists(callsFilePath))
+                {
+                    // Créer un fichier JSON vide
+                    CreateCallsJson();
+                }
+
                 var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions
                 {
                     WriteIndented = true,
