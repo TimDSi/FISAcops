@@ -48,6 +48,7 @@
                 <TextBlock Text="Afficher la pop-up lors des appels: "/>
                 <CheckBox x:Name="ChkDisplayPopUpWhenCall" Margin="10,5,0,0"/>
             </StackPanel>
+            <!--
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Courrier électronique du superviseur: "/>
                 <TextBox x:Name="TxtSupervisorEmail" Text="" Width="224" Height="18" Margin="0,5,0,0" />
@@ -62,6 +63,7 @@
                 </Grid>
                 <Button x:Name="BtnShowPassword" Content=" - - " Height="18" Width="30" Click="BtnShowPassword_Click"/>
             </StackPanel>
+            -->
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="BtnSetFilePath" Content="Enregistrer" Height="20" Width="70" Click="BtnSaveSettings_Click" Margin="0,10,0,0"/>
                 <Button x:Name="BtnReset" Content="Reset" Height="20" Width="70" Click="BtnReset_Click" Margin="10,10,0,0"/>

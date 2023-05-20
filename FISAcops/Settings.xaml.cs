@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -156,7 +157,7 @@ namespace FISAcops
         //-----------------------------------------------------------------------------------------------------------------
 
         // Email -------------------------------------------------------------------------------------------------
-
+        /*
         private void PwdSupervisorPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
             TxtSupervisorPassword.Text = PwdSupervisorPassword.Password;
@@ -183,7 +184,7 @@ namespace FISAcops
                 BtnShowPassword.Content = " - - ";
             }
         }
-
+        */
         //--------------------------------------------------------------------------------------------------------------------
 
 
@@ -228,8 +229,8 @@ namespace FISAcops
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
             ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
-            TxtSupervisorEmail.Text = superviserEmail;
-            PwdSupervisorPassword.Password = superviserPassword;
+            //TxtSupervisorEmail.Text = superviserEmail;
+            //PwdSupervisorPassword.Password = superviserPassword;
         }
 
 
@@ -487,19 +488,22 @@ namespace FISAcops
                 var callObject = new[]
                 {
                     new {
-                        Date = "10/05/2023",
-                        Time = "10:30",
+                        Date = "20/05/2023",
+                        Time = "17:03",
                         GroupName = "Gryffondor",
-                        Frequency = "Once"
-                    },
-                    new {
-                        Date = "10/05/2023",
-                        Time = "08:30",
-                        GroupName = "Serpentar",
-                        Frequency = "Weekly"
-                    },
-                    
+                        Frequency = "Weekly",
+                        StudentsWithState = new List<StudentWithState>
+                        {
+                            (StudentWithState)StudentFactory.CreateStudent("Potter","Harry","harry.potter@viacesi.fr","Gryffondor","Absence Justifié"),
+                            (StudentWithState)StudentFactory.CreateStudent("Potter", "Harry", "harry.potter@viacesi.fr", "Gryffondor", "Retard Justifié"),
+                            (StudentWithState)StudentFactory.CreateStudent("Granger", "Hermione", "hermione.granger@viacesi.fr", "Gryffondor", "Présent"),
+                            (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ron", "ron.weasley@viacesi.fr", "Gryffondor", "Controle"),
+                            (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ginny", "ginny.weasley@viacesi.fr", "Gryffondor", "Controle"),
+                            (StudentWithState)StudentFactory.CreateStudent("Black", "Sirius", "sirius.black@viacesi.fr", "Gryffondor", "Controle")
+                        }
+                    }
                 };
+
 
                 // Convertir l'objet en une chaîne JSON
                 string jsonString = JsonSerializer.Serialize(callObject);
@@ -620,8 +624,8 @@ namespace FISAcops
             TxtCallsPath.Text = callsPath;
             TxtResultsPath.Text = resultsPath;
             ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
-            TxtSupervisorEmail.Text = superviserEmail;
-            PwdSupervisorPassword.Password = superviserPassword;
+            //TxtSupervisorEmail.Text = superviserEmail;
+            //PwdSupervisorPassword.Password = superviserPassword;
         }
 
 
