@@ -18,6 +18,7 @@ namespace FISAcops
         private readonly List<DateTime> DeleteTime = new();
 
         private readonly List<Result> resultList = new();
+        private List<Call> callsToRemove = new();
 
 
         public TimeCallDetection()
@@ -143,10 +144,23 @@ namespace FISAcops
                             }
                         }
                         show = true;
+
+                        if (call.Frequency == "Once")
+                        {
+                            callsToRemove.Add(call);
+                        }
                     }
                 }
+                while (callsToRemove.Count > 0)
+                {
+                    Call call = callsToRemove[0];
+                    calls.Remove(call);
+                    callsToRemove.Remove(call);
+                }
+
                 if (show)
                 {
+                    CallsService.SaveCallsToJson(calls);
                     PrintStudentsPasswords();
                 }
 
@@ -290,8 +304,8 @@ namespace FISAcops
 
                     // Identifiants d'authentification pour le compte Gmail
                     Credentials = new NetworkCredential(
-                        "363509770901-29djk7igoij8ouk4a8mb036kj693n646.apps.googleusercontent.com ",
-                        "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"
+                        "fisa-cops@fisacops.iam.gserviceaccount.com",
+                        "48791288aa432347fa985bbaf8660814585f8d93"
                     )
                 };
 
