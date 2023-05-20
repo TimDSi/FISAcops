@@ -18,7 +18,8 @@ namespace FISAcops
         private readonly List<DateTime> DeleteTime = new();
 
         private readonly List<Result> resultList = new();
-        private List<Call> callsToRemove = new();
+        private readonly List<Call> callsToRemove = new();
+        private readonly List<Call> callsToAdd = new();
 
 
         public TimeCallDetection()
@@ -75,7 +76,6 @@ namespace FISAcops
             DeleteTime.RemoveAt(i);
         }
 
-        
 
         private void DetectionLoop()
         {
@@ -145,11 +145,30 @@ namespace FISAcops
                         }
                         show = true;
 
-                        if (call.Frequency == "Once")
+
+                        switch (call.Frequency)
                         {
-                            callsToRemove.Add(call);
+                            case "Once":
+                                callsToRemove.Add(call);
+                                break;
+                            case "Daily":
+                                string nextDay = NextCallDate.GetNextValidDay(currentDateTime).ToString("dd/MM/yyyy");
+                                callsToAdd.Add(new Call(nextDay, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
+                                break;
+                            case "Weekly":
+                                string nextWeek = NextCallDate.GetNextValidWeek(currentDateTime).ToString("dd/MM/yyyy");
+                                callsToAdd.Add(new Call(nextWeek, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
+                                break;
+                            default:
+                                break;
                         }
                     }
+                }
+                while (callsToAdd.Count > 0)
+                {
+                    Call call = callsToAdd[0];
+                    calls.Add(call);
+                    callsToAdd.Remove(call);
                 }
                 while (callsToRemove.Count > 0)
                 {
@@ -275,6 +294,7 @@ namespace FISAcops
                 MessageBox.Show(message);
             }
             if(!string.IsNullOrEmpty(new Settings().superviserEmail)) {
+                //Fonctionalité désactivé car non réussite de l'envoie de Mail
                 //SendEmail(new Settings().superviserEmail, "Appel pour des élèves", message);
             }
             
