@@ -48,7 +48,7 @@ namespace FISAcops
 
             while (codes.Count < groupSize)
             {
-                int newCode = new Random().Next(1, 100001);
+                int newCode = new Random().Next(1, 99999);
                 if (!codes.Contains(newCode))
                 {
                     codes.Add(newCode);

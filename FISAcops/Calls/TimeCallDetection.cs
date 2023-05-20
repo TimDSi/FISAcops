@@ -48,10 +48,10 @@ namespace FISAcops
 
         private int GenerateCode()
         {
-            int newCode = new Random().Next(1, 100001);
+            int newCode = new Random().Next(100000, 999999);
             while (Codes.Contains(newCode))
             {
-                newCode = new Random().Next(1, 100001);
+                newCode = new Random().Next(100000, 999999);
             }
             return newCode;
         }
