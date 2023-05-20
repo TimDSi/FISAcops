@@ -145,19 +145,16 @@ namespace FISAcops
                         }
                         show = true;
 
-
+                        callsToRemove.Add(call);
                         switch (call.Frequency)
                         {
-                            case "Once":
-                                callsToRemove.Add(call);
+                            case "Weekly":
+                                string nextWeek = NextCallDate.GetNextValidWeek(currentDateTime).ToString("dd/MM/yyyy");
+                                callsToAdd.Add(new Call(nextWeek, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
                                 break;
                             case "Daily":
                                 string nextDay = NextCallDate.GetNextValidDay(currentDateTime).ToString("dd/MM/yyyy");
                                 callsToAdd.Add(new Call(nextDay, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
-                                break;
-                            case "Weekly":
-                                string nextWeek = NextCallDate.GetNextValidWeek(currentDateTime).ToString("dd/MM/yyyy");
-                                callsToAdd.Add(new Call(nextWeek, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
                                 break;
                             default:
                                 break;
