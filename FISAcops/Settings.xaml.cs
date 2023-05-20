@@ -17,23 +17,26 @@ namespace FISAcops
 
         private static readonly string DefaultPath = Environment.CurrentDirectory;
 
-        public string studentsPath = DefaultPath;
-        public string groupsPath = DefaultPath;
-        public string callsPath = DefaultPath;
-        public string resultsPath = DefaultPath;
+        public static string StudentsPath { get; set; } = DefaultPath;
+        public static string GroupsPath { get; set; } = DefaultPath;
+        public static string CallsPath { get; set; } = DefaultPath;
+        public static string ResultsPath { get; set; } = DefaultPath;
+        public static int CallTime { get; set; } = 15;
+        public static bool DisplayPopUpWhenCall { get; set; } = false;
 
-        public bool displayPopUpWhenCall = false;
-        public string superviserEmail = "fisa.cops@gmail.com";
-        public string superviserPassword = "MDPlongDonc5ecurise";
+
+        //public string superviserEmail = "fisa.cops@gmail.com";
+        //public string superviserPassword = "MDPlongDonc5ecurise";
 
         private void SaveSettings(
             string studentsPath, 
             string groupsPath, 
             string callsPath, 
             string resultPath, 
-            bool displayPopUpWhenCall, 
-            string superviserEmail, 
-            string superviserPassword
+            bool displayPopUpWhenCall,
+            int callTime
+            //string superviserEmail, 
+            //string superviserPassword
             )
         {
             // Créer un objet JSON pour stocker les chemins de dossier
@@ -44,8 +47,9 @@ namespace FISAcops
                 CallsPath = callsPath,
                 ResultsPath = resultPath,
                 DisplayPopUpWhenCall = displayPopUpWhenCall,
-                SuperviserEmail = superviserEmail,
-                SuperviserPassword = superviserPassword
+                CallTime = callTime
+                //SuperviserEmail = superviserEmail,
+                //SuperviserPassword = superviserPassword
             };
 
             // Convertir l'objet JSON en une chaîne JSON
@@ -80,7 +84,7 @@ namespace FISAcops
                 string? selectedFolder = Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    studentsPath = selectedFolder;
+                    StudentsPath = selectedFolder;
                     TxtStudentsPath.Text = selectedFolder;
                 }
             }
@@ -103,7 +107,7 @@ namespace FISAcops
                 string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    groupsPath = selectedFolder;
+                    GroupsPath = selectedFolder;
                     TxtGroupsPath.Text = selectedFolder;
                 }
             }
@@ -126,7 +130,7 @@ namespace FISAcops
                 string? selectedFolder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 if (selectedFolder != null)
                 {
-                    callsPath = selectedFolder;
+                    CallsPath = selectedFolder;
                     TxtCallsPath.Text = selectedFolder;
                 }
             }
@@ -147,7 +151,7 @@ namespace FISAcops
             if (dialog.ShowDialog() == true)
             {
                 string selectedFile = dialog.FileName;
-                resultsPath = selectedFile;
+                ResultsPath = selectedFile;
                 TxtResultsPath.Text = selectedFile;
             }
         }
@@ -190,45 +194,54 @@ namespace FISAcops
 
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
+            bool numberExist = int.TryParse(TxtCallTime.Text, out int time);
+            if (!numberExist)
+            {
+                time = CallTime;
+            }
             SaveSettings(
-                studentsPath, 
-                groupsPath, 
-                callsPath, 
-                resultsPath, 
-                ChkDisplayPopUpWhenCall.IsChecked == true,
-                superviserEmail,
-                superviserPassword
+            StudentsPath, 
+            GroupsPath, 
+            CallsPath, 
+            ResultsPath, 
+            ChkDisplayPopUpWhenCall.IsChecked == true,
+            time
+            //superviserEmail,
+            //superviserPassword
             );
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
             // Réinitialiser les valeurs par défaut
-            studentsPath = DefaultPath;
-            groupsPath = DefaultPath;
-            callsPath = DefaultPath;
-            resultsPath= DefaultPath;
-            displayPopUpWhenCall = false;
-            superviserEmail = "fisa.cops@gmail.com";
-            superviserPassword = "MDPlongDonc5ecurise";
+            StudentsPath = DefaultPath;
+            GroupsPath = DefaultPath;
+            CallsPath = DefaultPath;
+            ResultsPath = DefaultPath;
+            DisplayPopUpWhenCall = false;
+            CallTime = 15;
+            //superviserEmail = "fisa.cops@gmail.com";
+            //superviserPassword = "MDPlongDonc5ecurise";
 
             // Mettre à jour les fichiers de configuration JSON
             SaveSettings(
-                studentsPath,
-                groupsPath,
-                callsPath,
-                resultsPath,
-                displayPopUpWhenCall,
-                superviserEmail,
-                superviserPassword
+                StudentsPath,
+                GroupsPath,
+                CallsPath,
+                ResultsPath,
+                DisplayPopUpWhenCall,
+                CallTime
+                //superviserEmail,
+                //superviserPassword
             );
 
             // Mettre à jour le texte du TextBox
-            TxtGroupsPath.Text = groupsPath;
-            TxtStudentsPath.Text = studentsPath;
-            TxtCallsPath.Text = callsPath;
-            TxtResultsPath.Text = resultsPath;
-            ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
+            TxtGroupsPath.Text = GroupsPath;
+            TxtStudentsPath.Text = StudentsPath;
+            TxtCallsPath.Text = CallsPath;
+            TxtResultsPath.Text = ResultsPath;
+            ChkDisplayPopUpWhenCall.IsChecked = DisplayPopUpWhenCall;
+            TxtCallTime.Text = CallTime.ToString();
             //TxtSupervisorEmail.Text = superviserEmail;
             //PwdSupervisorPassword.Password = superviserPassword;
         }
@@ -251,11 +264,17 @@ namespace FISAcops
                     StudentsPath = defaultPath,
                     GroupsPath = defaultPath,
                     CallsPath = defaultPath,
-                    ResultsPath = defaultPath
+                    ResultsPath = defaultPath,
+                    DisplayPopUpWhenCall = true,
+                    CallTime = 15
                 };
 
                 // Convertir l'objet en une chaîne JSON
-                string jsonString = JsonSerializer.Serialize(settingsObject);
+                string jsonString = JsonSerializer.Serialize(settingsObject, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
 
                 // Écrire la chaîne JSON dans le fichier "settings.json"
                 File.WriteAllText("settings.json", jsonString);
@@ -263,9 +282,9 @@ namespace FISAcops
         }
 
 
-        private void CreateStudentsFileIfNotExists()
+        private static void CreateStudentsFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(studentsPath, "Students.json")))
+            if (!File.Exists(Path.Combine(StudentsPath, "Students.json")))
             {
                 var studentsObject = new[]
                 {
@@ -356,16 +375,20 @@ namespace FISAcops
                 };
 
                 // Convertir l'objet en une chaîne JSON
-                string jsonString = JsonSerializer.Serialize(studentsObject);
+                string jsonString = JsonSerializer.Serialize(studentsObject, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
 
                 // Écrire la chaîne JSON dans le fichier "students.json"
-                File.WriteAllText(Path.Combine(studentsPath, "Students.json"), jsonString);
+                File.WriteAllText(Path.Combine(StudentsPath, "Students.json"), jsonString);
             }
         }
 
-        private void CreateGroupsFileIfNotExists()
+        private static void CreateGroupsFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(groupsPath, "Groups.json")))
+            if (!File.Exists(Path.Combine(GroupsPath, "Groups.json")))
             {
                 var groupsObject = new[]
                 {
@@ -474,22 +497,26 @@ namespace FISAcops
                 };
 
                 // Convertir l'objet en une chaîne JSON
-                string jsonString = JsonSerializer.Serialize(groupsObject);
+                string jsonString = JsonSerializer.Serialize(groupsObject, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
 
                 // Écrire la chaîne JSON dans le fichier "students.json"
-                File.WriteAllText(Path.Combine(groupsPath, "Groups.json"), jsonString);
+                File.WriteAllText(Path.Combine(GroupsPath, "Groups.json"), jsonString);
             }
         }
 
-        private void CreateCallsFileIfNotExists()
+        private static void CreateCallsFileIfNotExists()
         {
-            if (!File.Exists(Path.Combine(callsPath, "Calls.json")))
+            if (!File.Exists(Path.Combine(CallsPath, "Calls.json")))
             {
                 var callObject = new[]
                 {
                     new {
-                        Date = "20/05/2023",
-                        Time = "17:03",
+                        Date = DateTime.Now.AddMinutes(1).ToString("dd/MM/yyyy"),
+                        Time = DateTime.Now.AddMinutes(1).ToString("HH:mm"),
                         GroupName = "Gryffondor",
                         Frequency = "Weekly",
                         StudentsWithState = new List<StudentWithState>
@@ -506,10 +533,14 @@ namespace FISAcops
 
 
                 // Convertir l'objet en une chaîne JSON
-                string jsonString = JsonSerializer.Serialize(callObject);
+                string jsonString = JsonSerializer.Serialize(callObject, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
 
                 // Écrire la chaîne JSON dans le fichier "Call.json"
-                File.WriteAllText(Path.Combine(callsPath, "Calls.json"), jsonString);
+                File.WriteAllText(Path.Combine(CallsPath, "Calls.json"), jsonString);
             }
         }
         //-----------------------------------------------------------------------------------------------------------------------------
@@ -532,7 +563,7 @@ namespace FISAcops
                 // Affecter la valeur de GroupPath à groupsPath
                 if (filePath != null)
                 {
-                    groupsPath = filePath;
+                    GroupsPath = filePath;
                 }
             }
             CreateGroupsFileIfNotExists();
@@ -547,7 +578,7 @@ namespace FISAcops
                 // Affecter la valeur de StudentsPath à studentsPath
                 if (filePath != null)
                 {
-                    studentsPath = filePath;
+                    StudentsPath = filePath;
                 }
             }
             CreateStudentsFileIfNotExists();
@@ -562,7 +593,7 @@ namespace FISAcops
                 // Affecter la valeur de CallPath à callPath
                 if (filePath != null)
                 {
-                    callsPath = filePath;
+                    CallsPath = filePath;
                 }
             }
             CreateCallsFileIfNotExists();
@@ -577,7 +608,7 @@ namespace FISAcops
                 // Affecter la valeur de ResultsPath à resultsPath
                 if (filePath != null)
                 {
-                    resultsPath = filePath;
+                    ResultsPath = filePath;
                 }
             }
 
@@ -589,9 +620,20 @@ namespace FISAcops
                 bool displayPopUpWhenCallValue = displayPopUpWhenCallElement.GetBoolean();
 
                 // Affecter la valeur de DisplayPopUpWhenCall à displayPopUpWhenCall
-                displayPopUpWhenCall = displayPopUpWhenCallValue;
+                DisplayPopUpWhenCall = displayPopUpWhenCallValue;
             }
 
+            // Vérifier si la propriété DisplayPopUpWhenCall existe dans l'objet JSON
+            if (jsonObject.TryGetProperty("CallTime", out JsonElement callTimeElement))
+            {
+                // Récupérer la valeur de la propriété DisplayPopUpWhenCall
+                int callTimeValue = callTimeElement.GetInt32();
+
+                // Affecter la valeur de DisplayPopUpWhenCall à displayPopUpWhenCall
+                CallTime = callTimeValue;
+            }
+
+            /*
             // Vérifier si la propriété ResultsPath existe dans l'objet JSON
             if (jsonObject.TryGetProperty("SuperviserEmail", out JsonElement superviserEmailElement))
             {
@@ -617,13 +659,14 @@ namespace FISAcops
                     superviserPassword = superPassword;
                 }
             }
+            */
 
-
-            TxtGroupsPath.Text = groupsPath;
-            TxtStudentsPath.Text = studentsPath;
-            TxtCallsPath.Text = callsPath;
-            TxtResultsPath.Text = resultsPath;
-            ChkDisplayPopUpWhenCall.IsChecked = displayPopUpWhenCall;
+            TxtGroupsPath.Text = GroupsPath;
+            TxtStudentsPath.Text = StudentsPath;
+            TxtCallsPath.Text = CallsPath;
+            TxtResultsPath.Text = ResultsPath;
+            ChkDisplayPopUpWhenCall.IsChecked = DisplayPopUpWhenCall;
+            TxtCallTime.Text = CallTime.ToString();
             //TxtSupervisorEmail.Text = superviserEmail;
             //PwdSupervisorPassword.Password = superviserPassword;
         }

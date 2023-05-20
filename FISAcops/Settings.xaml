@@ -48,6 +48,10 @@
                 <TextBlock Text="Afficher la pop-up lors des appels: "/>
                 <CheckBox x:Name="ChkDisplayPopUpWhenCall" Margin="10,5,0,0"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Durée de l'appel (en minutes): "/>
+                <TextBox x:Name="TxtCallTime" Text="" Width="50" Height="18" Margin="10,5,0,0" />
+            </StackPanel>
             <!--
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Courrier électronique du superviseur: "/>

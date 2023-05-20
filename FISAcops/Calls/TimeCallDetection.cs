@@ -140,7 +140,7 @@ namespace FISAcops
                                 );
                                 CheckInList.Add(new CheckIn(studentWithCode));
                                 Codes.Add(studentWithCode.Code);
-                                DeleteTime.Add(callDateTime.AddMinutes(1));
+                                DeleteTime.Add(callDateTime.AddMinutes(Settings.CallTime));
                             }
                         }
                         show = true;
@@ -285,18 +285,19 @@ namespace FISAcops
             {
                 message += "\n" + s.student.Prenom + " " + s.student.Nom + ", Code :" + s.student.Code + " / ";
             }
-            if (new Settings().displayPopUpWhenCall)
+            if (Settings.DisplayPopUpWhenCall)
             {
                 // Code pour afficher la pop-up ici
                 MessageBox.Show(message);
             }
-            if(!string.IsNullOrEmpty(new Settings().superviserEmail)) {
-                //Fonctionalité désactivé car non réussite de l'envoie de Mail
-                //SendEmail(new Settings().superviserEmail, "Appel pour des élèves", message);
+            /* Fonctionalité désactivé car non réussite de l'envoie de Mail
+            if (!string.IsNullOrEmpty(new Settings().superviserEmail)) {
+                SendEmail(new Settings().superviserEmail, "Appel pour des élèves", message);
             }
-            
+            */
         }
 
+        /*
         public static void SendEmail(string toEmail, string subject, string message)
         {
             // Adresse e-mail de l'expéditeur
@@ -335,6 +336,6 @@ namespace FISAcops
                 MessageBox.Show("Erreur : " +ex );
             }
         }
-
+        */
     }
 }

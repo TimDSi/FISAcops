@@ -7,7 +7,7 @@ namespace FISAcops
     static class CallsService
     {
         private static readonly object lockObject = new();
-        public static string callsFilePath = Path.Combine(new Settings().callsPath, "Calls.json");
+        public static string callsFilePath = Path.Combine(Settings.CallsPath, "Calls.json");
 
         public static List<Call> LoadCallsFromJson()
         {

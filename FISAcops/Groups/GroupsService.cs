@@ -6,7 +6,7 @@ namespace FISAcops
 {
     static class GroupsService
     {
-        public static string groupsFilePath = Path.Combine(new Settings().groupsPath, "groups.json");
+        public static string groupsFilePath = Path.Combine(Settings.CallsPath, "groups.json");
         public static List<Group> LoadGroupsFromJson()
         {
             var json = File.ReadAllText(groupsFilePath);

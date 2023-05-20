@@ -8,7 +8,7 @@ namespace FISAcops
     {
         public static List<Result> LoadResultsFromJson(string date)
         {
-            string resultsFilePath = Path.Combine(new Settings().resultsPath, "Results" + date + ".json");
+            string resultsFilePath = Path.Combine(Settings.CallsPath, "Results" + date + ".json");
 
             // Vérifier si le fichier existe
             if (!File.Exists(resultsFilePath))
@@ -25,7 +25,7 @@ namespace FISAcops
 
         public static void SaveResultsToJson(List<Result> results, string date)
         {
-            string resultsFilePath = Path.Combine(new Settings().resultsPath, "Results" + date + ".json");
+            string resultsFilePath = Path.Combine(Settings.CallsPath, "Results" + date + ".json");
 
             // Vérifier si le fichier existe
             if (!File.Exists(resultsFilePath))
@@ -44,7 +44,7 @@ namespace FISAcops
 
         public static void CreateResultsJson(string date)
         {
-            string resultsFilePath = Path.Combine(new Settings().resultsPath, "Results" + date + ".json");
+            string resultsFilePath = Path.Combine(Settings.CallsPath, "Results" + date + ".json");
             var json = "[]"; // JSON vide représentant une liste vide
             File.WriteAllText(resultsFilePath, json);
         }

@@ -6,7 +6,7 @@ namespace FISAcops
 {
     static class StudentsService
     {
-        public static string studentsFilePath = Path.Combine(new Settings().studentsPath, "students.json");
+        public static string studentsFilePath = Path.Combine(Settings.StudentsPath, "students.json");
 
         public static List<Student> LoadStudentsFromJson()
         {
