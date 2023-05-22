@@ -524,8 +524,8 @@ namespace FISAcops
                 var callObject = new[]
                 {
                     new {
-                        Date = DateTime.Now.AddMinutes(1).ToString("dd/MM/yyyy"),
-                        Time = DateTime.Now.AddMinutes(1).ToString("HH:mm"),
+                        Date = DateTime.Now.ToString("dd/MM/yyyy"),
+                        Time = DateTime.Now.ToString("HH:mm"),
                         GroupName = "Gryffondor",
                         Frequency = "Test",
                         StudentsWithState = new List<StudentWithState>

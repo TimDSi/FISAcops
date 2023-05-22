@@ -118,7 +118,7 @@ namespace FISAcops
                             List<Result> datedResults = ResultsService.LoadResultsFromJson(jsonFileName);
                             datedResults.Add(result);
                             ResultsService.SaveResultsToJson(datedResults, jsonFileName);
-                            MessageBox.Show("ne call end !");
+                            MessageBox.Show("find d'appel pour " + result.GroupName);
                             resultList.RemoveAt(i);
                         }
                     }
@@ -147,33 +147,37 @@ namespace FISAcops
                         
                         show = true;
 
-                        callsToRemove.Add(call);
                         switch (call.Frequency)
                         {
                             case "Weekly":
+                                callsToRemove.Add(call);
                                 string nextWeek = NextCallDate.GetNextValidWeek(currentDateTime).ToString("dd/MM/yyyy");
                                 callsToAdd.Add(new Call(nextWeek, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
                                 break;
                             case "Daily":
+                                callsToRemove.Add(call);
                                 string nextDay = NextCallDate.GetNextValidDay(currentDateTime).ToString("dd/MM/yyyy");
                                 callsToAdd.Add(new Call(nextDay, call.Time, call.GroupName, call.Frequency, call.StudentsWithState));
+                                break;
+                            case "Once":
+                                callsToRemove.Add(call);
                                 break;
                             default:
                                 break;
                         }
                     }
                 }
-                while (callsToAdd.Count > 0)
-                {
-                    Call call = callsToAdd[0];
-                    calls.Add(call);
-                    callsToAdd.Remove(call);
-                }
                 while (callsToRemove.Count > 0)
                 {
                     Call call = callsToRemove[0];
                     calls.Remove(call);
                     callsToRemove.Remove(call);
+                }
+                while (callsToAdd.Count > 0)
+                {
+                    Call call = callsToAdd[0];
+                    calls.Add(call);
+                    callsToAdd.Remove(call);
                 }
 
                 if (show)
