@@ -118,6 +118,7 @@ namespace FISAcops
                             List<Result> datedResults = ResultsService.LoadResultsFromJson(jsonFileName);
                             datedResults.Add(result);
                             ResultsService.SaveResultsToJson(datedResults, jsonFileName);
+                            MessageBox.Show("ne call end !");
                             resultList.RemoveAt(i);
                         }
                     }

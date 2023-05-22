@@ -527,7 +527,7 @@ namespace FISAcops
                         Date = DateTime.Now.AddMinutes(1).ToString("dd/MM/yyyy"),
                         Time = DateTime.Now.AddMinutes(1).ToString("HH:mm"),
                         GroupName = "Gryffondor",
-                        Frequency = "Weekly",
+                        Frequency = "Test",
                         StudentsWithState = new List<StudentWithState>
                         {
                             (StudentWithState)StudentFactory.CreateStudent("Potter","Harry","harry.potter@viacesi.fr","Gryffondor","Absence Justifié"),
