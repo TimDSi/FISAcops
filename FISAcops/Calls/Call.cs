@@ -27,22 +27,7 @@ namespace FISAcops
             if (obj != null && GetType() == obj.GetType())
             {
                 Call otherCall = (Call)obj;
-                result =  Date == otherCall.Date&& Time == otherCall.Time && GroupName == otherCall.GroupName && Frequency == otherCall.Frequency;
-                if (!result) 
-                {
-                    if (otherCall.StudentsWithState.Count == StudentsWithState.Count) {
-                        result = true;
-                        for (int i = 0; i < otherCall.StudentsWithState.Count; i++)
-                        {
-                            if (StudentsWithState[i].Mail != otherCall.StudentsWithState[i].Mail ||
-                                StudentsWithState[i].State != otherCall.StudentsWithState[i].State)
-                            {
-                                result = false;
-                                break;
-                            }
-                        }
-                    }
-                }
+                result =  Date == otherCall.Date&& Time == otherCall.Time && GroupName == otherCall.GroupName;
             }
             return result;
         }
