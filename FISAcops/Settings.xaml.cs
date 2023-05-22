@@ -531,7 +531,6 @@ namespace FISAcops
                         StudentsWithState = new List<StudentWithState>
                         {
                             (StudentWithState)StudentFactory.CreateStudent("Potter","Harry","harry.potter@viacesi.fr","Gryffondor","Absence Justifié"),
-                            (StudentWithState)StudentFactory.CreateStudent("Potter", "Harry", "harry.potter@viacesi.fr", "Gryffondor", "Retard Justifié"),
                             (StudentWithState)StudentFactory.CreateStudent("Granger", "Hermione", "hermione.granger@viacesi.fr", "Gryffondor", "Présent"),
                             (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ron", "ron.weasley@viacesi.fr", "Gryffondor", "Controle"),
                             (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ginny", "ginny.weasley@viacesi.fr", "Gryffondor", "Controle"),
