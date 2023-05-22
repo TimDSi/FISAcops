@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace FISAcops
 {
@@ -118,7 +119,10 @@ namespace FISAcops
                             List<Result> datedResults = ResultsService.LoadResultsFromJson(jsonFileName);
                             datedResults.Add(result);
                             ResultsService.SaveResultsToJson(datedResults, jsonFileName);
-                            MessageBox.Show("find d'appel pour " + result.GroupName);
+                            Task.Run(() =>
+                            {
+                                MessageBox.Show("find d'appel pour " + result.GroupName);
+                            });
                             resultList.RemoveAt(i);
                         }
                     }
@@ -294,7 +298,10 @@ namespace FISAcops
             if (Settings.DisplayPopUpWhenCall)
             {
                 // Code pour afficher la pop-up ici
-                MessageBox.Show(message);
+                Task.Run(() =>
+                {
+                    MessageBox.Show(message);
+                });
             }
             /* Fonctionalité désactivé car non réussite de l'envoie de Mail
             if (!string.IsNullOrEmpty(new Settings().superviserEmail)) {
