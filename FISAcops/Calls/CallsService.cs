@@ -39,28 +39,7 @@ namespace FISAcops
                     CreateCallsJson();
                 }
 
-                List<Call> organizeCall = calls.OrderBy(call =>
-                {
-                    if (call.Frequency == "Once")
-                    {
-                        return 0;
-                    }
-                    else if (call.Frequency == "Daily")
-                    {
-                        return 1;
-                    }
-                    else if (call.Frequency == "Weekly")
-                    {
-                        return 2;
-                    }
-                    else
-                    {
-                        return 3;
-                    }
-                }).ToList();
-
-
-                var json = JsonSerializer.Serialize(organizeCall, new JsonSerializerOptions
+                var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
