@@ -41,11 +41,6 @@ namespace FISAcops
             StartChecker();
         }
 
-        public void StopDetection()
-        {
-            stopDetection = true;
-            detectionThread.Join();
-        }
 
         private int GenerateCode()
         {
