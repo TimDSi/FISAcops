@@ -82,7 +82,7 @@
             </StackPanel>
         </ScrollViewer>
         <!-- Bouton en bas à droite -->
-        <Button Content="Mon Bouton" 
+        <Button Content="Retour" 
                 Margin="0,0,20,20" 
                 HorizontalAlignment="Right" 
                 VerticalAlignment="Bottom" 

@@ -8,13 +8,47 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
 
-    <Grid>
-        <StackPanel Margin="10">
-            <Button Content="Lancer un appel" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCall"/>
-            <Button Content="Calendrier d'appels" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCalender"/>
-            <Button Content="Liste des groupes" Margin="0,0,0,10" Width="200" Height="30" Click="BtnGroups"/>
-            <Button Content="Paramètres" Margin="0,0,0,10" Width="200" Height="30" Click="BtnParameters"/>
-            <Button Content="Liste des élèves" Margin="0,0,0,10" Width="200" Height="30" Click="BtnStudents"/>
+    <Page.Resources>
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="DarkBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="LightBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="The School roll call" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Foreground="White" Margin="0,10" />
+
+        <StackPanel Grid.Row="1" Margin="10" VerticalAlignment="Center">
+            <Button Content="Lancer un appel" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCall" Style="{StaticResource RoundedButtonStyle}" />
+            <Button Content="Calendrier d'appels" Margin="0,0,0,10" Width="200" Height="30" Click="BtnCalender" Style="{StaticResource RoundedButtonStyle}" />
+            <Button Content="Liste des groupes" Margin="0,0,0,10" Width="200" Height="30" Click="BtnGroups" Style="{StaticResource RoundedButtonStyle}" />
+            <Button Content="Paramètres" Margin="0,0,0,10" Width="200" Height="30" Click="BtnParameters" Style="{StaticResource RoundedButtonStyle}" />
+            <Button Content="Liste des élèves" Margin="0,0,0,10" Width="200" Height="30" Click="BtnStudents" Style="{StaticResource RoundedButtonStyle}" />
         </StackPanel>
     </Grid>
 </Page>
