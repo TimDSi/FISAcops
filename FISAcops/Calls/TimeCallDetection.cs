@@ -186,21 +186,6 @@ namespace FISAcops
             }
         }
 
-        private bool ResultListContainsCall(Call call)
-        {
-            bool isIn = false;
-            foreach (Result result in resultList)
-            {
-                if(result.GroupName == call.GroupName
-                    && result.Time == call.Time) 
-                {
-                    isIn = true; 
-                    break;
-                }
-            }
-            return isIn;
-        }
-
         private static DateTime ParseDateTime(string date, string time)
         {
             string dateTimeString = $"{date} {time}";
