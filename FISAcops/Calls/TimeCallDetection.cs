@@ -126,24 +126,21 @@ namespace FISAcops
 
                     if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {
-                        if (ResultListContainsCall(call))
+                        resultList.Add(new Result(call.Time, call.GroupName, call.StudentsWithState));
+                        foreach (StudentWithState student in call.StudentsWithState)
                         {
-                            resultList.Add(new Result(call.Time, call.GroupName, call.StudentsWithState));
-                            foreach (StudentWithState student in call.StudentsWithState)
+                            if (student.State == "Controle")
                             {
-                                if (student.State == "Controle")
-                                {
-                                    StudentWithCode studentWithCode = (StudentWithCode)StudentFactory.CreateStudent(
-                                        student.Nom,
-                                        student.Prenom,
-                                        student.Mail,
-                                        student.Promotion,
-                                        GenerateCode()
-                                    );
-                                    CheckInList.Add(new CheckIn(studentWithCode));
-                                    Codes.Add(studentWithCode.Code);
-                                    DeleteTime.Add(callDateTime.AddMinutes(Settings.CallTime));
-                                }
+                                StudentWithCode studentWithCode = (StudentWithCode)StudentFactory.CreateStudent(
+                                    student.Nom,
+                                    student.Prenom,
+                                    student.Mail,
+                                    student.Promotion,
+                                    GenerateCode()
+                                );
+                                CheckInList.Add(new CheckIn(studentWithCode));
+                                Codes.Add(studentWithCode.Code);
+                                DeleteTime.Add(callDateTime.AddMinutes(Settings.CallTime));
                             }
                         }
                         
