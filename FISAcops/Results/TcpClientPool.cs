@@ -27,19 +27,6 @@ namespace FISAcops
             pool = new Stack<TcpClient>();
         }
 
-        public TcpClient Acquire()
-        {
-            lock (pool)
-            {
-                if (pool.Count > 0)
-                {
-                    return pool.Pop();
-                }
-            }
-
-            return new TcpClient();
-        }
-
         public void Release(TcpClient client)
         {
             if (client != null && client.Connected)
