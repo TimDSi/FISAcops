@@ -530,8 +530,8 @@ namespace FISAcops
                         Frequency = "Test",
                         StudentsWithState = new List<StudentWithState>
                         {
-                            (StudentWithState)StudentFactory.CreateStudent("Potter","Harry","harry.potter@viacesi.fr","Gryffondor","Absence Justifié"),
-                            (StudentWithState)StudentFactory.CreateStudent("Granger", "Hermione", "hermione.granger@viacesi.fr", "Gryffondor", "Présent"),
+                            (StudentWithState)StudentFactory.CreateStudent("Potter","Harry","harry.potter@viacesi.fr","Gryffondor","Absence justifiée"),
+                            (StudentWithState)StudentFactory.CreateStudent("Granger", "Hermione", "hermione.granger@viacesi.fr", "Gryffondor", "Retard justifié"),
                             (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ron", "ron.weasley@viacesi.fr", "Gryffondor", "Controle"),
                             (StudentWithState)StudentFactory.CreateStudent("Weasley", "Ginny", "ginny.weasley@viacesi.fr", "Gryffondor", "Controle"),
                             (StudentWithState)StudentFactory.CreateStudent("Black", "Sirius", "sirius.black@viacesi.fr", "Gryffondor", "Controle")

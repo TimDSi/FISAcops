@@ -21,7 +21,7 @@ namespace FISAcops
         public List<string> TimeSlots { get; set; }
         public string SelectedTimeSlot { get; set; }
 
-        public List<string> StateOptions { get; } = new List<string> { "Controle", "Absence Justifiée", "Retard Justifié" };
+        public List<string> StateOptions { get; } = new List<string> { "Controle", "Absence justifiée", "Retard justifié" };
 
         private readonly List<Call> callsList;
         private readonly int originalCallIndex = -1;
