@@ -257,7 +257,7 @@ namespace FISAcops
         //-----Create if not exists-------------------------------------------------------------------------------------------------------
         private static void CreateSettingsFileIfNotExists(string defaultPath)
         {
-            if (!File.Exists(Path.Combine(StudentsPath, "settings.json")))
+            if (!File.Exists("settings.json"))
             {
                 var settingsObject = new
                 {
@@ -557,6 +557,10 @@ namespace FISAcops
         public static void LoadSettings()
         {
             // Lire le contenu du fichier JSON
+            if (!File.Exists("settings.json"))
+            {
+                CreateSettingsFileIfNotExists(DefaultPath);
+            }
             string jsonString = File.ReadAllText(settingsPath);
 
             // Désérialiser le contenu JSON en un objet
