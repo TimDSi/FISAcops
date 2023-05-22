@@ -17,10 +17,5 @@
         }
 
         public int Code { get; set; }
-
-        public void UpdateCode(int newCode)
-        {
-            Code = newCode;
-        }
     }
 }
