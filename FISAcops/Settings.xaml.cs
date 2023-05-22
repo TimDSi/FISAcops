@@ -257,7 +257,7 @@ namespace FISAcops
         //-----Create if not exists-------------------------------------------------------------------------------------------------------
         private static void CreateSettingsFileIfNotExists(string defaultPath)
         {
-            if (!File.Exists("settings.json"))
+            if (!File.Exists(Path.Combine(StudentsPath, "settings.json")))
             {
                 var settingsObject = new
                 {
