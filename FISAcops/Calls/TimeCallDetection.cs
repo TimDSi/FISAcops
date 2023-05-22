@@ -126,23 +126,27 @@ namespace FISAcops
 
                     if (currentDateTime >= callDateTime && currentDateTime < callDateTimePlusOneMinute)
                     {
-                        resultList.Add(new Result(call.Time, call.GroupName, call.StudentsWithState));
-                        foreach (StudentWithState student in call.StudentsWithState)
+                        if (ResultListContainsCall(call))
                         {
-                            if (student.State == "Controle")
+                            resultList.Add(new Result(call.Time, call.GroupName, call.StudentsWithState));
+                            foreach (StudentWithState student in call.StudentsWithState)
                             {
-                                StudentWithCode studentWithCode = (StudentWithCode)StudentFactory.CreateStudent(
-                                    student.Nom, 
-                                    student.Prenom, 
-                                    student.Mail, 
-                                    student.Promotion, 
-                                    GenerateCode()
-                                );
-                                CheckInList.Add(new CheckIn(studentWithCode));
-                                Codes.Add(studentWithCode.Code);
-                                DeleteTime.Add(callDateTime.AddMinutes(Settings.CallTime));
+                                if (student.State == "Controle")
+                                {
+                                    StudentWithCode studentWithCode = (StudentWithCode)StudentFactory.CreateStudent(
+                                        student.Nom,
+                                        student.Prenom,
+                                        student.Mail,
+                                        student.Promotion,
+                                        GenerateCode()
+                                    );
+                                    CheckInList.Add(new CheckIn(studentWithCode));
+                                    Codes.Add(studentWithCode.Code);
+                                    DeleteTime.Add(callDateTime.AddMinutes(Settings.CallTime));
+                                }
                             }
                         }
+                        
                         show = true;
 
                         callsToRemove.Add(call);
@@ -183,6 +187,21 @@ namespace FISAcops
                 // Attendre avant de vérifier à nouveau
                 Thread.Sleep(60000); // Attendre 1 minute
             }
+        }
+
+        private bool ResultListContainsCall(Call call)
+        {
+            bool isIn = false;
+            foreach (Result result in resultList)
+            {
+                if(result.GroupName == call.GroupName
+                    && result.Time == call.Time) 
+                {
+                    isIn = true; 
+                    break;
+                }
+            }
+            return isIn;
         }
 
         private static DateTime ParseDateTime(string date, string time)
