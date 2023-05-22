@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace FISAcops
@@ -38,7 +39,28 @@ namespace FISAcops
                     CreateCallsJson();
                 }
 
-                var json = JsonSerializer.Serialize(calls, new JsonSerializerOptions
+                List<Call> organizeCall = calls.OrderBy(call =>
+                {
+                    if (call.Frequency == "Once")
+                    {
+                        return 0;
+                    }
+                    else if (call.Frequency == "Daily")
+                    {
+                        return 1;
+                    }
+                    else if (call.Frequency == "Weekly")
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 3;
+                    }
+                }).ToList();
+
+
+                var json = JsonSerializer.Serialize(organizeCall, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
