@@ -77,12 +77,12 @@ namespace FISAcops
             prenom = Regex.Replace(prenom, "[^a-zA-Z]+", "");
 
             // Construire la nouvelle adresse e-mail avec nom et prénom
-            string newMail = $"{prenom.ToLower()}.{nom.ToLower()}@viacesi.fr";
+            string newMail = $"{prenom.ToLower()}.{nom.ToLower()}@gmail.com";
 
             int number = 2;
             while (EmailExists(newMail))
             {
-                newMail = $"{prenom.ToLower()}.{nom.ToLower()}{number}@viacesi.fr";
+                newMail = $"{prenom.ToLower()}.{nom.ToLower()}{number}@gmail.com";
                 number++;
             }
 
