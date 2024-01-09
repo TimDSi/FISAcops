@@ -25,8 +25,8 @@ namespace FISAcops
         public static bool DisplayPopUpWhenCall { get; set; } = false;
 
 
-        //public string superviserEmail = "fisa.cops@gmail.com";
-        //public string superviserPassword = "MDPlongDonc5ecurise";
+        //public string superviserEmail = "nop I wont let it here anyway it has been deleted";
+        //public string superviserPassword = "YepItCouldHaveBeenAPasswordBetterThanYours";
 
         private static void SaveSettings(
             string studentsPath, 
